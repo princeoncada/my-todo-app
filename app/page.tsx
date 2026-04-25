@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <MaxWidthWrapper>
+    <MaxWidthWrapper singleItemPage={true}>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Simple Todo App</CardTitle>

@@ -1,14 +1,13 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
-import { redirect } from "next/navigation";
-import MaxWidthWrapper from "./MaxWidthWrapper";
-import { Loader2, Trash } from "lucide-react";
-import { useTRPC } from "@/trpc/client";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { Skeleton } from "./ui/skeleton";
 
 const supabase = createClient();

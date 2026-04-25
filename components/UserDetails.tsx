@@ -1,43 +1,33 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import { User } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { redirect } from "next/navigation";
 import MaxWidthWrapper from "./MaxWidthWrapper";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash } from "lucide-react";
+import { useTRPC } from "@/trpc/client";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Skeleton } from "./ui/skeleton";
 
 const supabase = createClient();
 
 const UserDetails = () => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loggingOut, setLoggingOut] = useState(false);
 
+  const trpc = useTRPC();
+  const { data, isLoading } = useQuery(trpc.getUser.queryOptions());
+  const user = data?.user;
+
   async function handleSignOut() {
-    setLoggingOut(true)
-    await supabase.auth.signOut()
-    setCurrentUser(null)
-    redirect("/")
+    setLoggingOut(true);
+    await supabase.auth.signOut();
+    redirect("/");
   }
 
-  useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setCurrentUser(session?.user ?? null);
-      }
-    );
-
-    return () => {
-      listener?.subscription.unsubscribe();
-    };
-  }, [supabase]);
-
   if (loggingOut) {
-    return <MaxWidthWrapper>
-      <Loader2 className="w-5 h-5 animate-spin"/>
-    </MaxWidthWrapper>
+    return <Loader2 className="w-5 h-5 animate-spin" />;
   }
 
   return (
@@ -47,20 +37,32 @@ const UserDetails = () => {
           User Details
         </CardTitle>
         <CardDescription>
-          Someone currently <span className={"font-medium text-red-500"}>{currentUser == null ? "not " : ""}</span>logged in.
+          {
+            isLoading ?
+              <Skeleton className="h-4 w-1/2" /> :
+              <>Someone currently <span className={"font-medium text-red-500"}>{user == null ? "not " : ""}</span>logged in.</>
+          }
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col gap-2">
-          <p>
-            <span className="font-medium">Email: </span>{currentUser === null ? "john@doe.com" : currentUser?.email}
-          </p>
-          <p>
-            <span className="font-medium">ID: </span>{currentUser === null ? "1234-4321-4352-5433" : currentUser?.id}
-          </p>
+        <div className="flex flex-col gap-1">
+          <div>
+            {
+              isLoading ?
+                <Skeleton className="h-4 w-2/3" /> :
+                <><span className="font-medium">Email: </span>{user === null ? "john@doe.com" : user?.email}</>
+            }
+          </div>
+          <div>
+            {
+              isLoading ?
+                <Skeleton className="h-4 w-3/4" /> :
+                <><span className="font-medium">ID: </span>{user === null ? "1234-4321-4352-5433" : user?.id}</>
+            }
+          </div>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-end">
+      <CardFooter className="flex justify-between">
         <Button size="lg" className="hover:cursor-pointer" onClick={handleSignOut}>
           Sign Out
         </Button>

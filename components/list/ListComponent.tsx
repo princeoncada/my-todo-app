@@ -1,23 +1,21 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { useDroppable } from "@dnd-kit/react";
 import { useSortable } from '@dnd-kit/react/sortable';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Calendar1, GripVertical, Inbox, ListPlus, Pencil, Plus, SearchIcon, Trash2 } from "lucide-react";
+import { Calendar1, GripVertical, ListPlus, ListX, Plus, Trash2 } from "lucide-react";
 import { motion } from "motion/react";
 import { ReactNode, useRef, useState } from "react";
-import InlineEdit from "../InlineEdit";
+import ListInlineEdit from "./ListInlineEdit";
 import { Button } from "../ui/button";
-import { Card, CardContent, CardFooter } from "../ui/card";
-import { Field } from "../ui/field";
-import { Input } from "../ui/input";
+import { Card, CardContent } from "../ui/card";
+import { Checkbox } from "../ui/checkbox";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../ui/input-group";
+import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { List, ListItem, Lists } from "./types";
-import { ScrollArea } from "../ui/scroll-area";
-import { cn } from "@/lib/utils";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group";
-import { Checkbox } from "../ui/checkbox";
 
 interface ListComponentProps {
   children: ReactNode;
@@ -159,6 +157,15 @@ const ListComponent = ({
     }
   }));
 
+  const handleCreateItem = () => {
+    setNewItemId(crypto.randomUUID());
+    createListItem({
+      id: newItemId,
+      name: createListItemName.trim(),
+      listId: list.id
+    });
+  };
+
   const { ref: listRef, handleRef, isDragging } = useSortable({
     id: `list-${list.id}`,
     index,
@@ -167,7 +174,7 @@ const ListComponent = ({
     group: "lists",
   });
 
-  const { ref: dropRef, isDropTarget } = useDroppable({
+  const { ref: dropRef } = useDroppable({
     id: `list-drop-${list.id}`,
     type: "list-drop",
     accept: "list-item",
@@ -195,12 +202,15 @@ const ListComponent = ({
         <CardContent className="px-0 flex flex-col flex-1">
           <div className="flex flex-col flex-1">
             <div className="flex items-start gap-3 px-4">
-              <div className="mt-1 shrink-0 hover:cursor-pointer" ref={handleRef}>
+              <div
+                ref={handleRef}
+                className="mt-1 shrink-0 cursor-grab active:cursor-grabbing touch-none select-none p-2 -m-2"
+              >
                 <GripVertical />
               </div>
 
               <div className="flex-1 min-w-0">
-                <InlineEdit
+                <ListInlineEdit
                   className="block truncate w-full font-semibold"
                   inputClassName="text-xl! h-6! mb-[5px]!"
                   displayClassName="text-xl! leading-[23px] h-6!"
@@ -233,45 +243,59 @@ const ListComponent = ({
             <div className={cn("border border-zinc-100 border-dashed rounded-lg duration-200 mx-2 my-1.5 flex-col", {
               "border-zinc-400": shouldHighlightList
             })}>
-              <div className={cn("text-lg mx-[8.5px] max-h-12 opacity-100 mt-1 rounded-md flex items-center gap-2 overflow-hidden transition-[max-height,opacity,margin] duration-300 ease-in-out", {
+              <div className={cn("text-lg px-2 max-h-12 opacity-100 mt-1 rounded-md flex items-center gap-2 overflow-hidden transition-[max-height,opacity,margin] duration-300 ease-in-out", {
                 "max-h-0 opacity-0 mt-0": !viewListItemAdder
               })}>
+                <div
+                  className="cursor-grab active:cursor-grabbing touch-none select-none p-2 -m-2 -mr-1 shrink-0 text-gray-400"
+                >
+                  <GripVertical className="w-4 h-4" />
+                </div>
                 <Checkbox
                   className="w-5 h-5 hover:cursor-pointer"
                   disabled={true}
                 />
-                <Input
-                  className="block truncate w-full text-lg! h-7.5 leading-0! font-medium focus-visible:ring-0 border-0 pl-0!"
-                  placeholder="Add new item here..."
-                  ref={inputRef}
-                  value={createListItemName}
-                  onChange={(e) => {
-                    setCreateListItemName(e.target.value);
-                  }}
-                  onBlur={(e) => {
-                    setCreateListItemName('');
-                    setViewListItemAdder(false);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      setNewItemId(crypto.randomUUID());
-                      createListItem({
-                        id: newItemId,
-                        name: createListItemName.trim(),
-                        listId: list.id
-                      });
-                    }
-
-                    if (e.key === "Escape") {
+                <InputGroup className="focus-visible:ring-0 border-0 -mr-0.5">
+                  <InputGroupInput
+                    className="truncate w-full text-lg! h-7.5 leading-0! font-medium pl-0!"
+                    placeholder="Add new item here..."
+                    ref={inputRef}
+                    value={createListItemName}
+                    onChange={(e) => {
+                      setCreateListItemName(e.target.value);
+                    }}
+                    onBlur={() => {
                       setCreateListItemName('');
                       setViewListItemAdder(false);
-                    }
-                  }}
-                />
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleCreateItem();
+                      }
+
+                      if (e.key === "Escape") {
+                        setCreateListItemName('');
+                        setViewListItemAdder(false);
+                      }
+                    }}
+                  />
+                  <InputGroupAddon align="inline-end">
+                    <InputGroupButton
+                      size="icon-xs"
+                      variant="ghost"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        handleCreateItem();
+                      }}
+                    >
+                      <Plus className="scale-90 text-zinc-700" />
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                </InputGroup>
               </div>
               <ScrollArea
                 ref={dropRef}
-                className={cn("h-60! min-h-45 w-full")}
+                className={cn("h-60! min-h-45 w-full touch-pan-y")}
               >
                 {children}
               </ScrollArea>
@@ -289,6 +313,9 @@ const ListComponent = ({
             <div className="text-center absolute h-0 left-2 flex items-center justify-center">
               <Button
                 size="icon"
+                className={cn("flex", {
+                  "hidden": viewListItemAdder
+                })}
                 variant="ghost"
                 onClick={() => {
                   if (inputRef.current) {
@@ -298,6 +325,19 @@ const ListComponent = ({
                 }}
               >
                 <ListPlus className="scale-120" />
+              </Button>
+              <Button
+                size="icon"
+                className={cn("flex", {
+                  "hidden": !viewListItemAdder
+                })}
+                variant="destructive"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setViewListItemAdder(false);
+                }}
+              >
+                <ListX className="scale-120" />
               </Button>
             </div>
           </div>

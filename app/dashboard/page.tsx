@@ -1,12 +1,9 @@
-import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import UserDetails from "@/components/UserDetails";
+import Dashboard from "@/components/Dashboard";
 
 const Page = () => {
   return (
-    <MaxWidthWrapper>
-      <UserDetails />
-    </MaxWidthWrapper>
-  )
-}
+    <Dashboard />
+  );
+};
 
-export default Page
+export default Page;

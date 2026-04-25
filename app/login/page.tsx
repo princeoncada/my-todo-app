@@ -75,11 +75,11 @@ const Page = () => {
   };
 
   return (
-    <MaxWidthWrapper>
+    <MaxWidthWrapper singleItemPage={true}>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
-          <CardDescription>Enter your email below to receive an OTP</CardDescription>
+          <CardDescription>Enter your email and password below</CardDescription>
         </CardHeader>
 
         <CardContent>

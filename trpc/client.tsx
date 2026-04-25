@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { makeQueryClient } from './query-client';
 import type { AppRouter } from './routers/_app';
 import SuperJSON from 'superjson';
+import { absoluteUrl } from '@/lib/utils';
 
 export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();
 
@@ -30,7 +31,7 @@ function getUrl() {
   const base = (() => {
     if (typeof window !== 'undefined') return '';
     if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-    return 'http://localhost:3000';
+    return absoluteUrl("");
   })();
   return `${base}/api/trpc`;
 }

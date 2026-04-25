@@ -3,9 +3,9 @@
 import { useTRPC } from "@/trpc/client";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { X } from "lucide-react";
+import { GripVertical, X } from "lucide-react";
 import { useState } from "react";
-import InlineEdit from "../InlineEdit";
+import ListInlineEdit from "./ListInlineEdit";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { ListItem, Lists } from "./types";
@@ -169,7 +169,7 @@ const ListItemComponent = ({
     }
   }));
 
-  const { ref, isDragging } = useSortable({
+  const { ref, handleRef: itemHandle, isDragging } = useSortable({
     id: `list-item-${listItem.id}`,
     index,
     type: 'list-item',
@@ -193,6 +193,12 @@ const ListItemComponent = ({
   `}
     >
       <div className="flex items-center gap-2">
+        <div
+          ref={itemHandle}
+          className="cursor-grab active:cursor-grabbing touch-none select-none p-2 -m-2 -mr-1 shrink-0 text-gray-400"
+        >
+          <GripVertical className="w-4 h-4" />
+        </div>
         <Checkbox
           className="w-5 h-5 hover:cursor-pointer"
           checked={listItem.completed}
@@ -203,7 +209,7 @@ const ListItemComponent = ({
             });
           }}
         />
-        <InlineEdit
+        <ListInlineEdit
           className={`block text-lg truncate w-full leading-8 transition-colors duration-300 ${listItem.completed ? "line-through text-gray-500" : ""}`}
           id={listItem.id}
           value={listItem.name}
@@ -214,7 +220,7 @@ const ListItemComponent = ({
         />
       </div>
       <Button
-        className="bg-transparent hover:bg-red-500/10 group-hover:opacity-100 opacity-0 transition-opacity duration-100"
+        className="bg-transparent hover:bg-red-500/10 group-hover:opacity-100 md:opacity-0 transition-opacity duration-100"
         variant="destructive"
         size="icon-xs"
         onClick={() => {

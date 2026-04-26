@@ -30,12 +30,12 @@ const ListMenu = ({
         >
           Add Item
         </DropdownMenuItem>
-        <DropdownMenuItem
+        {/* <DropdownMenuItem
           variant="default"
           className='hover:cursor-pointer'
         >
           Export
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           variant='destructive'

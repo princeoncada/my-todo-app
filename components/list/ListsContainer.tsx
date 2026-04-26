@@ -304,6 +304,7 @@ const ListsContainer = () => {
         });
       }}
     >
+      
       <div className="grow grid grid-cols-1 md:grid-cols-2 lg:md:grid-cols-3 gap-3">
         {
           lists.map((list: OptimisticList, index) =>

@@ -58,10 +58,8 @@ const UserAccountNav = ({ logout }: { logout: () => void; }) => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem asChild>
-          <div>
-            <Button size="lg" onClick={logout}>Logout</Button>
-          </div>
+        <DropdownMenuItem variant="destructive" onClick={logout}>
+          Logout
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

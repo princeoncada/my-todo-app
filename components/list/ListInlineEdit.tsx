@@ -92,7 +92,7 @@ export default function ListInlineEdit({
         className={`
         ${className}
         ${inputClassName}
-        min-h-8 resize-none overflow-hidden
+        min-h-6 resize-none overflow-hidden
         whitespace-normal break-all
         focus-visible:ring-0 border-0 pl-0! rounded-none
       `}

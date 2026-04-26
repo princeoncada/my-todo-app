@@ -8,7 +8,7 @@ import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { List } from "./types";
+import { List, OptimisticList } from "./types";
 import { Plus } from "lucide-react";
 
 
@@ -30,7 +30,7 @@ const ListAdder = () => {
 
       if (!previousLists) return { previousLists };
 
-      const optimisticList: List = {
+      const optimisticList: OptimisticList = {
         id: variables.id,
         userId: "optimistic",
         name: variables.name,
@@ -39,7 +39,8 @@ const ListAdder = () => {
           : 0,
         createdAt: new Date(),
         updatedAt: new Date(),
-        listItems: []
+        listItems: [],
+        isOptimistic: true
       };
 
       queryClient.setQueryData(queryKey, (old = []) => ([
@@ -88,7 +89,7 @@ const ListAdder = () => {
               setDialogOpen(true);
             }}
           >
-            New List +
+            <Plus className="-ml-1"/>New List 
           </Button>
           <Button
             className="font-semibold md:hidden p-4"

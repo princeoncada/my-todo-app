@@ -25,7 +25,7 @@ const ListMenu = ({
       <DropdownMenuContent align="end">
         <DropdownMenuItem
           variant="default"
-          className='hover:cursor-pointer'
+          className='hover:cursor-pointer text-xs!'
           onSelect={handleViewListItemAdder}
         >
           Add Item
@@ -39,7 +39,7 @@ const ListMenu = ({
         <DropdownMenuSeparator />
         <DropdownMenuItem
           variant='destructive'
-          className='hover:cursor-pointer'
+          className='hover:cursor-pointer text-xs!'
           onSelect={handleDeleteList}
         >
           Delete

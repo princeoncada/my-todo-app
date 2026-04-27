@@ -199,24 +199,24 @@ const ListItemComponent = ({
     <div
       ref={ref}
       className={cn(
-        `flex items-start gap-2 px-2 rounded-md border border-white hover:bg-gray-50 hover:border-gray-100 overflow-hidden transition-[max-height,opacity,transform,padding,scale,shadow] duration-200 ease-in-out group`,
+        `flex items-start gap-1.5 px-1.5 rounded-md border border-white hover:bg-gray-50 hover:border-gray-100 overflow-hidden transition-[max-height,opacity,transform,padding,scale,shadow] duration-200 ease-in-out group`,
         {
           "scale-[1.01] backdrop-blur-[5px] shadow-md bg-gray-50 border border-gray-100": isDragging,
-          "max-h-32 opacity-100 scale-100": !itemDeleted && itemRevealed,
+          "max-h-200 opacity-100 scale-100": !itemDeleted && itemRevealed,
           "max-h-0 opacity-0 py-0": itemDeleted || !itemRevealed,
         }
       )}
     >
-      <div className="flex min-w-0 flex-1 items-start gap-2">
+      <div className="flex min-w-0 flex-1 items-start gap-1.5">
         <div
           ref={itemHandle}
-          className="cursor-grab active:cursor-grabbing touch-none select-none p-2 -m-2 -mr-1 shrink-0 text-gray-400 pt-[14px]"
+          className="cursor-grab active:cursor-grabbing touch-none select-none p-1.5 -m-1.5 -mr-0.5 shrink-0 text-gray-400 pt-2"
         >
-          <GripVertical className="w-4 h-4" />
+          <GripVertical className="w-3.5 h-3.5" />
         </div>
 
         <Checkbox
-          className="w-5 h-5 shrink-0 hover:cursor-pointer my-1"
+          className="w-4 h-4 shrink-0 hover:cursor-pointer mt-0.5"
           checked={listItem.completed}
           onClick={() => {
             setCompletion({
@@ -229,7 +229,7 @@ const ListItemComponent = ({
         <div className="min-w-0 flex-1">
           <ListInlineEdit
             className={cn(
-              "block w-full min-w-0 text-lg whitespace-normal break-all break-normal transition-colors duration-300 leading-7!",
+              "block w-full min-w-0 text-sm pt-px! whitespace-normal break-all break-normal transition-colors duration-300 leading-5.5!",
               listItem.completed && "line-through text-gray-500"
             )}
             id={listItem.id}
@@ -237,13 +237,13 @@ const ListItemComponent = ({
             onSave={renameListItem}
             disabled={renameListItemPending}
             displayClassName="whitespace-normal"
-            inputClassName="text-lg! p-0! leading-7! break-normal!"
+            inputClassName="text-sm! p-0! leading-5.5! break-normal!"
           />
         </div>
       </div>
 
       <Button
-        className="shrink-0 self-start bg-transparent hover:bg-red-500/10 opacity-100 transition-opacity duration-100 my-0.5"
+        className="h-6 w-6 shrink-0 self-start bg-transparent hover:bg-red-500/10 opacity-100 transition-opacity duration-100 mt-px"
         variant="destructive"
         size="icon-xs"
         onClick={() => {

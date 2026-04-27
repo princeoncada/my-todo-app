@@ -82,14 +82,13 @@ const ListAdder = () => {
       <DialogTrigger className="h-full" asChild>
         <div className="h-full flex items-end">
           <Button
-            className="h-full px-5 font-semibold hidden md:flex"
+            className="font-semibold hidden md:flex"
             variant="outline"
-            size="lg"
             onClick={() => {
               setDialogOpen(true);
             }}
           >
-            <Plus className="-ml-1"/>New List 
+            <Plus className="-ml-1"/>Add List 
           </Button>
           <Button
             className="font-semibold md:hidden p-4"

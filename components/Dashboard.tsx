@@ -10,6 +10,7 @@ import ListsContainer from "./list/ListsContainer";
 import { Separator } from "./ui/separator";
 import UserAccountNav from "./UserAccountNav";
 import { useQueryClient } from "@tanstack/react-query";
+import ViewsSidebarPreview from "./views/ViewsSidebarPreview";
 
 const supabase = createClient();
 
@@ -24,7 +25,7 @@ const Dashboard = () => {
     setLoggingOut(true);
     supabase.auth.signOut();
     queryClient.clear();
-    router.replace("/")
+    router.replace("/");
   }
 
   if (loggingOut) {
@@ -35,8 +36,8 @@ const Dashboard = () => {
 
   return (
     <MaxWidthWrapper>
-      <div className="flex relative">
-        <div className="flex-1 flex flex-col gap-3 py-10">
+      <div className="flex gap-4">
+        <main className="min-w-0 flex-1 flex flex-col gap-3 py-10">
           <div className="flex flex-col gap-2.5 w-full items-center">
             <div className="w-full flex flex-col">
               <div className="w-full flex justify-between items-end h-12">
@@ -49,10 +50,18 @@ const Dashboard = () => {
                 <ListAdder />
               </div>
             </div>
+
             <Separator className="bg-zinc-200 md:bg-zinc-200/30" />
           </div>
+
           <ListsContainer />
-        </div>
+        </main>
+
+        <aside className="hidden lg:block w-64 shrink-0 py-11">
+          <div className="sticky top-4">
+            <ViewsSidebarPreview />
+          </div>
+        </aside>
       </div>
     </MaxWidthWrapper>
   );

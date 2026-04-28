@@ -3,12 +3,13 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2 } from "lucide-react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 import ListAdder from "./list/ListAdder";
 import ListsContainer from "./list/ListsContainer";
 import { Separator } from "./ui/separator";
 import UserAccountNav from "./UserAccountNav";
+import { useQueryClient } from "@tanstack/react-query";
 
 const supabase = createClient();
 
@@ -16,10 +17,14 @@ const Dashboard = () => {
 
   const [loggingOut, setLoggingOut] = useState(false);
 
+  const queryClient = useQueryClient();
+  const router = useRouter();;
+
   function handleLogout() {
     setLoggingOut(true);
     supabase.auth.signOut();
-    redirect('/');
+    queryClient.clear();
+    router.replace("/")
   }
 
   if (loggingOut) {

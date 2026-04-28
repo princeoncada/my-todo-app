@@ -10,6 +10,7 @@ import { makeQueryClient } from './query-client';
 import type { AppRouter } from './routers/_app';
 import SuperJSON from 'superjson';
 import { absoluteUrl } from '@/lib/utils';
+import { AuthSync } from '@/components/AuthSync';
 
 export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();
 
@@ -61,6 +62,7 @@ export function TRPCReactProvider(
   return (
     <QueryClientProvider client={queryClient}>
       <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
+        <AuthSync />
         {props.children}
       </TRPCProvider>
     </QueryClientProvider>

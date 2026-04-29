@@ -16,8 +16,8 @@ const UserDetails = () => {
   const [loggingOut, setLoggingOut] = useState(false);
 
   const trpc = useTRPC();
-  const { data, isLoading } = useQuery(trpc.getUser.queryOptions());
-  const user = data?.user;
+  const { data, isLoading } = useQuery(trpc.user.getUser.queryOptions());
+  const user = data;
 
   async function handleSignOut() {
     setLoggingOut(true);

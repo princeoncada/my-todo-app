@@ -8,7 +8,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Calendar1, GripVertical, Plus, StickyNote } from "lucide-react";
 import { motion } from "motion/react";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { useMediaQuery } from "usehooks-ts";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";

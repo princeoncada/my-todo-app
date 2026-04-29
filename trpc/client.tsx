@@ -29,12 +29,11 @@ function getQueryClient() {
 }
 
 function getUrl() {
-  const base = (() => {
-    if (typeof window !== 'undefined') return '';
-    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-    return absoluteUrl("");
-  })();
-  return `${base}/api/trpc`;
+  if (typeof window !== "undefined") {
+    return "/api/trpc";
+  }
+
+  return absoluteUrl("/api/trpc");
 }
 
 export function TRPCReactProvider(

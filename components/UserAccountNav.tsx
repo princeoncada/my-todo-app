@@ -22,10 +22,10 @@ const UserAccountNav = ({ logout }: { logout: () => void; }) => {
         asChild
         className="overflow-visible"
       >
-        <Button className="rounded-full h-10 w-10 md:h-12 md:w-12 bg-slate-400">
-          <Avatar className='relative h-10 w-10 md:h-12 md:w-12'>
+        <Button className="rounded-full h-7 w-7 md:h-9 md:w-9 bg-slate-400">
+          <Avatar className='relative h-7 w-7 md:h-9 md:w-9'>
             <AvatarFallback>
-              <User className="scale-115! md:scale-130!" />
+              <User className="scale-90 md:scale-100" />
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -33,7 +33,7 @@ const UserAccountNav = ({ logout }: { logout: () => void; }) => {
       <DropdownMenuContent className="bg-white w-40 p-1 m-1" align="start">
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-0.5 leading-none min-w-0">
-            {name && <p className="font-medium text-sm text-black">{name}</p>}
+            {name && <p className="font-medium text-xs text-black">{name}</p>}
             {
               user && (
                 <p className="truncate text-xs text-zinc-700">{user.email}</p>
@@ -58,7 +58,7 @@ const UserAccountNav = ({ logout }: { logout: () => void; }) => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem variant="destructive" onClick={logout}>
+        <DropdownMenuItem variant="destructive" onClick={logout} className="text-xs">
           Logout
         </DropdownMenuItem>
       </DropdownMenuContent>

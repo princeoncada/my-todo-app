@@ -93,7 +93,7 @@ export default function ListInlineEdit({
         ${className}
         ${inputClassName}
         min-h-5 resize-none overflow-hidden
-        whitespace-normal
+        whitespace-normal break-all!
         focus-visible:ring-0 border-0 px-0! py-0! rounded-none
       `}
       />
@@ -103,7 +103,7 @@ export default function ListInlineEdit({
   return (
     <span
       onClick={startEditing}
-      className={`${className} ${displayClassName} cursor-pointer rounded-sm transition-colors block w-full min-w-0`}
+      className={`${className} ${displayClassName} break-all! cursor-pointer rounded-sm transition-colors block w-full min-w-0`}
     >
       {displayValue}
     </span>

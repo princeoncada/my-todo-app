@@ -8,14 +8,14 @@ import { useRef, useState } from 'react';
 import ListComponent from './ListComponent';
 import ListItemComponent from './ListItemComponent';
 import ListSkeleton from './ListSkeleton';
-import { Lists, OptimisticList, OptimisticListItem } from './types';
+import { List, ListItem, Lists, OptimisticList, OptimisticListItem } from './types';
 import ListEmpty from './ListEmpty';
 
 const ListsContainer = () => {
 
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const queryKey = trpc.getListsWithItems.queryKey();
+  const queryKey = trpc.list.getListsWithItems.queryKey();
   const { enqueue } = useMutationQueue();
 
   const [activeDropTarget, setActiveDropTarget] = useState<{
@@ -23,7 +23,7 @@ const ListsContainer = () => {
     id: string;
   } | null>(null);
 
-  const { data: retrievedLists, isLoading, isError } = useQuery(trpc.getListsWithItems.queryOptions(undefined, {
+  const { data: retrievedLists, isLoading, isError } = useQuery(trpc.list.getListsWithItems.queryOptions(undefined, {
     refetchOnMount: true,
     refetchOnWindowFocus: true,
   }));
@@ -31,11 +31,11 @@ const ListsContainer = () => {
   const lists = retrievedLists ?? [];
 
   const reorderListsMutation = useMutation(
-    trpc.reorderLists.mutationOptions()
+    trpc.list.reorderLists.mutationOptions()
   );
 
   const reorderListItemsMutation = useMutation(
-    trpc.reorderListItems.mutationOptions()
+    trpc.listItem.reorderListItems.mutationOptions()
   );
 
   const reorderListsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -64,7 +64,7 @@ const ListsContainer = () => {
       enqueue(async () => {
         // Server save runs through queue
         await reorderListsMutation.mutateAsync({
-          lists: latestLists.map((list, index) => ({
+          lists: latestLists.map((list: List, index: number) => ({
             id: list.id,
             order: index
           }))
@@ -94,8 +94,8 @@ const ListsContainer = () => {
       enqueue(async () => {
         // Server save runs through queue
         await reorderListItemsMutation.mutateAsync({
-          items: latestLists.flatMap((list) =>
-            list.listItems.map((item, index) => ({
+          items: latestLists.flatMap((list: List) =>
+            list.listItems.map((item: ListItem, index: number) => ({
               id: item.id,
               listId: list.id,
               order: index
@@ -185,11 +185,11 @@ const ListsContainer = () => {
           queryClient.setQueryData<Lists>(queryKey, (currentLists) => {
             if (!currentLists) return currentLists;
             const sourceIndex = currentLists.findIndex(
-              (list) => list.id === sourceListId
+              (list: List) => list.id === sourceListId
             );
 
             const targetIndex = currentLists.findIndex(
-              (list) => list.id === targetListId
+              (list: List) => list.id === targetListId
             );
 
             if (sourceIndex === -1 || targetIndex === -1) return currentLists;
@@ -214,15 +214,15 @@ const ListsContainer = () => {
 
         queryClient.setQueryData<Lists>(queryKey, (currentLists) => {
           if (!currentLists) return currentLists;
-          const sourceListIndex = currentLists.findIndex((list) =>
-            list.listItems.some((item) => item.id === draggedItemId)
+          const sourceListIndex = currentLists.findIndex((list: List) =>
+            list.listItems.some((item: ListItem) => item.id === draggedItemId)
           );
 
           if (sourceListIndex === -1) return currentLists;
 
           const sourceList = currentLists[sourceListIndex];
           const sourceItemIndex = sourceList.listItems.findIndex(
-            (item) => item.id === draggedItemId
+            (item: ListItem) => item.id === draggedItemId
           );
 
           if (sourceItemIndex === -1) return currentLists;
@@ -233,14 +233,14 @@ const ListsContainer = () => {
           if (target.type === "list-item") {
             const targetItemId = String(target.id).replace("list-item-", "");
 
-            targetListIndex = currentLists.findIndex((list) =>
-              list.listItems.some((item) => item.id === targetItemId)
+            targetListIndex = currentLists.findIndex((list: List) =>
+              list.listItems.some((item: ListItem) => item.id === targetItemId)
             );
 
             if (targetListIndex === -1) return currentLists;
 
             targetItemIndex = currentLists[targetListIndex].listItems.findIndex(
-              (item) => item.id === targetItemId
+              (item: ListItem) => item.id === targetItemId
             );
           }
 
@@ -265,7 +265,7 @@ const ListsContainer = () => {
             return currentLists;
           }
 
-          const nextLists = currentLists.map((list) => ({
+          const nextLists = currentLists.map((list: List) => ({
             ...list,
             listItems: [...list.listItems],
           }));
@@ -290,13 +290,13 @@ const ListsContainer = () => {
           });
 
           nextLists[sourceListIndex].listItems =
-            nextLists[sourceListIndex].listItems.map((item, index) => ({
+            nextLists[sourceListIndex].listItems.map((item: ListItem, index: number) => ({
               ...item,
               order: index,
             }));
 
           nextLists[targetListIndex].listItems =
-            nextLists[targetListIndex].listItems.map((item, index) => ({
+            nextLists[targetListIndex].listItems.map((item: ListItem, index: number) => ({
               ...item,
               order: index,
             }));
@@ -323,7 +323,7 @@ const ListsContainer = () => {
               }}
             >
               {
-                list.listItems?.map((item: OptimisticListItem, index) =>
+                list.listItems?.map((item: OptimisticListItem, index: number) =>
                   <ListItemComponent
                     key={item.id}
                     listItem={item}

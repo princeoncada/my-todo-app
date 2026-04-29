@@ -18,6 +18,7 @@ import { Separator } from "../ui/separator";
 import { List, ListItem, Lists, OptimisticListItem } from "./types";
 import ListMenu from "./ListMenu";
 import { useMediaQuery } from "usehooks-ts";
+import { Textarea } from "../ui/textarea";
 
 interface ListComponentProps {
   children: ReactNode;
@@ -152,6 +153,7 @@ const ListComponent = ({
         createdAt: new Date(),
         updatedAt: new Date(),
         isOptimistic: true,
+        notes: ""
       };
 
       queryClient.setQueryData(queryKey, (old: Lists | undefined) =>
@@ -213,7 +215,7 @@ const ListComponent = ({
     );
   const shouldHighlightList = isListDropTarget || isItemInsideThisListDropTarget;
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   function handleViewListItemAdder() {
     if (inputRef.current) {
@@ -278,14 +280,14 @@ const ListComponent = ({
               <div className="flex items-start gap-3 px-4">
                 <div
                   ref={handleRef}
-                  className="mt-1 shrink-0 cursor-grab active:cursor-grabbing touch-none select-none p-2 -m-2"
+                  className="-mt-1 shrink-0 cursor-grab active:cursor-grabbing touch-none select-none p-2 -m-2"
                 >
                   <GripVertical />
                 </div>
 
                 <div className="flex-1 min-w-0">
                   <ListInlineEdit
-                    className="block truncate w-full font-semibold leading-7! text-xl!"
+                    className="block wrap-break-word font-semibold leading-7! text-xl!"
                     inputClassName=""
                     displayClassName=""
                     id={list.id}
@@ -311,60 +313,77 @@ const ListComponent = ({
               <div className={cn("border border-zinc-100 border-dashed rounded-lg duration-200 mx-2 my-1.5 flex-col", {
                 "border-zinc-400": shouldHighlightList
               })}>
-                <div className={cn("text-lg px-2 max-h-12 opacity-100 mt-1 rounded-md flex items-center gap-2 overflow-hidden transition-[max-height,opacity,margin] duration-300 ease-in-out", {
-                  "max-h-0 opacity-0 mt-0": !viewListItemAdder
-                })}>
-                  <div
-                    className="cursor-grab active:cursor-grabbing touch-none select-none p-2 -m-2 -mr-1 shrink-0 text-gray-400"
-                  >
-                    <GripVertical className="w-4 h-4" />
-                  </div>
-                  <Checkbox
-                    className="w-5 h-5 hover:cursor-pointer"
-                    disabled={true}
-                  />
-                  <InputGroup className="focus-visible:ring-0 border-0 -mr-0.5">
-                    <InputGroupInput
-                      className="truncate w-full text-lg! h-7.5 leading-0! pl-0!"
-                      placeholder="Add new item here..."
-                      ref={inputRef}
-                      value={createListItemName}
-                      onChange={(e) => {
-                        setCreateListItemName(e.target.value);
-                      }}
-                      onBlur={() => {
-                        setCreateListItemName('');
-                        setViewListItemAdder(false);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          handleCreateItem();
-                        }
 
-                        if (e.key === "Escape") {
-                          setCreateListItemName('');
-                          setViewListItemAdder(false);
-                        }
-                      }}
-                    />
-                    <InputGroupAddon align="inline-end">
-                      <InputGroupButton
-                        size="icon-xs"
-                        variant="ghost"
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          handleCreateItem();
-                        }}
-                      >
-                        <Plus className="scale-70 text-zinc-700" />
-                      </InputGroupButton>
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
                 <ScrollArea
                   ref={dropRef}
                   className={cn("h-60! min-h-45 w-full touch-pan-y relative")}
                 >
+                  <div
+                    className={cn(
+                      `flex items-start max-h-12 gap-1.5 pl-px py-px rounded-md pr-2 hover:bg-gray-50 hover:border-gray-100 overflow-hidden transition-[max-height,opacity,transform,padding,scale,shadow] duration-200 ease-in-out group`, {
+                      "max-h-0 opacity-0 py-0": !viewListItemAdder,
+                    }
+                    )}
+                  >
+                    <div
+                      className="touch-none select-none p-1.5 -mt-px -mr-1 shrink-0 text-gray-400"
+                    >
+                      <GripVertical className="w-3.5 h-3.5" />
+                    </div>
+
+                    <Checkbox
+                      className="w-4 h-4 shrink-0 hover:cursor-default! my-1"
+                      disabled={true}
+                    />
+
+                    <div className="min-w-0 flex-1">
+                      <Textarea
+                        ref={inputRef}
+                        value={createListItemName}
+                        placeholder="Add new item here..."
+                        className="rounded-md flex-1 min-h-5  resize-none overflow-hidden border-0 bg-transparent p-0 text-sm leading-5.5 shadow-none focus-visible:ring-0 break-normal!"
+                        onChange={(e) => {
+                          setCreateListItemName(e.target.value);
+                        }}
+                        onBlur={() => {
+                          if (createListItemName.trim()) {
+                            handleCreateItem();
+                          }
+
+                          setCreateListItemName("");
+                          setViewListItemAdder(false);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+
+                            if (!createListItemName.trim()) return;
+
+                            handleCreateItem();
+                          }
+
+                          if (e.key === "Escape") {
+                            setCreateListItemName("");
+                            setViewListItemAdder(false);
+                          }
+                        }}
+                      />
+                    </div>
+                    <Button
+                      className="scale-80 shrink-0 self-start opacity-100 duration-100 transition-all"
+                      variant="ghost"
+                      size="icon-xs"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+
+                        if (!createListItemName.trim()) return;
+
+                        handleCreateItem();
+                      }}
+                    >
+                      <Plus />
+                    </Button>
+                  </div>
                   {children}
                   {totalItems == 0 &&
                     <div className="w-0 h-0 absolute flex items-center justify-center left-1/2 top-1/2">

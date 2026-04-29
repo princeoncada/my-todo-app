@@ -42,7 +42,7 @@ const Dashboard = () => {
               <div className="w-full flex justify-between items-end h-12">
                 <div className="flex gap-3 items-end">
                   <UserAccountNav logout={handleLogout} />
-                  <h1 className="text-[28px] md:text-[32px] font-bold text-gray-900">
+                  <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                     Your Todo Lists
                   </h1>
                 </div>

@@ -49,7 +49,6 @@ function SortableViewRow({
       className={cn(
         "group/view-row flex items-center gap-0.5 rounded-md border border-transparent pr-0.5 transition",
         "hover:border-zinc-200 hover:bg-zinc-50",
-        isSelected && "border-zinc-300 bg-zinc-100",
         isDragging && "scale-[1.01] border-zinc-300 bg-zinc-100 shadow-sm"
       )}
     >
@@ -109,10 +108,10 @@ export default function ViewsSidebarPreview() {
           type="button"
           onClick={() => setSelectedViewId("all-lists")}
           className={cn(
-            "flex w-full items-center justify-between rounded-md border px-2 py-1.5 text-left text-xs transition",
+            "flex w-full items-center justify-between rounded-md border hover:bg-zinc-50 px-2 py-1.5 text-left text-xs transition",
             selectedViewId === "all-lists"
-              ? "border-zinc-300 bg-zinc-100 text-zinc-900"
-              : "border-zinc-200 text-zinc-700 hover:bg-zinc-50"
+              ? "border-zinc-300 text-zinc-900"
+              : "border-zinc-200 text-zinc-700"
           )}
         >
           <span className="inline-flex items-center gap-1.5">

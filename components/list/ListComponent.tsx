@@ -65,11 +65,11 @@ const ListComponent = ({
   const [newItemId, setNewItemId] = useState(() => crypto.randomUUID());
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const queryKey = trpc.getListsWithItems.queryKey();
+  const queryKey = trpc.list.getListsWithItems.queryKey();
 
-  const { mutate: renameList, isPending: renameListPending } = useMutation(trpc.renameList.mutationOptions({
+  const { mutate: renameList, isPending: renameListPending } = useMutation(trpc.list.renameList.mutationOptions({
     async onMutate(variables) {
-      const queryKey = trpc.getListsWithItems.queryKey();
+      const queryKey = trpc.list.getListsWithItems.queryKey();
       await queryClient.cancelQueries({ queryKey });
       const previousListsWithItems = queryClient.getQueryData<Array<List>>(queryKey);
 
@@ -86,7 +86,7 @@ const ListComponent = ({
       return { previousListsWithItems };
     },
     onError(_error, _variables, context) {
-      const queryKey = trpc.getListsWithItems.queryKey();
+      const queryKey = trpc.list.getListsWithItems.queryKey();
 
       if (context?.previousListsWithItems) {
         queryClient.setQueryData(queryKey, context.previousListsWithItems);
@@ -94,19 +94,19 @@ const ListComponent = ({
     },
   }));
 
-  const deleteListMutation = useMutation(trpc.deleteList.mutationOptions());
+  const deleteListMutation = useMutation(trpc.list.deleteList.mutationOptions());
 
   const deleteList = (listId: string) => {
     // Snapshot before optimistic update
     const deletedList = queryClient.getQueryData<Lists>(queryKey)?.find(
-      (list) => list.id === listId
+      (list: List) => list.id === listId
     );
 
     // Optimistically remove list from cache immediately
     queryClient.setQueryData<Lists>(queryKey,
       (old) => {
         if (!old) return old;
-        return old.filter((list) => list.id !== listId);
+        return old.filter((list: List) => list.id !== listId);
       }
     );
 
@@ -121,7 +121,7 @@ const ListComponent = ({
             (old) => {
               if (!old || !deletedList) return old;
 
-              const alreadyRestored = old.some((list) => list.id === listId);
+              const alreadyRestored = old.some((list: List) => list.id === listId);
 
               if (alreadyRestored) return old;
 
@@ -135,9 +135,9 @@ const ListComponent = ({
     );
   };
 
-  const { mutate: createListItem } = useMutation(trpc.createListItem.mutationOptions({
+  const { mutate: createListItem } = useMutation(trpc.listItem.createListItem.mutationOptions({
     async onMutate(variables) {
-      const queryKey = trpc.getListsWithItems.queryKey();
+      const queryKey = trpc.list.getListsWithItems.queryKey();
 
       await queryClient.cancelQueries({ queryKey });
 
@@ -148,7 +148,7 @@ const ListComponent = ({
         name: variables.name,
         listId: variables.listId,
         order: list.listItems && list.listItems.length > 0
-          ? Math.max(...list.listItems.map((item) => item.order)) + 1
+          ? Math.max(...list.listItems.map((item: ListItem) => item.order)) + 1
           : 0,
         completed: false,
         createdAt: new Date(),
@@ -159,7 +159,7 @@ const ListComponent = ({
 
       queryClient.setQueryData(queryKey, (old: Lists | undefined) =>
         old
-          ? old.map((currentList) =>
+          ? old.map((currentList: List) =>
             currentList.id === variables.listId
               ? {
                 ...currentList,
@@ -175,7 +175,7 @@ const ListComponent = ({
       return { previousListsWithItems };
     },
     onError(_errors, _variables, context) {
-      const queryKey = trpc.getListsWithItems.queryKey();
+      const queryKey = trpc.list.getListsWithItems.queryKey();
 
       if (context?.previousListsWithItems) {
         queryClient.setQueryData(queryKey, context.previousListsWithItems);
@@ -206,13 +206,13 @@ const ListComponent = ({
     accept: "list-item",
   });
 
-  const completedItems = list.listItems.filter((item) => item.completed === true).length;
+  const completedItems = list.listItems.filter((item: ListItem) => item.completed === true).length;
   const totalItems = list.listItems.length;
   const listDropId = `list-drop-${list.id}`;
   const isListDropTarget = activeDropTarget?.id === listDropId;
   const isItemInsideThisListDropTarget = activeDropTarget?.type === "list-item" &&
     list.listItems.some(
-      (item) => `list-item-${item.id}` === activeDropTarget.id
+      (item: ListItem) => `list-item-${item.id}` === activeDropTarget.id
     );
   const shouldHighlightList = isListDropTarget || isItemInsideThisListDropTarget;
 

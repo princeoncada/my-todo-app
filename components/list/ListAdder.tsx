@@ -39,6 +39,7 @@ const ListAdder = () => {
           : 0,
         createdAt: new Date(),
         updatedAt: new Date(),
+        listTags: [],
         listItems: [],
         isOptimistic: true
       };

@@ -20,9 +20,9 @@ const ListAdder = () => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  const { mutate: createList } = useMutation(trpc.createList.mutationOptions({
+  const { mutate: createList } = useMutation(trpc.list.createList.mutationOptions({
     async onMutate(variables) {
-      const queryKey = trpc.getListsWithItems.queryKey();
+      const queryKey = trpc.list.getListsWithItems.queryKey();
 
       await queryClient.cancelQueries({ queryKey });
 
@@ -53,7 +53,7 @@ const ListAdder = () => {
     onError(_error, _variables, context) {
       if (context?.previousLists) {
         queryClient.setQueryData(
-          trpc.getListsWithItems.queryKey(),
+          trpc.list.getListsWithItems.queryKey(),
           context?.previousLists
         );
       }

@@ -57,11 +57,11 @@ const Dashboard = () => {
           <ListsContainer />
         </main>
 
-        <aside className="hidden lg:block w-64 shrink-0 py-11">
+        {/* <aside className="hidden lg:block w-64 shrink-0 py-11">
           <div className="sticky top-4">
             <ViewsSidebarPreview />
           </div>
-        </aside>
+        </aside> */}
       </div>
     </MaxWidthWrapper>
   );

@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../app/generated/prisma"
@@ -12,28 +7,126 @@ datasource db {
   provider = "postgresql"
 }
 
+enum TagColor {
+  gray
+  red
+  orange
+  yellow
+  green
+  blue
+  purple
+  pink
+}
+
+enum ViewMatchMode {
+  ALL
+  ANY
+}
+
 model List {
-  id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  name  String
-  order Int
-
-  userId String @db.Uuid()
-
-  listItems ListItem[]
-
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  order     Int
+  userId    String   @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  listItems ListItem[]
+  listTags  ListTag[]
+  viewLists ViewList[]
+
+  @@index([userId])
+  @@index([userId, order])
 }
 
 model ListItem {
-  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
+  completed Boolean  @default(false)
   order     Int
-  completed Boolean @default(false)
-
-  listId     String @db.Uuid()
-  parentList List   @relation(fields: [listId], references: [id])
-
+  notes     String?
+  listId    String   @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  parentList List @relation(fields: [listId], references: [id], onDelete: Cascade)
+
+  @@index([listId])
+  @@index([listId, order])
+}
+
+model Tag {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  color     TagColor @default(gray)
+  userId    String   @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  listTags ListTag[]
+  viewTags ViewTag[]
+
+  @@index([userId])
+  @@index([userId, name])
+}
+
+model ListTag {
+  listId String @db.Uuid
+  tagId  String @db.Uuid
+
+  list List @relation(fields: [listId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([listId, tagId])
+  @@index([tagId])
+}
+
+model View {
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  order     Int
+  userId    String        @db.Uuid
+  type      ViewType      @default(CUSTOM)
+  isDefault Boolean       @default(false)
+  matchMode ViewMatchMode @default(ALL)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  viewLists ViewList[]
+  viewTags  ViewTag[]
+
+  @@unique([userId, name])
+  @@index([userId])
+  @@index([userId, order])
+  @@index([userId, type])
+}
+
+model ViewList {
+  viewId String @db.Uuid
+  listId String @db.Uuid
+  order  Int
+
+  view View @relation(fields: [viewId], references: [id], onDelete: Cascade)
+  list List @relation(fields: [listId], references: [id], onDelete: Cascade)
+
+  @@id([viewId, listId])
+  @@index([viewId, order])
+  @@index([listId])
+}
+
+model ViewTag {
+  viewId String @db.Uuid
+  tagId  String @db.Uuid
+
+  view View @relation(fields: [viewId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([viewId, tagId])
+  @@index([tagId])
+}
+
+enum ViewType {
+  ALL_LISTS
+  UNTAGGED
+  CUSTOM
 }

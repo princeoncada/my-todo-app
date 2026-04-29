@@ -19,6 +19,7 @@ import { List, ListItem, Lists, OptimisticListItem } from "./types";
 import ListMenu from "./ListMenu";
 import { useMediaQuery } from "usehooks-ts";
 import { Textarea } from "../ui/textarea";
+import ListTagPicker from "./ListTagPicker";
 
 interface ListComponentProps {
   children: ReactNode;
@@ -308,7 +309,11 @@ const ListComponent = ({
                 />
               </div>
 
-              <Separator className="mt-4 mb-0.5" />
+              <div className="my-2 mx-13 mr-14">
+                <ListTagPicker />
+              </div>
+
+              <Separator />
 
               <div className={cn("border border-zinc-100 border-dashed rounded-lg duration-200 mx-2 my-1.5 flex-col", {
                 "border-zinc-400": shouldHighlightList

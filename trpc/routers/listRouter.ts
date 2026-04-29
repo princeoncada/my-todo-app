@@ -47,6 +47,11 @@ export const listRouter = createTRPCRouter({
         order: 'asc'
       },
       include: {
+        listTags: {
+          include: {
+            tag: true,
+          },
+        },
         listItems: {
           orderBy: {
             order: 'asc'

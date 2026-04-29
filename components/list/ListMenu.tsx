@@ -18,7 +18,7 @@ const ListMenu = ({
       <DropdownMenuTrigger
         asChild
       >
-        <Button size="icon-lg" variant="ghost" aria-label="List options">
+        <Button size="icon-sm" variant="ghost" aria-label="List options">
           <Ellipsis />
         </Button>
       </DropdownMenuTrigger>

@@ -310,7 +310,7 @@ const ListComponent = ({
               </div>
 
               <div className="my-2 mx-13 mr-14">
-                <ListTagPicker />
+                <ListTagPicker listId={list.id} selectedListTags={list.listTags} />
               </div>
 
               <Separator />

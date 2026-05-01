@@ -4,18 +4,25 @@ import { useTRPC } from "@/trpc/client";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { GripVertical, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import ListInlineEdit from "./ListInlineEdit";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-import { List, ListItem, Lists } from "./types";
+import { CurrentView, List, ListItem } from "./types";
 import { cn } from "@/lib/utils";
+import { syncProjectedCurrentView } from "@/lib/dashboard-cache";
+import { measureCacheWrite, useRenderMeasure } from "@/lib/optimistic-debug";
+import type { OptimisticScope } from "@/hooks/useOptimisticSync";
 
 
 interface ListItemComponentProps {
   listItem: ListItem;
   index: number;
-  enqueue: (task: () => Promise<void>, onQueueEmpty?: (() => void) | undefined) => Promise<void>;
+  enqueue: (
+    scope: OptimisticScope,
+    task: () => Promise<void>,
+    options?: { label?: string; rollback?: () => void }
+  ) => Promise<void>;
   shouldRevealOnMount?: boolean;
   onRevealComplete?: () => void;
 }
@@ -27,6 +34,12 @@ const ListItemComponent = ({
   shouldRevealOnMount,
   onRevealComplete
 }: ListItemComponentProps) => {
+
+  useRenderMeasure(`ListItemComponent:${listItem.id}`);
+
+  const itemIsOnlyInBrowser = Boolean(
+    "isOptimistic" in listItem && listItem.isOptimistic
+  );
 
   const [itemDeleted, setItemDeleted] = useState<boolean>(false);
   const [itemRevealed, setItemRevealed] = useState(!shouldRevealOnMount);
@@ -44,32 +57,43 @@ const ListItemComponent = ({
 
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const queryKey = trpc.list.getListsWithItems.queryKey();
+  const viewsQueryKey = trpc.view.getAll.queryKey();
+  const queryKey = trpc.view.getAllListsWithItems.queryKey();
+  const currentViewQueryKey = trpc.view.getCurrentViewListsWithItems.queryKey();
+  const dashboardKeys = {
+    views: viewsQueryKey,
+    allLists: queryKey,
+    currentView: currentViewQueryKey,
+  };
 
   const { mutate: renameListItem, isPending: renameListItemPending } = useMutation(trpc.listItem.renameListItem.mutationOptions({
     async onMutate(variables) {
-      const queryKey = trpc.list.getListsWithItems.queryKey();
       await queryClient.cancelQueries({ queryKey });
-      const previousListsWithItems = queryClient.getQueryData<Lists>(queryKey);
+      const previousListsWithItems = queryClient.getQueryData<CurrentView>(queryKey);
 
-      queryClient.setQueryData<Lists>(queryKey, (old) => {
+      queryClient.setQueryData<CurrentView>(queryKey, (old) => {
         if (!old) return old;
 
-        return old.map((list: List) => ({
-          ...list,
-          listItems: list.listItems.map((item: ListItem) =>
-            item.id === variables.id
-              ? { ...item, name: variables.name }
+        const nextValue = {
+          ...old,
+          lists: old.lists.map((list: List) => ({
+            ...list,
+            listItems: list.listItems.map((item: ListItem) =>
+              item.id === variables.id
+                ? { ...item, name: variables.name }
               : item
-          ),
-        }));
+            ),
+          })),
+        };
+
+        measureCacheWrite("item.rename", nextValue);
+        return nextValue;
       });
+      syncProjectedCurrentView(queryClient, dashboardKeys);
 
       return { previousListsWithItems };
     },
     onError(_error, _variables, context) {
-      const queryKey = trpc.list.getListsWithItems.queryKey();
-
       if (context?.previousListsWithItems) {
         queryClient.setQueryData(queryKey, context.previousListsWithItems);
       }
@@ -80,7 +104,7 @@ const ListItemComponent = ({
 
   const deleteItem = (itemId: string) => {
     // Find the parent list before deleting
-    const parentList = queryClient.getQueryData<Lists>(queryKey)?.find(
+    const parentList = queryClient.getQueryData<CurrentView>(queryKey)?.lists.find(
       (list: List) => list.listItems.some(
         (item: ListItem) => item.id === itemId)
     );
@@ -100,24 +124,31 @@ const ListItemComponent = ({
 
     // Optimistically remove listItem from cache immediately
     setTimeout(() => {
-      queryClient.setQueryData<Lists>(queryKey,
+      queryClient.setQueryData<CurrentView>(queryKey,
         (old) => {
           if (!old) return old;
-          return old.map((list: List) => {
-            // Only updated the parent list
-            if (list.id !== parentList.id) return list;
+          return {
+            ...old,
+            lists: old.lists.map((list: List) => {
+              // Only updated the parent list
+              if (list.id !== parentList.id) return list;
 
-            return {
-              ...list,
-              listItems: list.listItems.filter((item: ListItem) => item.id !== itemId)
-            };
-          });
+              return {
+                ...list,
+                listItems: list.listItems.filter((item: ListItem) => item.id !== itemId)
+              };
+            }),
+          };
         }
       );
+      syncProjectedCurrentView(queryClient, dashboardKeys);
     }, 200);
 
     enqueue(
+      "item-edits",
       async () => {
+        if (itemIsOnlyInBrowser) return;
+
         try {
           // Actual server request runs in order
           await deleteItemMutation.mutateAsync({ id: itemId });
@@ -125,62 +156,71 @@ const ListItemComponent = ({
           // Rollback UI animation state
           setItemDeleted(false);
 
-          queryClient.setQueryData<Lists>(queryKey,
+          queryClient.setQueryData<CurrentView>(queryKey,
             (old) => {
               if (!old || !deletedItem) return old;
 
-              return old.map((list: List) => {
-                // Only restore into original parent list
-                if (list.id !== parentList.id) return list;
+              return {
+                ...old,
+                lists: old.lists.map((list: List) => {
+                  // Only restore into original parent list
+                  if (list.id !== parentList.id) return list;
 
-                const alreadyRestored = list.listItems.some(
-                  (item: ListItem) => item.id === itemId
-                );
+                  const alreadyRestored = list.listItems.some(
+                    (item: ListItem) => item.id === itemId
+                  );
 
-                if (alreadyRestored) return list;
+                  if (alreadyRestored) return list;
 
-                const restoredItems = [...list.listItems];
+                  const restoredItems = [...list.listItems];
 
-                // Put item back in original position
-                restoredItems.splice(deletedItemIndex, 0, deletedItem);
+                  // Put item back in original position
+                  restoredItems.splice(deletedItemIndex, 0, deletedItem);
 
-                return {
-                  ...list,
-                  listItems: restoredItems.sort((a, b) => a.order - b.order)
-                };
-              });
+                  return {
+                    ...list,
+                    listItems: restoredItems.sort((a, b) => a.order - b.order)
+                  };
+                }),
+              };
             });
+          syncProjectedCurrentView(queryClient, dashboardKeys);
 
           throw error;
         }
-      }
+      },
+      { label: "listItem.deleteListItem" }
     );
   };
 
   const { mutate: setCompletion } = useMutation(trpc.listItem.setCompletionListItem.mutationOptions({
     async onMutate(variables) {
-      const queryKey = trpc.list.getListsWithItems.queryKey();
       await queryClient.cancelQueries({ queryKey });
-      const previousListsWithItems = queryClient.getQueryData<Lists>(queryKey);
+      const previousListsWithItems = queryClient.getQueryData<CurrentView>(queryKey);
 
-      queryClient.setQueryData<Lists>(queryKey, (old) => {
+      queryClient.setQueryData<CurrentView>(queryKey, (old) => {
         if (!old) return old;
 
-        return old.map((list: List) => ({
-          ...list,
-          listItems: list.listItems.map((item: ListItem) =>
-            item.id === variables.id
-              ? { ...item, completed: variables.completed }
+        const nextValue = {
+          ...old,
+          lists: old.lists.map((list: List) => ({
+            ...list,
+            listItems: list.listItems.map((item: ListItem) =>
+              item.id === variables.id
+                ? { ...item, completed: variables.completed }
               : item
-          ),
-        }));
+            ),
+          })),
+        };
+
+        measureCacheWrite("item.complete", nextValue);
+        return nextValue;
       });
+      syncProjectedCurrentView(queryClient, dashboardKeys);
 
       return { previousListsWithItems };
     },
     onError(_error, _variables, context) {
-      const queryKey = trpc.list.getListsWithItems.queryKey();
-
       if (context?.previousListsWithItems) {
         queryClient.setQueryData(queryKey, context.previousListsWithItems);
       }
@@ -255,4 +295,4 @@ const ListItemComponent = ({
   );
 };
 
-export default ListItemComponent;
+export default memo(ListItemComponent);

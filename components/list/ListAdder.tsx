@@ -7,9 +7,10 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { List, OptimisticList } from "./types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { CurrentView, OptimisticList } from "./types";
 import { Plus } from "lucide-react";
+import { selectedViewFromCache, syncProjectedCurrentView } from "@/lib/dashboard-cache";
 
 
 const ListAdder = () => {
@@ -19,52 +20,104 @@ const ListAdder = () => {
 
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+  const viewsQueryKey = trpc.view.getAll.queryKey();
+  const queryKey = trpc.view.getAllListsWithItems.queryKey();
+  const currentViewQueryKey = trpc.view.getCurrentViewListsWithItems.queryKey();
+  const dashboardKeys = {
+    views: viewsQueryKey,
+    allLists: queryKey,
+    currentView: currentViewQueryKey,
+  };
 
-  const { mutate: createList } = useMutation(trpc.list.createList.mutationOptions({
+  const { data: views } = useQuery(trpc.view.getAll.queryOptions());
+  const selectedView = selectedViewFromCache(views);
+
+  const { mutate: createList, isPending: createListPending } = useMutation(trpc.list.createList.mutationOptions({
     async onMutate(variables) {
-      const queryKey = trpc.list.getListsWithItems.queryKey();
-
       await queryClient.cancelQueries({ queryKey });
 
-      const previousLists = queryClient.getQueryData<List[]>(queryKey);
+      const previousCurrentView = queryClient.getQueryData<CurrentView>(queryKey);
 
-      if (!previousLists) return { previousLists };
+      if (!previousCurrentView) return { previousCurrentView };
+
+      const activeView = selectedViewFromCache(queryClient.getQueryData(viewsQueryKey));
+      const selectedViewTags = activeView?.viewTags ?? [];
+      const optimisticListTags = selectedViewTags.map((viewTag) => ({
+        listId: variables.id,
+        tagId: viewTag.tagId,
+        tag: viewTag.tag,
+      }));
 
       const optimisticList: OptimisticList = {
         id: variables.id,
         userId: "optimistic",
         name: variables.name,
-        order: previousLists && previousLists.length > 0
-          ? Math.max(...previousLists.map((list) => list.order)) + 1
+        order: previousCurrentView.lists.length > 0
+          ? Math.min(...previousCurrentView.lists.map((list) => list.order)) - 1
           : 0,
         createdAt: new Date(),
         updatedAt: new Date(),
-        listTags: [],
+        listTags: activeView?.type === "CUSTOM"
+          ? optimisticListTags
+          : [],
         listItems: [],
         isOptimistic: true
       };
 
-      queryClient.setQueryData(queryKey, (old = []) => ([
-        optimisticList,
-        ...old
-      ]));
+      queryClient.setQueryData<CurrentView>(queryKey, (current) =>
+        current
+          ? {
+            ...current,
+            lists: [
+              optimisticList,
+              ...current.lists,
+            ],
+          }
+          : current
+      );
+      syncProjectedCurrentView(queryClient, dashboardKeys);
 
-      return { previousLists };
+      return { previousCurrentView };
+    },
+    onSuccess(createdList, variables) {
+      queryClient.setQueryData<CurrentView>(queryKey, (current) =>
+        current
+          ? {
+            ...current,
+            lists: current.lists.map((list) =>
+              list.id === variables.id
+                ? {
+                  ...createdList,
+                  // Items can be added while a new list is still saving. Keep them instead of wiping the local work.
+                  listItems: list.listItems,
+                  listTags: createdList.listTags.length > 0
+                    ? createdList.listTags
+                    : list.listTags,
+                }
+                : list
+            ),
+          }
+          : current
+      );
+      syncProjectedCurrentView(queryClient, dashboardKeys);
     },
     onError(_error, _variables, context) {
-      if (context?.previousLists) {
-        queryClient.setQueryData(
-          trpc.list.getListsWithItems.queryKey(),
-          context?.previousLists
-        );
+      if (context?.previousCurrentView) {
+        queryClient.setQueryData(queryKey, context.previousCurrentView);
       }
-    }
+      syncProjectedCurrentView(queryClient, dashboardKeys);
+    },
   }));
 
   const handleCreateList = () => {
+    const name = createListName.trim();
+
+    if (!name || createListPending) return;
+
     createList({
       id: crypto.randomUUID(),
-      name: createListName.trim()
+      name,
+      viewId: selectedView?.id,
     });
     setCreateListName('');
   };
@@ -124,7 +177,6 @@ const ListAdder = () => {
               value={createListName}
               onChange={(e) => { setCreateListName(e.target.value); }}
               onKeyDown={(e) => {
-                console.log(e.key);
                 if (e.key === "Enter") {
                   handleCreateList();
                   setDialogOpen(false);
@@ -143,7 +195,7 @@ const ListAdder = () => {
               handleCreateList();
               setDialogOpen(false);
             }}
-            disabled={createListName.length === 0}
+            disabled={createListName.trim().length === 0 || createListPending}
           >Create List
           </Button>
         </DialogFooter>

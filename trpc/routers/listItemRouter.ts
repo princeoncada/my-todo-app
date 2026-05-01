@@ -2,6 +2,7 @@ import z from "zod";
 import { createTRPCRouter, protectedProcedure } from "../init";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/lib/db";
+import { Prisma } from "@/app/generated/prisma/client";
 
 /**
  * listItemRouter
@@ -160,6 +161,10 @@ export const listItemRouter = createTRPCRouter({
       })
     )
   })).mutation(async ({ ctx: { userId }, input }) => {
+    if (input.items.length === 0) {
+      return { success: true };
+    }
+
     const itemIds = input.items.map((item) => item.id)
 
     const ownedItems = await db.listItem.findMany({
@@ -179,17 +184,17 @@ export const listItemRouter = createTRPCRouter({
       });
     }
 
-    await db.$transaction(
-      input.items.map((item) =>
-        db.listItem.update({
-          where: { id: item.id },
-          data: {
-            listId: item.listId,
-            order: item.order,
-          },
-        })
-      )
-    );
+    // Save the whole order in one statement. Many small updates can expire the transaction.
+    await db.$executeRaw`
+      UPDATE "ListItem" AS item
+      SET
+        "listId" = data."listId",
+        "order" = data."order"
+      FROM (VALUES ${Prisma.join(
+        input.items.map((item) => Prisma.sql`(${item.id}::uuid, ${item.listId}::uuid, ${item.order}::int)`)
+      )}) AS data("id", "listId", "order")
+      WHERE item."id" = data."id"
+    `;
 
     return { success: true };
   })

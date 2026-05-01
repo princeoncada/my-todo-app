@@ -1,6 +1,8 @@
 import { RouterOutputs } from "@/lib/trpc";
 
-export type Lists = RouterOutputs['list']['getListsWithItems']
+export type CurrentView = RouterOutputs['view']['getCurrentViewListsWithItems']
+export type AllListsView = RouterOutputs['view']['getAllListsWithItems']
+export type Lists = AllListsView['lists']
 export type List = Lists[number]
 export type ListItems = List['listItems']
 export type ListItem = ListItems[number]

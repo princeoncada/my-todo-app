@@ -1,13 +1,16 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { syncProjectedCurrentView } from "@/lib/dashboard-cache";
+import { measureCacheWrite, useRenderMeasure } from "@/lib/optimistic-debug";
+import type { OptimisticScope } from "@/hooks/useOptimisticSync";
 import { useTRPC } from "@/trpc/client";
 import { useDroppable } from "@dnd-kit/react";
 import { useSortable } from '@dnd-kit/react/sortable';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Calendar1, GripVertical, Plus, StickyNote } from "lucide-react";
 import { motion } from "motion/react";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { memo, ReactNode, useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
@@ -17,13 +20,58 @@ import { Textarea } from "../ui/textarea";
 import ListInlineEdit from "./ListInlineEdit";
 import ListMenu from "./ListMenu";
 import ListTagPicker from "./ListTagPicker";
-import { List, ListItem, Lists, OptimisticListItem } from "./types";
+import { CurrentView, List, ListItem, OptimisticListItem } from "./types";
+
+function listIsOptimistic(list: List) {
+  return Boolean("isOptimistic" in list && list.isOptimistic);
+}
+
+function itemIsAlreadyInCache(currentView: CurrentView | undefined, itemId: string) {
+  return Boolean(
+    currentView?.lists.some((currentList) =>
+      currentList.listItems.some((item) => item.id === itemId)
+    )
+  );
+}
+
+function removeItemFromCache(currentView: CurrentView | undefined, itemId: string) {
+  if (!currentView) return currentView;
+
+  return {
+    ...currentView,
+    lists: currentView.lists.map((currentList) => ({
+      ...currentList,
+      listItems: currentList.listItems.filter((item) => item.id !== itemId),
+    })),
+  };
+}
+
+async function waitForSavedList(
+  getCurrentView: () => CurrentView | undefined,
+  listId: string
+) {
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    const currentList = getCurrentView()?.lists.find((list) => list.id === listId);
+
+    if (currentList && !listIsOptimistic(currentList)) {
+      return true;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 150));
+  }
+
+  return false;
+}
 
 interface ListComponentProps {
   children: ReactNode;
   listValues: List;
   index: number;
-  enqueue: (task: () => Promise<void>, onQueueEmpty?: (() => void) | undefined) => Promise<void>;
+  enqueue: (
+    scope: OptimisticScope,
+    task: () => Promise<void>,
+    options?: { label?: string; rollback?: () => void }
+  ) => Promise<void>;
   activeDropTarget: {
     type: string;
     id: string;
@@ -41,6 +89,10 @@ const ListComponent = ({
   shouldRevealOnMount,
   onRevealComplete
 }: ListComponentProps) => {
+
+  useRenderMeasure(`ListComponent:${list.id}`);
+
+  const listIsOnlyInBrowser = listIsOptimistic(list);
 
   const [listDeleted, setListDeleted] = useState<boolean>(false);
   const [listRevealed, setListRevealed] = useState(!shouldRevealOnMount);
@@ -61,29 +113,40 @@ const ListComponent = ({
   const [newItemId, setNewItemId] = useState(() => crypto.randomUUID());
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const queryKey = trpc.list.getListsWithItems.queryKey();
+  const viewsQueryKey = trpc.view.getAll.queryKey();
+  const queryKey = trpc.view.getAllListsWithItems.queryKey();
+  const currentViewQueryKey = trpc.view.getCurrentViewListsWithItems.queryKey();
+  const dashboardKeys = {
+    views: viewsQueryKey,
+    allLists: queryKey,
+    currentView: currentViewQueryKey,
+  };
 
   const { mutate: renameList, isPending: renameListPending } = useMutation(trpc.list.renameList.mutationOptions({
     async onMutate(variables) {
-      const queryKey = trpc.list.getListsWithItems.queryKey();
       await queryClient.cancelQueries({ queryKey });
-      const previousListsWithItems = queryClient.getQueryData<Array<List>>(queryKey);
+      const previousListsWithItems = queryClient.getQueryData<CurrentView>(queryKey);
 
-      queryClient.setQueryData<Lists>(queryKey, (old) => {
+      queryClient.setQueryData<CurrentView>(queryKey, (old) => {
         if (!old) return old;
 
-        return old.map((list) =>
-          list.id === variables.id
-            ? { ...list, name: variables.name }
-            : list
-        );
+        const nextValue = {
+          ...old,
+          lists: old.lists.map((list) =>
+            list.id === variables.id
+              ? { ...list, name: variables.name }
+              : list
+          ),
+        };
+
+        measureCacheWrite("list.rename", nextValue);
+        return nextValue;
       });
+      syncProjectedCurrentView(queryClient, dashboardKeys);
 
       return { previousListsWithItems };
     },
     onError(_error, _variables, context) {
-      const queryKey = trpc.list.getListsWithItems.queryKey();
-
       if (context?.previousListsWithItems) {
         queryClient.setQueryData(queryKey, context.previousListsWithItems);
       }
@@ -94,50 +157,66 @@ const ListComponent = ({
 
   const deleteList = (listId: string) => {
     // Snapshot before optimistic update
-    const deletedList = queryClient.getQueryData<Lists>(queryKey)?.find(
+    const deletedList = queryClient.getQueryData<CurrentView>(queryKey)?.lists.find(
       (list: List) => list.id === listId
     );
 
     // Optimistically remove list from cache immediately
-    queryClient.setQueryData<Lists>(queryKey,
+    queryClient.setQueryData<CurrentView>(queryKey,
       (old) => {
         if (!old) return old;
-        return old.filter((list: List) => list.id !== listId);
+        return {
+          ...old,
+          lists: old.lists.filter((list: List) => list.id !== listId),
+        };
       }
     );
+    syncProjectedCurrentView(queryClient, dashboardKeys);
 
     enqueue(
+      "list-edits",
       async () => {
+        if (listIsOnlyInBrowser) return;
+
         try {
           // Actual server request runs in order
           await deleteListMutation.mutateAsync({ listId });
         } catch (error) {
           // Rollback only if server really failed
-          queryClient.setQueryData<Lists>(queryKey,
+          queryClient.setQueryData<CurrentView>(queryKey,
             (old) => {
               if (!old || !deletedList) return old;
 
-              const alreadyRestored = old.some((list: List) => list.id === listId);
+              const alreadyRestored = old.lists.some((list: List) => list.id === listId);
 
               if (alreadyRestored) return old;
 
-              return [...old, deletedList].sort((a, b) => a.order - b.order);
+              return {
+                ...old,
+                lists: [...old.lists, deletedList].sort((a, b) => a.order - b.order),
+              };
             }
           );
+          syncProjectedCurrentView(queryClient, dashboardKeys);
 
           throw error;
         }
-      }
+      },
+      { label: "list.deleteList" }
     );
   };
 
-  const { mutate: createListItem } = useMutation(trpc.listItem.createListItem.mutationOptions({
+  const { mutateAsync: createListItem } = useMutation(trpc.listItem.createListItem.mutationOptions({
     async onMutate(variables) {
-      const queryKey = trpc.list.getListsWithItems.queryKey();
-
       await queryClient.cancelQueries({ queryKey });
 
-      const previousListsWithItems = queryClient.getQueryData<Lists>(queryKey);
+      const previousListsWithItems = queryClient.getQueryData<CurrentView>(queryKey);
+      const alreadyInCache = itemIsAlreadyInCache(previousListsWithItems, variables.id);
+
+      if (alreadyInCache) {
+        // The UI already showed this item while its parent list was saving.
+        return { previousListsWithItems, addedToCache: false };
+      }
 
       const optimisticListItem: OptimisticListItem = {
         id: variables.id,
@@ -153,37 +232,131 @@ const ListComponent = ({
         notes: ""
       };
 
-      queryClient.setQueryData(queryKey, (old: Lists | undefined) =>
-        old
-          ? old.map((currentList: List) =>
+      queryClient.setQueryData<CurrentView>(queryKey, (old) => {
+        if (!old) return old;
+
+        const nextValue = {
+          ...old,
+          lists: old.lists.map((currentList: List) =>
             currentList.id === variables.listId
               ? {
                 ...currentList,
                 listItems: [optimisticListItem, ...currentList.listItems],
               }
               : currentList
-          )
-          : []
-      );
+          ),
+        };
+
+        measureCacheWrite("item.create", nextValue);
+        return nextValue;
+      });
+      syncProjectedCurrentView(queryClient, dashboardKeys);
 
       setCreateListItemName('');
 
-      return { previousListsWithItems };
+      return { previousListsWithItems, addedToCache: true };
     },
-    onError(_errors, _variables, context) {
-      const queryKey = trpc.list.getListsWithItems.queryKey();
+    onSuccess(createdItem) {
+      queryClient.setQueryData<CurrentView>(queryKey, (current) => {
+        if (!current) return current;
 
-      if (context?.previousListsWithItems) {
+        return {
+          ...current,
+          lists: current.lists.map((currentList) =>
+            currentList.id === createdItem.listId
+              ? {
+                ...currentList,
+                listItems: currentList.listItems.map((item) =>
+                  item.id === createdItem.id ? createdItem : item
+                ),
+              }
+              : currentList
+          ),
+        };
+      });
+      syncProjectedCurrentView(queryClient, dashboardKeys);
+    },
+    onError(_errors, variables, context) {
+      if (context?.addedToCache && context.previousListsWithItems) {
         queryClient.setQueryData(queryKey, context.previousListsWithItems);
+        return;
       }
+
+      queryClient.setQueryData<CurrentView>(queryKey, (current) =>
+        removeItemFromCache(current, variables.id)
+      );
+      syncProjectedCurrentView(queryClient, dashboardKeys);
     }
   }));
 
   const handleCreateItem = () => {
+    const itemId = newItemId;
+    const itemName = createListItemName.trim();
+
+    if (!itemName) return;
+
     setNewItemId(crypto.randomUUID());
+
+    if (listIsOnlyInBrowser) {
+      // Show the item now, but wait for the parent list before calling the server.
+      const optimisticListItem: OptimisticListItem = {
+        id: itemId,
+        name: itemName,
+        listId: list.id,
+        order: list.listItems && list.listItems.length > 0
+          ? Math.max(...list.listItems.map((item: ListItem) => item.order)) + 1
+          : 0,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isOptimistic: true,
+        notes: "",
+      };
+
+      queryClient.setQueryData<CurrentView>(queryKey, (current) => {
+        if (!current) return current;
+
+        return {
+          ...current,
+          lists: current.lists.map((currentList) =>
+            currentList.id === list.id
+              ? {
+                ...currentList,
+                listItems: [optimisticListItem, ...currentList.listItems],
+              }
+              : currentList
+          ),
+        };
+      });
+      syncProjectedCurrentView(queryClient, dashboardKeys);
+      setCreateListItemName("");
+
+      enqueue(
+        "item-edits",
+        async () => {
+          const listWasSaved = await waitForSavedList(
+            () => queryClient.getQueryData<CurrentView>(queryKey),
+            list.id
+          );
+
+          if (!listWasSaved) {
+            throw new Error("Parent list was not saved before item create.");
+          }
+
+          await createListItem({
+            id: itemId,
+            name: itemName,
+            listId: list.id,
+          });
+        },
+        { label: "listItem.createListItem.afterListCreate" }
+      );
+      return;
+    }
+
     createListItem({
-      id: newItemId,
-      name: createListItemName.trim(),
+      id: itemId,
+      name: itemName,
       listId: list.id
     });
   };
@@ -262,7 +435,7 @@ const ListComponent = ({
           )
         )}
       >
-        <Card data-list-id={list.id} className={`transition-all duration-300 h-full min-h-92.5 flex flex-col ${isDragging ? "scale-[1.03] backdrop-blur-[5px] shadow-xl" : ""}`}>
+          <Card data-list-id={list.id} className={`transition-all duration-300 h-full min-h-92.5 flex flex-col ${isDragging ? "scale-[1.03] backdrop-blur-[5px] shadow-xl" : ""}`}>
           <CardContent className="px-0 flex flex-col flex-1">
             <div className="flex flex-col flex-1">
               <div className="flex items-start gap-3 px-4">
@@ -402,5 +575,5 @@ const ListComponent = ({
   );
 };
 
-export default ListComponent;
+export default memo(ListComponent);
 

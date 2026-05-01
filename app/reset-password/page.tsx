@@ -1,9 +1,9 @@
-import Register from '@/components/auth/Register';
+import ResetPassword from '@/components/auth/ResetPassword';
 import React from 'react'
 
 const Page = () => {
   return (
-    <Register />
+    <ResetPassword />
   )
 }
 

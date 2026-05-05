@@ -114,8 +114,8 @@ const ListComponent = ({
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const viewsQueryKey = trpc.view.getAll.queryKey();
-  const queryKey = trpc.view.getAllListsWithItems.queryKey();
   const currentViewQueryKey = trpc.view.getCurrentViewListsWithItems.queryKey();
+  const queryKey = currentViewQueryKey;
   const dashboardKeys = {
     views: viewsQueryKey,
     allLists: queryKey,

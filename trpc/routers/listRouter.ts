@@ -28,12 +28,7 @@ export const listRouter = createTRPCRouter({
             include: {
               tag: true,
             },
-          },
-          listItems: {
-            orderBy: {
-              order: "asc",
-            },
-          },
+          }
         },
       });
 
@@ -60,16 +55,12 @@ export const listRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
-      const topList = await tx.list.findFirst({
-        where: { userId },
-        orderBy: { order: "asc" },
-        select: { order: true },
-      });
       const topAllViewList = await tx.viewList.findFirst({
         where: { viewId: allListsView.id },
         orderBy: { order: "asc" },
         select: { order: true },
       });
+      
       const viewTagIds =
         selectedView.type === "CUSTOM"
           ? selectedView.viewTags.map((viewTag) => viewTag.tagId)
@@ -96,7 +87,6 @@ export const listRouter = createTRPCRouter({
           id: input.id,
           name: input.name,
           userId,
-          order: topList ? topList.order - 1 : 0,
           listTags: viewTagIds.length > 0
             ? {
               createMany: {
@@ -146,9 +136,6 @@ export const listRouter = createTRPCRouter({
       where: {
         userId
       },
-      orderBy: {
-        order: 'asc'
-      }
     })
 
     return lists
@@ -157,9 +144,6 @@ export const listRouter = createTRPCRouter({
     const lists = await db.list.findMany({
       where: {
         userId
-      },
-      orderBy: {
-        order: 'asc'
       },
       include: {
         listTags: {

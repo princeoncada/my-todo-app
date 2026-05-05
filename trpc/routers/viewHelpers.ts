@@ -107,9 +107,9 @@ export async function backfillAllListsView(
     client.list.findMany({
       where: { userId },
       select: {
-        id: true,
-        order: true,
+        id: true
       },
+      orderBy: { createdAt: "asc" }
     }),
     client.viewList.findMany({
       where: { viewId },
@@ -122,11 +122,19 @@ export async function backfillAllListsView(
 
   if (missingLists.length === 0) return;
 
+  const bottomViewList = await client.viewList.findFirst({
+    where: { viewId },
+    orderBy: { order: "desc" },
+    select: { order: true }
+  })
+
+  const startOrder = bottomViewList ? bottomViewList.order + 1 : 0;
+
   await client.viewList.createMany({
-    data: missingLists.map((list) => ({
+    data: missingLists.map((list, index) => ({
       viewId,
       listId: list.id,
-      order: list.order,
+      order: startOrder + index,
     })),
     skipDuplicates: true,
   });
@@ -186,18 +194,17 @@ export async function recomputeCustomView(
       })),
     },
     select: {
-      id: true,
-      order: true,
+      id: true
     },
   });
 
   if (matchingLists.length === 0) return;
 
   await client.viewList.createMany({
-    data: matchingLists.map((list) => ({
+    data: matchingLists.map((list, index) => ({
       viewId,
       listId: list.id,
-      order: previousOrders.get(list.id) ?? allListOrders.get(list.id) ?? list.order,
+      order: previousOrders.get(list.id) ?? allListOrders.get(list.id) ?? index,
     })),
     skipDuplicates: true,
   });

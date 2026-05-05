@@ -167,14 +167,14 @@ const ListsContainer = () => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const viewsQueryKey = trpc.view.getAll.queryKey();
-  const allListsQueryKey = trpc.view.getAllListsWithItems.queryKey();
   const currentViewQueryKey = trpc.view.getCurrentViewListsWithItems.queryKey();
+  const queryKey = currentViewQueryKey;
   const optimisticSync = useOptimisticSync();
   const dashboardKeys = useMemo(() => ({
     views: viewsQueryKey,
-    allLists: allListsQueryKey,
+    allLists: queryKey,
     currentView: currentViewQueryKey,
-  }), [allListsQueryKey, currentViewQueryKey, viewsQueryKey]);
+  }), [queryKey, currentViewQueryKey, viewsQueryKey]);
 
   useRenderMeasure("ListsContainer");
 
@@ -189,7 +189,7 @@ const ListsContainer = () => {
     trpc.view.getAll.queryOptions()
   );
   const { data: allListsSnapshot, isLoading: listsLoading, isError: listsError } = useQuery(
-    trpc.view.getAllListsWithItems.queryOptions()
+    trpc.view.getCurrentViewListsWithItems.queryOptions()
   );
 
   const selectedView = selectedViewFromCache(views);
@@ -211,7 +211,7 @@ const ListsContainer = () => {
   const scheduleReorderListsSave = useCallback((nextLists: Lists) => {
     if (currentView?.view.type === "ALL_LISTS") {
       measureCacheWrite("lists.drop.all-lists", nextLists);
-      queryClient.setQueryData<CurrentView>(allListsQueryKey, (current) =>
+      queryClient.setQueryData<CurrentView>(queryKey, (current) =>
         current ? { ...current, lists: nextLists } : current
       );
     } else {
@@ -258,7 +258,7 @@ const ListsContainer = () => {
       }, { label: "view.reorderViewLists" });
     }, 300);
   }, [
-    allListsQueryKey,
+    queryKey,
     currentView,
     dashboardKeys,
     optimisticSync,
@@ -269,7 +269,7 @@ const ListsContainer = () => {
 
   const scheduleReorderListItemsSave = useCallback((nextLists: Lists) => {
     measureCacheWrite("items.drop.all-lists", nextLists);
-    queryClient.setQueryData<CurrentView>(allListsQueryKey, (current) =>
+    queryClient.setQueryData<CurrentView>(queryKey, (current) =>
       current
         ? {
           ...current,
@@ -312,7 +312,7 @@ const ListsContainer = () => {
       }, { label: "listItem.reorderListItems" });
     }, 300);
   }, [
-    allListsQueryKey,
+    queryKey,
     dashboardKeys,
     optimisticSync,
     queryClient,

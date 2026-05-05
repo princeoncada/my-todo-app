@@ -3,10 +3,10 @@ import type { RouterOutputs } from "@/lib/trpc";
 
 export type ViewsCache = RouterOutputs["view"]["getAll"];
 export type ViewCacheItem = ViewsCache[number];
-export type DashboardSnapshot = RouterOutputs["view"]["getAllListsWithItems"];
+export type CurrentViewSnapshot = RouterOutputs["view"]["getCurrentViewListsWithItems"];
+export type DashboardSnapshot = CurrentViewSnapshot
 export type DashboardList = DashboardSnapshot["lists"][number];
 export type DashboardTag = RouterOutputs["tag"]["getAll"][number];
-export type CurrentViewSnapshot = RouterOutputs["view"]["getCurrentViewListsWithItems"];
 
 type DashboardKeys = {
   views: QueryKey;

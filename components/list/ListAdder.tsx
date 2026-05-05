@@ -21,8 +21,8 @@ const ListAdder = () => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const viewsQueryKey = trpc.view.getAll.queryKey();
-  const queryKey = trpc.view.getAllListsWithItems.queryKey();
   const currentViewQueryKey = trpc.view.getCurrentViewListsWithItems.queryKey();
+  const queryKey = currentViewQueryKey;
   const dashboardKeys = {
     views: viewsQueryKey,
     allLists: queryKey,
@@ -88,11 +88,10 @@ const ListAdder = () => {
               list.id === variables.id
                 ? {
                   ...createdList,
+                  order: list.order,
                   // Items can be added while a new list is still saving. Keep them instead of wiping the local work.
                   listItems: list.listItems,
-                  listTags: createdList.listTags.length > 0
-                    ? createdList.listTags
-                    : list.listTags,
+                  listTags: list.listTags,
                 }
                 : list
             ),
@@ -142,7 +141,7 @@ const ListAdder = () => {
               setDialogOpen(true);
             }}
           >
-            <Plus className="-ml-1"/>Add List 
+            <Plus className="-ml-1" />Add List
           </Button>
           <Button
             className="font-semibold md:hidden p-4"

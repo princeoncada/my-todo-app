@@ -8,7 +8,7 @@ export type DashboardSnapshot = CurrentViewSnapshot
 export type DashboardList = DashboardSnapshot["lists"][number];
 export type DashboardTag = RouterOutputs["tag"]["getAll"][number];
 
-type DashboardKeys = {
+export type DashboardKeys = {
   views: QueryKey;
   allLists: QueryKey;
   currentView: QueryKey;
@@ -91,15 +91,67 @@ export function applyViewSelection(
   queryClient.setQueryData(keys.currentView, projectView(selectedView, allListsSnapshot));
 }
 
-export function syncProjectedCurrentView(
+export function updateListInDashboardCaches(
   queryClient: QueryClient,
-  keys: DashboardKeys
+  keys: DashboardKeys,
+  listId: string,
+  updater: (list: DashboardList) => DashboardList
 ) {
-  const views = queryClient.getQueryData<ViewsCache>(keys.views);
-  const selectedView = selectedViewFromCache(views);
-  const allListsSnapshot = getAllListsSnapshot(queryClient, keys.allLists);
+  queryClient.setQueryData<DashboardSnapshot>(keys.allLists, (snapshot) => {
+    if (!snapshot) return snapshot;
 
-  queryClient.setQueryData(keys.currentView, projectView(selectedView, allListsSnapshot));
+    return {
+      ...snapshot,
+      lists: snapshot.lists.map((list) =>
+        list.id === listId ? updater(list) : list
+      ),
+    };
+  });
+
+  queryClient.setQueryData<DashboardSnapshot>(keys.currentView, (snapshot) => {
+    if (!snapshot) return snapshot;
+
+    const selectedView = snapshot.view;
+    const updatedLists = snapshot.lists.map((list) =>
+      list.id === listId ? updater(list) : list
+    );
+
+    if (selectedView.type !== "CUSTOM") {
+      return {
+        ...snapshot,
+        lists: updatedLists,
+      };
+    }
+
+    return {
+      ...snapshot,
+      lists: updatedLists.filter((list) => listMatchesView(list, selectedView)),
+    };
+  });
+}
+
+export function removeListFromDashboardCaches(
+  queryClient: QueryClient,
+  keys: DashboardKeys,
+  listId: string
+) {
+  const removeList = (snapshot: DashboardSnapshot | undefined) =>
+    snapshot
+      ? {
+        ...snapshot,
+        lists: snapshot.lists.filter((list) => list.id !== listId),
+      }
+      : snapshot;
+
+  queryClient.setQueryData<DashboardSnapshot>(keys.allLists, removeList);
+  queryClient.setQueryData<DashboardSnapshot>(keys.currentView, removeList);
+}
+
+export function invalidateViewPayloadQueries(queryClient: QueryClient) {
+  return queryClient.invalidateQueries({
+    predicate: (query) =>
+      JSON.stringify(query.queryKey).includes("getViewListsWithItems"),
+  });
 }
 
 export function applyTagChangeToCaches(
@@ -109,37 +161,26 @@ export function applyTagChangeToCaches(
   tag: DashboardTag,
   action: "add" | "remove"
 ) {
-  queryClient.setQueryData<DashboardSnapshot>(keys.allLists, (snapshot) => {
-    if (!snapshot) return snapshot;
+  updateListInDashboardCaches(queryClient, keys, listId, (list) => {
+    const hasTag = list.listTags.some((listTag) => listTag.tagId === tag.id);
+
+    if (action === "add" && hasTag) return list;
+    if (action === "remove" && !hasTag) return list;
 
     return {
-      ...snapshot,
-      lists: snapshot.lists.map((list) => {
-        if (list.id !== listId) return list;
-
-        const hasTag = list.listTags.some((listTag) => listTag.tagId === tag.id);
-
-        if (action === "add" && hasTag) return list;
-        if (action === "remove" && !hasTag) return list;
-
-        return {
-          ...list,
-          listTags: action === "add"
-            ? [
-              ...list.listTags,
-              {
-                listId,
-                tagId: tag.id,
-                tag,
-              },
-            ]
-            : list.listTags.filter((listTag) => listTag.tagId !== tag.id),
-        };
-      }),
+      ...list,
+      listTags: action === "add"
+        ? [
+          ...list.listTags,
+          {
+            listId,
+            tagId: tag.id,
+            tag,
+          },
+        ]
+        : list.listTags.filter((listTag) => listTag.tagId !== tag.id),
     };
   });
-
-  syncProjectedCurrentView(queryClient, keys);
 }
 
 export function rollbackScope<T>(

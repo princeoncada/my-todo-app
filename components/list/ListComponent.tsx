@@ -1,7 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { syncProjectedCurrentView } from "@/lib/dashboard-cache";
+import {
+  DashboardKeys,
+  removeListFromDashboardCaches,
+  updateListInDashboardCaches,
+} from "@/lib/dashboard-cache";
 import { measureCacheWrite, useRenderMeasure } from "@/lib/optimistic-debug";
 import type { OptimisticScope } from "@/hooks/useOptimisticSync";
 import { useTRPC } from "@/trpc/client";
@@ -78,6 +82,7 @@ interface ListComponentProps {
   } | null;
   shouldRevealOnMount?: boolean,
   onRevealComplete: () => void;
+  dashboardKeys: DashboardKeys;
 }
 
 const ListComponent = ({
@@ -87,7 +92,8 @@ const ListComponent = ({
   enqueue,
   activeDropTarget,
   shouldRevealOnMount,
-  onRevealComplete
+  onRevealComplete,
+  dashboardKeys
 }: ListComponentProps) => {
 
   useRenderMeasure(`ListComponent:${list.id}`);
@@ -113,43 +119,25 @@ const ListComponent = ({
   const [newItemId, setNewItemId] = useState(() => crypto.randomUUID());
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const viewsQueryKey = trpc.view.getAll.queryKey();
-  const currentViewQueryKey = trpc.view.getCurrentViewListsWithItems.queryKey();
-  const queryKey = currentViewQueryKey;
-  const dashboardKeys = {
-    views: viewsQueryKey,
-    allLists: queryKey,
-    currentView: currentViewQueryKey,
-  };
+  const queryKey = dashboardKeys.allLists;
 
   const { mutate: renameList, isPending: renameListPending } = useMutation(trpc.list.renameList.mutationOptions({
     async onMutate(variables) {
       await queryClient.cancelQueries({ queryKey });
-      const previousListsWithItems = queryClient.getQueryData<CurrentView>(queryKey);
+      const previousAllLists = queryClient.getQueryData<CurrentView>(dashboardKeys.allLists);
+      const previousCurrentView = queryClient.getQueryData<CurrentView>(dashboardKeys.currentView);
 
-      queryClient.setQueryData<CurrentView>(queryKey, (old) => {
-        if (!old) return old;
+      updateListInDashboardCaches(queryClient, dashboardKeys, variables.id, (currentList) => ({
+        ...currentList,
+        name: variables.name,
+      }));
+      measureCacheWrite("list.rename", { id: variables.id, name: variables.name });
 
-        const nextValue = {
-          ...old,
-          lists: old.lists.map((list) =>
-            list.id === variables.id
-              ? { ...list, name: variables.name }
-              : list
-          ),
-        };
-
-        measureCacheWrite("list.rename", nextValue);
-        return nextValue;
-      });
-      syncProjectedCurrentView(queryClient, dashboardKeys);
-
-      return { previousListsWithItems };
+      return { previousAllLists, previousCurrentView };
     },
     onError(_error, _variables, context) {
-      if (context?.previousListsWithItems) {
-        queryClient.setQueryData(queryKey, context.previousListsWithItems);
-      }
+      queryClient.setQueryData(dashboardKeys.allLists, context?.previousAllLists);
+      queryClient.setQueryData(dashboardKeys.currentView, context?.previousCurrentView);
     },
   }));
 
@@ -157,21 +145,14 @@ const ListComponent = ({
 
   const deleteList = (listId: string) => {
     // Snapshot before optimistic update
-    const deletedList = queryClient.getQueryData<CurrentView>(queryKey)?.lists.find(
+    const deletedList = queryClient.getQueryData<CurrentView>(dashboardKeys.allLists)?.lists.find(
+      (list: List) => list.id === listId
+    ) ?? queryClient.getQueryData<CurrentView>(dashboardKeys.currentView)?.lists.find(
       (list: List) => list.id === listId
     );
 
     // Optimistically remove list from cache immediately
-    queryClient.setQueryData<CurrentView>(queryKey,
-      (old) => {
-        if (!old) return old;
-        return {
-          ...old,
-          lists: old.lists.filter((list: List) => list.id !== listId),
-        };
-      }
-    );
-    syncProjectedCurrentView(queryClient, dashboardKeys);
+    removeListFromDashboardCaches(queryClient, dashboardKeys, listId);
 
     enqueue(
       "list-edits",
@@ -183,7 +164,7 @@ const ListComponent = ({
           await deleteListMutation.mutateAsync({ listId });
         } catch (error) {
           // Rollback only if server really failed
-          queryClient.setQueryData<CurrentView>(queryKey,
+          queryClient.setQueryData<CurrentView>(dashboardKeys.allLists,
             (old) => {
               if (!old || !deletedList) return old;
 
@@ -197,7 +178,20 @@ const ListComponent = ({
               };
             }
           );
-          syncProjectedCurrentView(queryClient, dashboardKeys);
+          queryClient.setQueryData<CurrentView>(dashboardKeys.currentView,
+            (old) => {
+              if (!old || !deletedList) return old;
+
+              const alreadyRestored = old.lists.some((list: List) => list.id === listId);
+
+              if (alreadyRestored) return old;
+
+              return {
+                ...old,
+                lists: [...old.lists, deletedList].sort((a, b) => a.order - b.order),
+              };
+            }
+          );
 
           throw error;
         }
@@ -210,12 +204,14 @@ const ListComponent = ({
     async onMutate(variables) {
       await queryClient.cancelQueries({ queryKey });
 
-      const previousListsWithItems = queryClient.getQueryData<CurrentView>(queryKey);
-      const alreadyInCache = itemIsAlreadyInCache(previousListsWithItems, variables.id);
+      const previousAllLists = queryClient.getQueryData<CurrentView>(dashboardKeys.allLists);
+      const previousCurrentView = queryClient.getQueryData<CurrentView>(dashboardKeys.currentView);
+      const alreadyInCache = itemIsAlreadyInCache(previousAllLists, variables.id) ||
+        itemIsAlreadyInCache(previousCurrentView, variables.id);
 
       if (alreadyInCache) {
         // The UI already showed this item while its parent list was saving.
-        return { previousListsWithItems, addedToCache: false };
+        return { previousAllLists, previousCurrentView, addedToCache: false };
       }
 
       const optimisticListItem: OptimisticListItem = {
@@ -232,60 +228,37 @@ const ListComponent = ({
         notes: ""
       };
 
-      queryClient.setQueryData<CurrentView>(queryKey, (old) => {
-        if (!old) return old;
-
-        const nextValue = {
-          ...old,
-          lists: old.lists.map((currentList: List) =>
-            currentList.id === variables.listId
-              ? {
-                ...currentList,
-                listItems: [optimisticListItem, ...currentList.listItems],
-              }
-              : currentList
-          ),
-        };
-
-        measureCacheWrite("item.create", nextValue);
-        return nextValue;
-      });
-      syncProjectedCurrentView(queryClient, dashboardKeys);
+      updateListInDashboardCaches(queryClient, dashboardKeys, variables.listId, (currentList) => ({
+        ...currentList,
+        listItems: [optimisticListItem, ...currentList.listItems],
+      }));
+      measureCacheWrite("item.create", optimisticListItem);
 
       setCreateListItemName('');
 
-      return { previousListsWithItems, addedToCache: true };
+      return { previousAllLists, previousCurrentView, addedToCache: true };
     },
     onSuccess(createdItem) {
-      queryClient.setQueryData<CurrentView>(queryKey, (current) => {
-        if (!current) return current;
-
-        return {
-          ...current,
-          lists: current.lists.map((currentList) =>
-            currentList.id === createdItem.listId
-              ? {
-                ...currentList,
-                listItems: currentList.listItems.map((item) =>
-                  item.id === createdItem.id ? createdItem : item
-                ),
-              }
-              : currentList
-          ),
-        };
-      });
-      syncProjectedCurrentView(queryClient, dashboardKeys);
+      updateListInDashboardCaches(queryClient, dashboardKeys, createdItem.listId, (currentList) => ({
+        ...currentList,
+        listItems: currentList.listItems.map((item) =>
+          item.id === createdItem.id ? createdItem : item
+        ),
+      }));
     },
     onError(_errors, variables, context) {
-      if (context?.addedToCache && context.previousListsWithItems) {
-        queryClient.setQueryData(queryKey, context.previousListsWithItems);
+      if (context?.addedToCache) {
+        queryClient.setQueryData(dashboardKeys.allLists, context.previousAllLists);
+        queryClient.setQueryData(dashboardKeys.currentView, context.previousCurrentView);
         return;
       }
 
-      queryClient.setQueryData<CurrentView>(queryKey, (current) =>
+      queryClient.setQueryData<CurrentView>(dashboardKeys.allLists, (current) =>
         removeItemFromCache(current, variables.id)
       );
-      syncProjectedCurrentView(queryClient, dashboardKeys);
+      queryClient.setQueryData<CurrentView>(dashboardKeys.currentView, (current) =>
+        removeItemFromCache(current, variables.id)
+      );
     }
   }));
 
@@ -313,22 +286,10 @@ const ListComponent = ({
         notes: "",
       };
 
-      queryClient.setQueryData<CurrentView>(queryKey, (current) => {
-        if (!current) return current;
-
-        return {
-          ...current,
-          lists: current.lists.map((currentList) =>
-            currentList.id === list.id
-              ? {
-                ...currentList,
-                listItems: [optimisticListItem, ...currentList.listItems],
-              }
-              : currentList
-          ),
-        };
-      });
-      syncProjectedCurrentView(queryClient, dashboardKeys);
+      updateListInDashboardCaches(queryClient, dashboardKeys, list.id, (currentList) => ({
+        ...currentList,
+        listItems: [optimisticListItem, ...currentList.listItems],
+      }));
       setCreateListItemName("");
 
       enqueue(
@@ -470,7 +431,11 @@ const ListComponent = ({
               </div>
 
               <div className="my-2 mx-13 mr-14">
-                <ListTagPicker listId={list.id} selectedListTags={list.listTags} />
+                <ListTagPicker
+                  listId={list.id}
+                  selectedListTags={list.listTags}
+                  dashboardKeys={dashboardKeys}
+                />
               </div>
 
               <Separator />

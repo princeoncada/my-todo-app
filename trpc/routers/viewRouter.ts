@@ -14,6 +14,10 @@ const viewTagIdsInput = z.array(z.uuid()).min(1, {
   message: "Custom views must require at least one tag.",
 });
 
+function isPrismaKnownError(error: unknown) {
+  return error instanceof Prisma.PrismaClientKnownRequestError;
+}
+
 export const viewRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx: { userId } }) => {
     await ensureDefaultView(userId);
@@ -170,46 +174,61 @@ export const viewRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx: { userId }, input }) => {
-      return await db.$transaction(async (tx) => {
-        await ensureAllListsView(userId, tx);
-        const ownedTags = await tx.tag.findMany({
-          where: {
-            id: { in: input.tagIds },
-            userId,
-          },
-          select: { id: true },
-        });
+      try {
+        await ensureAllListsView(userId);
+        const view = await db.$transaction(async (tx) => {
+          const uniqueTagIds = [...new Set(input.tagIds)];
+          const ownedTags = await tx.tag.findMany({
+            where: {
+              id: { in: uniqueTagIds },
+              userId,
+            },
+            select: { id: true },
+          });
 
-        if (ownedTags.length !== new Set(input.tagIds).size) {
-          throw new TRPCError({ code: "FORBIDDEN" });
-        }
+          if (ownedTags.length !== uniqueTagIds.length) {
+            throw new TRPCError({ code: "FORBIDDEN" });
+          }
 
-        const topView = await tx.view.findFirst({
-          where: { userId },
-          orderBy: { order: "asc" },
-          select: { order: true },
-        });
+          const topView = await tx.view.findFirst({
+            where: { userId },
+            orderBy: { order: "asc" },
+            select: { order: true },
+          });
 
-        await tx.view.updateMany({
-          where: { userId },
-          data: { isDefault: false },
-        });
+          await tx.view.updateMany({
+            where: { userId },
+            data: { isDefault: false },
+          });
 
-        const view = await tx.view.create({
-          data: {
-            id: input.id,
-            name: input.name,
-            userId,
-            order: topView ? topView.order - 1 : 0,
-            type: ViewType.CUSTOM,
-            matchMode: ViewMatchMode.ALL,
-            isDefault: true,
-            viewTags: {
-              createMany: {
-                data: [...new Set(input.tagIds)].map((tagId) => ({ tagId })),
-                skipDuplicates: true,
+          return await tx.view.create({
+            data: {
+              id: input.id,
+              name: input.name,
+              userId,
+              order: topView ? topView.order - 1 : 0,
+              type: ViewType.CUSTOM,
+              matchMode: ViewMatchMode.ALL,
+              isDefault: true,
+              viewTags: {
+                createMany: {
+                  data: uniqueTagIds.map((tagId) => ({ tagId })),
+                  skipDuplicates: true,
+                },
               },
             },
+            select: { id: true },
+          });
+        });
+
+        // Keep recompute outside the interactive transaction to avoid the
+        // default Prisma transaction timeout on large production accounts.
+        await recomputeCustomView(userId, view.id);
+
+        return await db.view.findFirstOrThrow({
+          where: {
+            id: view.id,
+            userId,
           },
           include: {
             viewTags: {
@@ -228,11 +247,33 @@ export const viewRouter = createTRPCRouter({
             },
           },
         });
+      } catch (error) {
+        if (
+          isPrismaKnownError(error) &&
+          error.code === "P2002" &&
+          Array.isArray(error.meta?.target) &&
+          error.meta.target.includes("userId") &&
+          error.meta.target.includes("name")
+        ) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "A view with this name already exists.",
+            cause: error,
+          });
+        }
 
-        await recomputeCustomView(userId, view.id, tx);
+        if (!(error instanceof TRPCError)) {
+          console.error("view.create failed", {
+            error,
+            prismaCode: isPrismaKnownError(error) ? error.code : undefined,
+            viewName: input.name,
+            tagCount: input.tagIds.length,
+            userId,
+          });
+        }
 
-        return view;
-      });
+        throw error;
+      }
     }),
 
   rename: protectedProcedure

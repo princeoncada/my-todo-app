@@ -29,9 +29,10 @@ import {
   DashboardKeys,
   DashboardSnapshot,
   invalidateViewPayloadQueries,
+  reconcileAffectedViewLists,
+  reconcileSavedListTags,
   ViewsCache,
 } from "@/lib/dashboard-cache";
-import { useOptimisticSync } from "@/hooks/useOptimisticSync";
 import { measureCacheWrite, measureRequest, useRenderMeasure } from "@/lib/optimistic-debug";
 
 type TagValue = RouterOutputs["tag"]["getAll"][number];
@@ -88,11 +89,11 @@ export default function ListTagPicker({
 
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const optimisticSync = useOptimisticSync();
   const tagsQueryKey = trpc.tag.getAll.queryKey();
   const queryKey = dashboardKeys.allLists;
   const pendingTagOperationsRef = useRef(new Map<string, "add" | "remove">());
   const tagFlushTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const tagSaveChainRef = useRef(Promise.resolve());
   const tagRollbackSnapshotRef = useRef<{
     allLists: DashboardSnapshot | undefined;
     currentView: CurrentView | undefined;
@@ -201,27 +202,37 @@ export default function ListTagPicker({
 
       if (operations.length === 0) return;
 
-      optimisticSync.enqueue(
-        "list-tags",
-        async () => {
+      tagSaveChainRef.current = tagSaveChainRef.current
+        .catch(() => undefined)
+        .then(async () => {
           measureRequest("tag.applyListTagChanges", {
             listId,
             count: operations.length,
           });
-          await applyListTagChangesMutation.mutateAsync({ listId, operations });
-          await queryClient.invalidateQueries({ queryKey: dashboardKeys.views });
-          await invalidateViewPayloadQueries(queryClient);
-        },
-        {
-          label: "tag.applyListTagChanges",
-          rollback: () => {
-            queryClient.setQueryData(queryKey, rollbackSnapshot?.allLists);
-            queryClient.setQueryData(dashboardKeys.currentView, rollbackSnapshot?.currentView);
-            queryClient.setQueryData(dashboardKeys.selectedView, rollbackSnapshot?.selectedView);
-            queryClient.setQueryData(dashboardKeys.views, rollbackSnapshot?.views);
-          },
-        }
-      );
+          const result = await applyListTagChangesMutation.mutateAsync({
+            listId,
+            operations,
+          });
+
+          reconcileSavedListTags(
+            queryClient,
+            dashboardKeys,
+            result.listId,
+            result.listTags
+          );
+          reconcileAffectedViewLists(
+            queryClient,
+            dashboardKeys,
+            result.affectedViews
+          );
+        })
+        .catch((error) => {
+          queryClient.setQueryData(queryKey, rollbackSnapshot?.allLists);
+          queryClient.setQueryData(dashboardKeys.currentView, rollbackSnapshot?.currentView);
+          queryClient.setQueryData(dashboardKeys.selectedView, rollbackSnapshot?.selectedView);
+          queryClient.setQueryData(dashboardKeys.views, rollbackSnapshot?.views);
+          console.error("Tag sync failed:", error);
+        });
     }, 150);
   };
 

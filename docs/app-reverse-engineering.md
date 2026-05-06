@@ -9,7 +9,7 @@ This app is a Next.js dashboard for lists, list items, tags, and filtered views.
 - `components/list/` contains list cards, list items, tag picker, empty state, and the list creation dialog.
 - `components/views/ViewsSidebarPreview.tsx` contains view selection, view editing, and view reorder.
 - `trpc/routers/` contains server endpoints for lists, list items, tags, and views.
-- `lib/dashboard-cache.ts` explains how dashboard cache data is shaped and projected.
+- `lib/dashboard-cache.ts` explains how dashboard cache data is shaped and updated.
 - `hooks/useOptimisticSync.ts` queues server saves after the UI has already changed.
 
 ## Data Model
@@ -29,24 +29,25 @@ The database has five main ideas:
 The frontend mostly uses three tRPC query caches:
 
 - `view.getAll`: all views, their tags, and view-list order metadata.
-- `view.getAllListsWithItems`: the main all-lists snapshot. Treat this as the main list/item cache.
-- `view.getCurrentViewListsWithItems`: a projected current view. This should not become a second source of truth.
+- `view.getViewListsWithItems({ viewId: allListsView.id })`: the explicit All Lists payload. Treat this as the canonical full list/item/tag cache.
+- `view.getViewListsWithItems({ viewId })`: the explicit payload for a selected view, including custom views and All Lists.
+- `view.getCurrentViewListsWithItems`: the bootstrapping payload for the persisted selected view on refresh.
 
 The important rule is:
 
-`all lists + selected view = current visible dashboard`
+`ViewList.order owns list order for every view`
 
-That projection happens in `projectView` inside `lib/dashboard-cache.ts`.
+All Lists is a permanent system view whose `ViewList` rows include every list. Custom views are tag-filtered views whose `ViewList` rows include matching lists only.
 
-## Why Current View Is Projected
+## Why Caches Stay Separate
 
-If every mutation manually updates both all-lists and current-view caches, the app can drift. One cache may say a list has a tag while the other does not. To avoid that, most changes update the all-lists cache first, then call `syncProjectedCurrentView`.
+If every mutation treats the current view as a filtered copy of All Lists, custom view order and membership can drift. The app keeps All Lists and the selected view as separate explicit payloads.
 
 Plain version:
 
-- Change the real dashboard data once.
-- Rebuild what the selected view should show.
-- Do not hand-edit the same fact in two places unless there is no choice.
+- Update All Lists first when a shared list, item, or tag fact changes.
+- Update the selected-view payload only if the changed list is visible there, or refetch affected explicit view payloads.
+- Keep each view's order in its own `ViewList.order` rows.
 
 ## Optimistic UI Rule
 
@@ -150,7 +151,6 @@ The app now uses one SQL statement per reorder save:
 
 - `view.reorderViews`
 - `view.reorderViewLists`
-- `list.reorderLists`
 - `listItem.reorderListItems`
 
 The pattern is:

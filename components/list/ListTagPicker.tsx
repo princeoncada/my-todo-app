@@ -93,6 +93,7 @@ export default function ListTagPicker({
   const pendingTagOperationsRef = useRef(new Map<string, "add" | "remove">());
   const tagFlushTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const tagSaveChainRef = useRef(Promise.resolve());
+  const tagOptimisticVersionRef = useRef(0);
   const tagRollbackSnapshotRef = useRef<{
     allLists: DashboardSnapshot | undefined;
     currentView: CurrentView | undefined;
@@ -177,79 +178,83 @@ export default function ListTagPicker({
       ? tag
       : { ...tag, listTags: [] };
 
-    void (async () => {
-      await cancelTagCacheQueries();
+    tagOptimisticVersionRef.current += 1;
+    void cancelTagCacheQueries();
 
-      if (!tagRollbackSnapshotRef.current) {
-        tagRollbackSnapshotRef.current = {
-          allLists: queryClient.getQueryData<DashboardSnapshot>(queryKey),
-          currentView: queryClient.getQueryData<CurrentView>(dashboardKeys.currentView),
-          selectedView: queryClient.getQueryData<CurrentView>(dashboardKeys.selectedView),
-          views: queryClient.getQueryData<ViewsCache>(dashboardKeys.views),
-        };
+    if (!tagRollbackSnapshotRef.current) {
+      tagRollbackSnapshotRef.current = {
+        allLists: queryClient.getQueryData<DashboardSnapshot>(queryKey),
+        currentView: queryClient.getQueryData<CurrentView>(dashboardKeys.currentView),
+        selectedView: queryClient.getQueryData<CurrentView>(dashboardKeys.selectedView),
+        views: queryClient.getQueryData<ViewsCache>(dashboardKeys.views),
+      };
+    }
+
+    pendingTagOperationsRef.current.set(cacheTag.id, action);
+    // Tags update the cache right away, but the server save waits for the short batch window.
+    applyTagChangeToCaches(queryClient, dashboardKeys, listId, cacheTag, action);
+    measureCacheWrite("list-tags.toggle", { listId, tagId: cacheTag.id, action });
+
+    if (tagFlushTimeoutRef.current) {
+      clearTimeout(tagFlushTimeoutRef.current);
+    }
+
+    tagFlushTimeoutRef.current = setTimeout(() => {
+      const currentLists = queryClient.getQueryData<CurrentView>(queryKey);
+
+      if (listIsStillOptimistic(currentLists, listId)) {
+        // Newly created lists may not exist on the server yet. Wait instead of sending a temporary id.
+        scheduleTagFlush(cacheTag, action);
+        return;
       }
 
-      pendingTagOperationsRef.current.set(cacheTag.id, action);
-      // Tags update the cache right away, but the server save waits for the short batch window.
-      applyTagChangeToCaches(queryClient, dashboardKeys, listId, cacheTag, action);
-      measureCacheWrite("list-tags.toggle", { listId, tagId: cacheTag.id, action });
+      const operations = Array.from(pendingTagOperationsRef.current.entries()).map(
+        ([tagId, action]) => ({ tagId, action })
+      );
+      const rollbackSnapshot = tagRollbackSnapshotRef.current;
+      const flushVersion = tagOptimisticVersionRef.current;
 
-      if (tagFlushTimeoutRef.current) {
-        clearTimeout(tagFlushTimeoutRef.current);
-      }
+      pendingTagOperationsRef.current.clear();
+      tagRollbackSnapshotRef.current = null;
 
-      tagFlushTimeoutRef.current = setTimeout(() => {
-        const currentLists = queryClient.getQueryData<CurrentView>(queryKey);
+      if (operations.length === 0) return;
 
-        if (listIsStillOptimistic(currentLists, listId)) {
-          // Newly created lists may not exist on the server yet. Wait instead of sending a temporary id.
-          scheduleTagFlush(cacheTag, action);
-          return;
-        }
+      tagSaveChainRef.current = tagSaveChainRef.current
+        .catch(() => undefined)
+        .then(async () => {
+          measureRequest("tag.applyListTagChanges", {
+            listId,
+            count: operations.length,
+          });
+          const result = await applyListTagChangesMutation.mutateAsync({
+            listId,
+            operations,
+          });
 
-        const operations = Array.from(pendingTagOperationsRef.current.entries()).map(
-          ([tagId, action]) => ({ tagId, action })
-        );
-        const rollbackSnapshot = tagRollbackSnapshotRef.current;
+          if (flushVersion !== tagOptimisticVersionRef.current) return;
 
-        pendingTagOperationsRef.current.clear();
-        tagRollbackSnapshotRef.current = null;
-
-        if (operations.length === 0) return;
-
-        tagSaveChainRef.current = tagSaveChainRef.current
-          .catch(() => undefined)
-          .then(async () => {
-            measureRequest("tag.applyListTagChanges", {
-              listId,
-              count: operations.length,
-            });
-            const result = await applyListTagChangesMutation.mutateAsync({
-              listId,
-              operations,
-            });
-
-            reconcileSavedListTags(
-              queryClient,
-              dashboardKeys,
-              result.listId,
-              result.listTags
-            );
-            reconcileAffectedViewLists(
-              queryClient,
-              dashboardKeys,
-              result.affectedViews
-            );
-          })
-          .catch((error) => {
+          reconcileSavedListTags(
+            queryClient,
+            dashboardKeys,
+            result.listId,
+            result.listTags
+          );
+          reconcileAffectedViewLists(
+            queryClient,
+            dashboardKeys,
+            result.affectedViews
+          );
+        })
+        .catch((error) => {
+          if (flushVersion === tagOptimisticVersionRef.current) {
             queryClient.setQueryData(queryKey, rollbackSnapshot?.allLists);
             queryClient.setQueryData(dashboardKeys.currentView, rollbackSnapshot?.currentView);
             queryClient.setQueryData(dashboardKeys.selectedView, rollbackSnapshot?.selectedView);
             queryClient.setQueryData(dashboardKeys.views, rollbackSnapshot?.views);
-            console.error("Tag sync failed:", error);
-          });
-      }, 150);
-    })();
+          }
+          console.error("Tag sync failed:", error);
+        });
+    }, 150);
   };
 
   const createTagMutation = useMutation(trpc.tag.create.mutationOptions({

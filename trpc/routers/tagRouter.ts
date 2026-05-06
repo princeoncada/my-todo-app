@@ -84,7 +84,31 @@ export const tagRouter = createTRPCRouter({
 
     await recomputeCustomViewsForUser(userId);
 
-    return result;
+    const affectedViews = await db.view.findMany({
+      where: {
+        userId,
+        type: "CUSTOM",
+      },
+      include: {
+        viewTags: {
+          include: { tag: true },
+        },
+        viewLists: {
+          select: {
+            listId: true,
+            order: true,
+          },
+          orderBy: {
+            order: "asc",
+          },
+        },
+      },
+    });
+
+    return {
+      ...result,
+      affectedViews,
+    };
   }),
   addToList: protectedProcedure.input(z.object({
     listId: z.uuid(),

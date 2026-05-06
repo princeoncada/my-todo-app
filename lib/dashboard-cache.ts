@@ -8,7 +8,9 @@ export type DashboardSnapshot = CurrentViewSnapshot
 export type DashboardList = DashboardSnapshot["lists"][number];
 export type DashboardTag = RouterOutputs["tag"]["getAll"][number];
 export type SavedListTags = DashboardList["listTags"];
-export type AffectedTagView = RouterOutputs["tag"]["applyListTagChanges"]["affectedViews"][number];
+export type AffectedTagView =
+  RouterOutputs["tag"]["applyListTagChanges"]["affectedViews"][number] |
+  RouterOutputs["tag"]["delete"]["affectedViews"][number];
 
 export type DashboardKeys = {
   views: QueryKey;

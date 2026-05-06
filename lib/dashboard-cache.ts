@@ -15,6 +15,24 @@ export type DashboardKeys = {
   selectedView: QueryKey;
 };
 
+export function queryKeysEqual(left: QueryKey, right: QueryKey) {
+  return JSON.stringify(left) === JSON.stringify(right);
+}
+
+function setDashboardQueryDataOnce<T>(
+  queryClient: QueryClient,
+  updatedKeys: Set<string>,
+  queryKey: QueryKey,
+  updater: (snapshot: T | undefined) => T | undefined
+) {
+  const keyHash = JSON.stringify(queryKey);
+
+  if (updatedKeys.has(keyHash)) return;
+
+  updatedKeys.add(keyHash);
+  queryClient.setQueryData<T>(queryKey, updater);
+}
+
 export function getAllListsSnapshot(
   queryClient: QueryClient,
   allListsQueryKey: QueryKey
@@ -98,7 +116,9 @@ export function updateListInDashboardCaches(
   listId: string,
   updater: (list: DashboardList) => DashboardList
 ) {
-  queryClient.setQueryData<DashboardSnapshot>(keys.allLists, (snapshot) => {
+  const updatedKeys = new Set<string>();
+
+  setDashboardQueryDataOnce<DashboardSnapshot>(queryClient, updatedKeys, keys.allLists, (snapshot) => {
     if (!snapshot) return snapshot;
 
     return {
@@ -109,7 +129,7 @@ export function updateListInDashboardCaches(
     };
   });
 
-  queryClient.setQueryData<DashboardSnapshot>(keys.currentView, (snapshot) => {
+  setDashboardQueryDataOnce<DashboardSnapshot>(queryClient, updatedKeys, keys.currentView, (snapshot) => {
     if (!snapshot) return snapshot;
 
     const selectedView = snapshot.view;
@@ -130,7 +150,7 @@ export function updateListInDashboardCaches(
     };
   });
 
-  queryClient.setQueryData<DashboardSnapshot>(keys.selectedView, (snapshot) => {
+  setDashboardQueryDataOnce<DashboardSnapshot>(queryClient, updatedKeys, keys.selectedView, (snapshot) => {
     if (!snapshot) return snapshot;
 
     const selectedView = snapshot.view;
@@ -157,6 +177,7 @@ export function removeListFromDashboardCaches(
   keys: DashboardKeys,
   listId: string
 ) {
+  const updatedKeys = new Set<string>();
   const removeList = (snapshot: DashboardSnapshot | undefined) =>
     snapshot
       ? {
@@ -165,9 +186,9 @@ export function removeListFromDashboardCaches(
       }
       : snapshot;
 
-  queryClient.setQueryData<DashboardSnapshot>(keys.allLists, removeList);
-  queryClient.setQueryData<DashboardSnapshot>(keys.currentView, removeList);
-  queryClient.setQueryData<DashboardSnapshot>(keys.selectedView, removeList);
+  setDashboardQueryDataOnce<DashboardSnapshot>(queryClient, updatedKeys, keys.allLists, removeList);
+  setDashboardQueryDataOnce<DashboardSnapshot>(queryClient, updatedKeys, keys.currentView, removeList);
+  setDashboardQueryDataOnce<DashboardSnapshot>(queryClient, updatedKeys, keys.selectedView, removeList);
 }
 
 export function invalidateViewPayloadQueries(queryClient: QueryClient) {

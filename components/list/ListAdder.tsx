@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CurrentView, OptimisticList } from "./types";
 import { Plus } from "lucide-react";
-import { invalidateViewPayloadQueries, selectedViewFromCache } from "@/lib/dashboard-cache";
+import { invalidateViewPayloadQueries, queryKeysEqual, selectedViewFromCache } from "@/lib/dashboard-cache";
 import { Skeleton } from "../ui/skeleton";
 
 
@@ -98,7 +98,7 @@ const ListAdder = () => {
         isOptimistic: true
       };
 
-      queryClient.setQueryData<CurrentView>(dashboardKeys.allLists, (current) =>
+      const insertOptimisticList = (current: CurrentView | undefined) =>
         current
           ? {
             ...current,
@@ -107,9 +107,9 @@ const ListAdder = () => {
               ...current.lists,
             ],
           }
-          : current
-      );
-      queryClient.setQueryData<CurrentView>(dashboardKeys.currentView, (current) =>
+          : current;
+
+      const insertIntoSelectedView = (current: CurrentView | undefined) =>
         current && (activeView?.type !== "CUSTOM" || activeView.id === current.view.id)
           ? {
             ...current,
@@ -118,44 +118,64 @@ const ListAdder = () => {
               ...current.lists,
             ],
           }
-          : current
-      );
-      queryClient.setQueryData<CurrentView>(dashboardKeys.selectedView, (current) =>
-        current && (activeView?.type !== "CUSTOM" || activeView.id === current.view.id)
-          ? {
-            ...current,
-            lists: [
-              optimisticList,
-              ...current.lists,
-            ],
-          }
-          : current
-      );
+          : current;
+
+      queryClient.setQueryData<CurrentView>(dashboardKeys.allLists, insertOptimisticList);
+      queryClient.setQueryData<CurrentView>(dashboardKeys.currentView, insertIntoSelectedView);
+      if (
+        !queryKeysEqual(dashboardKeys.selectedView, dashboardKeys.allLists) &&
+        !queryKeysEqual(dashboardKeys.selectedView, dashboardKeys.currentView)
+      ) {
+        queryClient.setQueryData<CurrentView>(dashboardKeys.selectedView, insertIntoSelectedView);
+      }
 
       return { previousAllLists, previousCurrentView, previousSelectedView };
     },
     async onSuccess(createdList, variables) {
-      const replaceOptimisticList = (current: CurrentView | undefined) =>
-        current
-          ? {
-            ...current,
-            lists: current.lists.map((list) =>
-              list.id === variables.id
-                ? {
-                  ...createdList,
-                  order: list.order,
-                  // Items can be added while a new list is still saving. Keep them instead of wiping the local work.
-                  listItems: list.listItems,
-                  listTags: list.listTags,
-                }
-                : list
-            ),
-          }
-          : current;
+      const replaceOptimisticList = (current: CurrentView | undefined) => {
+        if (!current) return current;
+
+        const matchingLists = current.lists.filter((list) => list.id === variables.id);
+        if (matchingLists.length === 0) return current;
+
+        const preservedList = matchingLists.reduce((bestList, list) =>
+          list.listItems.length > bestList.listItems.length ? list : bestList
+        );
+        let insertedCreatedList = false;
+
+        return {
+          ...current,
+          lists: current.lists.reduce<CurrentView["lists"]>((nextLists, list) => {
+              if (list.id !== variables.id) {
+                nextLists.push(list);
+                return nextLists;
+              }
+
+              if (insertedCreatedList) {
+                return nextLists;
+              }
+
+              insertedCreatedList = true;
+              nextLists.push({
+                ...createdList,
+                order: list.order,
+                // Items can be added while a new list is still saving. Keep them instead of wiping the local work.
+                listItems: preservedList.listItems,
+                listTags: preservedList.listTags,
+              });
+              return nextLists;
+            }, []),
+        };
+      };
 
       queryClient.setQueryData<CurrentView>(dashboardKeys.allLists, replaceOptimisticList);
       queryClient.setQueryData<CurrentView>(dashboardKeys.currentView, replaceOptimisticList);
-      queryClient.setQueryData<CurrentView>(dashboardKeys.selectedView, replaceOptimisticList);
+      if (
+        !queryKeysEqual(dashboardKeys.selectedView, dashboardKeys.allLists) &&
+        !queryKeysEqual(dashboardKeys.selectedView, dashboardKeys.currentView)
+      ) {
+        queryClient.setQueryData<CurrentView>(dashboardKeys.selectedView, replaceOptimisticList);
+      }
       await queryClient.invalidateQueries({ queryKey: dashboardKeys.views });
       await invalidateViewPayloadQueries(queryClient);
     },

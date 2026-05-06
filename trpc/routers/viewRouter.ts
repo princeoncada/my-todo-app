@@ -10,7 +10,9 @@ import {
   setSelectedView,
 } from "./viewHelpers";
 
-const viewTagIdsInput = z.array(z.uuid()).default([]);
+const viewTagIdsInput = z.array(z.uuid()).min(1, {
+  message: "Custom views must require at least one tag.",
+});
 
 export const viewRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx: { userId } }) => {

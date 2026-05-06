@@ -187,18 +187,21 @@ export const tagRouter = createTRPCRouter({
     }
 
     const tagIds = compactedOperations.map((operation) => operation.tagId);
-    const [list, tags] = await Promise.all([
+    const addTagIds = compactedOperations
+      .filter((operation) => operation.action === "add")
+      .map((operation) => operation.tagId);
+    const [list, ownedAddTags] = await Promise.all([
       db.list.findFirst({
         where: { id: listId, userId },
         select: { id: true },
       }),
       db.tag.findMany({
-        where: { id: { in: tagIds }, userId },
+        where: { id: { in: addTagIds }, userId },
         select: { id: true },
       }),
     ]);
 
-    if (!list || tags.length !== tagIds.length) {
+    if (!list || ownedAddTags.length !== new Set(addTagIds).size) {
       throw new TRPCError({ code: "NOT_FOUND" });
     }
 

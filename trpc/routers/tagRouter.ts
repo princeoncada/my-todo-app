@@ -84,7 +84,31 @@ export const tagRouter = createTRPCRouter({
 
     await recomputeCustomViewsForUser(userId);
 
-    return result;
+    const affectedViews = await db.view.findMany({
+      where: {
+        userId,
+        type: "CUSTOM",
+      },
+      include: {
+        viewTags: {
+          include: { tag: true },
+        },
+        viewLists: {
+          select: {
+            listId: true,
+            order: true,
+          },
+          orderBy: {
+            order: "asc",
+          },
+        },
+      },
+    });
+
+    return {
+      ...result,
+      affectedViews,
+    };
   }),
   addToList: protectedProcedure.input(z.object({
     listId: z.uuid(),
@@ -171,22 +195,37 @@ export const tagRouter = createTRPCRouter({
     ).map(([tagId, action]) => ({ tagId, action }));
 
     if (compactedOperations.length === 0) {
-      return { success: true };
+      const listTags = await db.listTag.findMany({
+        where: {
+          listId,
+          list: { userId },
+        },
+        include: { tag: true },
+      });
+
+      return {
+        listId,
+        listTags,
+        affectedViews: [],
+      };
     }
 
     const tagIds = compactedOperations.map((operation) => operation.tagId);
-    const [list, tags] = await Promise.all([
+    const addTagIds = compactedOperations
+      .filter((operation) => operation.action === "add")
+      .map((operation) => operation.tagId);
+    const [list, ownedAddTags] = await Promise.all([
       db.list.findFirst({
         where: { id: listId, userId },
         select: { id: true },
       }),
       db.tag.findMany({
-        where: { id: { in: tagIds }, userId },
+        where: { id: { in: addTagIds }, userId },
         select: { id: true },
       }),
     ]);
 
-    if (!list || tags.length !== tagIds.length) {
+    if (!list || ownedAddTags.length !== new Set(addTagIds).size) {
       throw new TRPCError({ code: "NOT_FOUND" });
     }
 
@@ -223,6 +262,45 @@ export const tagRouter = createTRPCRouter({
     // Recompute after the short write transaction. Keeping this outside avoids Prisma's 5s transaction timeout.
     await recomputeCustomViewsForTags(userId, tagIds);
 
-    return { success: true };
+    const [listTags, affectedViews] = await Promise.all([
+      db.listTag.findMany({
+        where: {
+          listId,
+          list: { userId },
+        },
+        include: { tag: true },
+      }),
+      db.view.findMany({
+        where: {
+          userId,
+          type: "CUSTOM",
+          viewTags: {
+            some: {
+              tagId: { in: tagIds },
+            },
+          },
+        },
+        include: {
+          viewTags: {
+            include: { tag: true },
+          },
+          viewLists: {
+            select: {
+              listId: true,
+              order: true,
+            },
+            orderBy: {
+              order: "asc",
+            },
+          },
+        },
+      }),
+    ]);
+
+    return {
+      listId,
+      listTags,
+      affectedViews,
+    };
   }),
 })

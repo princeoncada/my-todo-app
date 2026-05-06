@@ -28,10 +28,10 @@ import {
   applyTagChangeToCaches,
   DashboardKeys,
   DashboardSnapshot,
-  invalidateViewPayloadQueries,
+  reconcileAffectedViewLists,
+  reconcileSavedListTags,
   ViewsCache,
 } from "@/lib/dashboard-cache";
-import { useOptimisticSync } from "@/hooks/useOptimisticSync";
 import { measureCacheWrite, measureRequest, useRenderMeasure } from "@/lib/optimistic-debug";
 
 type TagValue = RouterOutputs["tag"]["getAll"][number];
@@ -88,11 +88,12 @@ export default function ListTagPicker({
 
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const optimisticSync = useOptimisticSync();
   const tagsQueryKey = trpc.tag.getAll.queryKey();
   const queryKey = dashboardKeys.allLists;
   const pendingTagOperationsRef = useRef(new Map<string, "add" | "remove">());
   const tagFlushTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const tagSaveChainRef = useRef(Promise.resolve());
+  const tagOptimisticVersionRef = useRef(0);
   const tagRollbackSnapshotRef = useRef<{
     allLists: DashboardSnapshot | undefined;
     currentView: CurrentView | undefined;
@@ -156,6 +157,19 @@ export default function ListTagPicker({
     trpc.tag.applyListTagChanges.mutationOptions()
   );
 
+  const cancelTagCacheQueries = () =>
+    Promise.all([
+      queryClient.cancelQueries({ queryKey: tagsQueryKey }),
+      queryClient.cancelQueries({ queryKey: dashboardKeys.views }),
+      queryClient.cancelQueries({ queryKey: dashboardKeys.allLists }),
+      queryClient.cancelQueries({ queryKey: dashboardKeys.currentView }),
+      queryClient.cancelQueries({ queryKey: dashboardKeys.selectedView }),
+      queryClient.cancelQueries({
+        predicate: (query) =>
+          JSON.stringify(query.queryKey).includes("getViewListsWithItems"),
+      }),
+    ]);
+
   const scheduleTagFlush = (
     tag: TagValue | ListTagValue["tag"],
     action: "add" | "remove"
@@ -163,6 +177,9 @@ export default function ListTagPicker({
     const cacheTag: TagValue = "listTags" in tag
       ? tag
       : { ...tag, listTags: [] };
+
+    tagOptimisticVersionRef.current += 1;
+    void cancelTagCacheQueries();
 
     if (!tagRollbackSnapshotRef.current) {
       tagRollbackSnapshotRef.current = {
@@ -195,33 +212,48 @@ export default function ListTagPicker({
         ([tagId, action]) => ({ tagId, action })
       );
       const rollbackSnapshot = tagRollbackSnapshotRef.current;
+      const flushVersion = tagOptimisticVersionRef.current;
 
       pendingTagOperationsRef.current.clear();
       tagRollbackSnapshotRef.current = null;
 
       if (operations.length === 0) return;
 
-      optimisticSync.enqueue(
-        "list-tags",
-        async () => {
+      tagSaveChainRef.current = tagSaveChainRef.current
+        .catch(() => undefined)
+        .then(async () => {
           measureRequest("tag.applyListTagChanges", {
             listId,
             count: operations.length,
           });
-          await applyListTagChangesMutation.mutateAsync({ listId, operations });
-          await queryClient.invalidateQueries({ queryKey: dashboardKeys.views });
-          await invalidateViewPayloadQueries(queryClient);
-        },
-        {
-          label: "tag.applyListTagChanges",
-          rollback: () => {
+          const result = await applyListTagChangesMutation.mutateAsync({
+            listId,
+            operations,
+          });
+
+          if (flushVersion !== tagOptimisticVersionRef.current) return;
+
+          reconcileSavedListTags(
+            queryClient,
+            dashboardKeys,
+            result.listId,
+            result.listTags
+          );
+          reconcileAffectedViewLists(
+            queryClient,
+            dashboardKeys,
+            result.affectedViews
+          );
+        })
+        .catch((error) => {
+          if (flushVersion === tagOptimisticVersionRef.current) {
             queryClient.setQueryData(queryKey, rollbackSnapshot?.allLists);
             queryClient.setQueryData(dashboardKeys.currentView, rollbackSnapshot?.currentView);
             queryClient.setQueryData(dashboardKeys.selectedView, rollbackSnapshot?.selectedView);
             queryClient.setQueryData(dashboardKeys.views, rollbackSnapshot?.views);
-          },
-        }
-      );
+          }
+          console.error("Tag sync failed:", error);
+        });
     }, 150);
   };
 
@@ -300,12 +332,7 @@ export default function ListTagPicker({
 
   const deleteTagMutation = useMutation(trpc.tag.delete.mutationOptions({
     async onMutate(deletedTag) {
-      await Promise.all([
-        queryClient.cancelQueries({ queryKey: tagsQueryKey }),
-        queryClient.cancelQueries({ queryKey: dashboardKeys.allLists }),
-        queryClient.cancelQueries({ queryKey: dashboardKeys.currentView }),
-        queryClient.cancelQueries({ queryKey: dashboardKeys.selectedView }),
-      ]);
+      await cancelTagCacheQueries();
 
       const previousTags = queryClient.getQueryData<TagValue[]>(tagsQueryKey);
       const previousLists = queryClient.getQueryData<CurrentView>(queryKey);
@@ -367,9 +394,8 @@ export default function ListTagPicker({
       queryClient.setQueryData(dashboardKeys.currentView, context?.previousCurrentView);
       queryClient.setQueryData(dashboardKeys.selectedView, context?.previousSelectedView);
     },
-    async onSuccess() {
-      await queryClient.invalidateQueries({ queryKey: dashboardKeys.views });
-      await invalidateViewPayloadQueries(queryClient);
+    async onSuccess(result) {
+      reconcileAffectedViewLists(queryClient, dashboardKeys, result.affectedViews);
     },
   }));
 

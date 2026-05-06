@@ -14,6 +14,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -488,9 +489,10 @@ export default function ViewsSidebarPreview() {
       );
       queryClient.setQueryData(currentViewQueryKey, createdViewPayload);
     },
-    onError(_error, _variables, context) {
+    onError(error, _variables, context) {
       queryClient.setQueryData(viewsQueryKey, context?.previousViews);
       queryClient.setQueryData(currentViewQueryKey, context?.previousCurrentView);
+      toast.error(error.message || "View could not be created.");
     },
   }));
 

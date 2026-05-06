@@ -117,59 +117,63 @@ export function updateListInDashboardCaches(
   updater: (list: DashboardList) => DashboardList
 ) {
   const updatedKeys = new Set<string>();
+  let updatedAllListsSnapshot: DashboardSnapshot | undefined;
 
   setDashboardQueryDataOnce<DashboardSnapshot>(queryClient, updatedKeys, keys.allLists, (snapshot) => {
     if (!snapshot) return snapshot;
 
-    return {
+    updatedAllListsSnapshot = {
       ...snapshot,
       lists: snapshot.lists.map((list) =>
         list.id === listId ? updater(list) : list
       ),
     };
+
+    return updatedAllListsSnapshot;
   });
 
   setDashboardQueryDataOnce<DashboardSnapshot>(queryClient, updatedKeys, keys.currentView, (snapshot) => {
     if (!snapshot) return snapshot;
 
-    const selectedView = snapshot.view;
-    const updatedLists = snapshot.lists.map((list) =>
-      list.id === listId ? updater(list) : list
-    );
-
-    if (selectedView.type !== "CUSTOM") {
-      return {
-        ...snapshot,
-        lists: updatedLists,
-      };
+    if (updatedAllListsSnapshot) {
+      return projectView(snapshot.view, updatedAllListsSnapshot);
     }
 
-    return {
-      ...snapshot,
-      lists: updatedLists.filter((list) => listMatchesView(list, selectedView)),
-    };
+    return updateListInViewSnapshot(snapshot, listId, updater);
   });
 
   setDashboardQueryDataOnce<DashboardSnapshot>(queryClient, updatedKeys, keys.selectedView, (snapshot) => {
     if (!snapshot) return snapshot;
 
-    const selectedView = snapshot.view;
-    const updatedLists = snapshot.lists.map((list) =>
-      list.id === listId ? updater(list) : list
-    );
-
-    if (selectedView.type !== "CUSTOM") {
-      return {
-        ...snapshot,
-        lists: updatedLists,
-      };
+    if (updatedAllListsSnapshot) {
+      return projectView(snapshot.view, updatedAllListsSnapshot);
     }
 
+    return updateListInViewSnapshot(snapshot, listId, updater);
+  });
+}
+
+function updateListInViewSnapshot(
+  snapshot: DashboardSnapshot,
+  listId: string,
+  updater: (list: DashboardList) => DashboardList
+) {
+  const selectedView = snapshot.view;
+  const updatedLists = snapshot.lists.map((list) =>
+    list.id === listId ? updater(list) : list
+  );
+
+  if (selectedView.type !== "CUSTOM") {
     return {
       ...snapshot,
-      lists: updatedLists.filter((list) => listMatchesView(list, selectedView)),
+      lists: updatedLists,
     };
-  });
+  }
+
+  return {
+    ...snapshot,
+    lists: updatedLists.filter((list) => listMatchesView(list, selectedView)),
+  };
 }
 
 export function removeListFromDashboardCaches(

@@ -28,7 +28,6 @@ import {
   applyTagChangeToCaches,
   DashboardKeys,
   DashboardSnapshot,
-  invalidateViewPayloadQueries,
   reconcileAffectedViewLists,
   reconcileSavedListTags,
   ViewsCache,
@@ -157,6 +156,19 @@ export default function ListTagPicker({
     trpc.tag.applyListTagChanges.mutationOptions()
   );
 
+  const cancelTagCacheQueries = () =>
+    Promise.all([
+      queryClient.cancelQueries({ queryKey: tagsQueryKey }),
+      queryClient.cancelQueries({ queryKey: dashboardKeys.views }),
+      queryClient.cancelQueries({ queryKey: dashboardKeys.allLists }),
+      queryClient.cancelQueries({ queryKey: dashboardKeys.currentView }),
+      queryClient.cancelQueries({ queryKey: dashboardKeys.selectedView }),
+      queryClient.cancelQueries({
+        predicate: (query) =>
+          JSON.stringify(query.queryKey).includes("getViewListsWithItems"),
+      }),
+    ]);
+
   const scheduleTagFlush = (
     tag: TagValue | ListTagValue["tag"],
     action: "add" | "remove"
@@ -165,75 +177,79 @@ export default function ListTagPicker({
       ? tag
       : { ...tag, listTags: [] };
 
-    if (!tagRollbackSnapshotRef.current) {
-      tagRollbackSnapshotRef.current = {
-        allLists: queryClient.getQueryData<DashboardSnapshot>(queryKey),
-        currentView: queryClient.getQueryData<CurrentView>(dashboardKeys.currentView),
-        selectedView: queryClient.getQueryData<CurrentView>(dashboardKeys.selectedView),
-        views: queryClient.getQueryData<ViewsCache>(dashboardKeys.views),
-      };
-    }
+    void (async () => {
+      await cancelTagCacheQueries();
 
-    pendingTagOperationsRef.current.set(cacheTag.id, action);
-    // Tags update the cache right away, but the server save waits for the short batch window.
-    applyTagChangeToCaches(queryClient, dashboardKeys, listId, cacheTag, action);
-    measureCacheWrite("list-tags.toggle", { listId, tagId: cacheTag.id, action });
-
-    if (tagFlushTimeoutRef.current) {
-      clearTimeout(tagFlushTimeoutRef.current);
-    }
-
-    tagFlushTimeoutRef.current = setTimeout(() => {
-      const currentLists = queryClient.getQueryData<CurrentView>(queryKey);
-
-      if (listIsStillOptimistic(currentLists, listId)) {
-        // Newly created lists may not exist on the server yet. Wait instead of sending a temporary id.
-        scheduleTagFlush(cacheTag, action);
-        return;
+      if (!tagRollbackSnapshotRef.current) {
+        tagRollbackSnapshotRef.current = {
+          allLists: queryClient.getQueryData<DashboardSnapshot>(queryKey),
+          currentView: queryClient.getQueryData<CurrentView>(dashboardKeys.currentView),
+          selectedView: queryClient.getQueryData<CurrentView>(dashboardKeys.selectedView),
+          views: queryClient.getQueryData<ViewsCache>(dashboardKeys.views),
+        };
       }
 
-      const operations = Array.from(pendingTagOperationsRef.current.entries()).map(
-        ([tagId, action]) => ({ tagId, action })
-      );
-      const rollbackSnapshot = tagRollbackSnapshotRef.current;
+      pendingTagOperationsRef.current.set(cacheTag.id, action);
+      // Tags update the cache right away, but the server save waits for the short batch window.
+      applyTagChangeToCaches(queryClient, dashboardKeys, listId, cacheTag, action);
+      measureCacheWrite("list-tags.toggle", { listId, tagId: cacheTag.id, action });
 
-      pendingTagOperationsRef.current.clear();
-      tagRollbackSnapshotRef.current = null;
+      if (tagFlushTimeoutRef.current) {
+        clearTimeout(tagFlushTimeoutRef.current);
+      }
 
-      if (operations.length === 0) return;
+      tagFlushTimeoutRef.current = setTimeout(() => {
+        const currentLists = queryClient.getQueryData<CurrentView>(queryKey);
 
-      tagSaveChainRef.current = tagSaveChainRef.current
-        .catch(() => undefined)
-        .then(async () => {
-          measureRequest("tag.applyListTagChanges", {
-            listId,
-            count: operations.length,
+        if (listIsStillOptimistic(currentLists, listId)) {
+          // Newly created lists may not exist on the server yet. Wait instead of sending a temporary id.
+          scheduleTagFlush(cacheTag, action);
+          return;
+        }
+
+        const operations = Array.from(pendingTagOperationsRef.current.entries()).map(
+          ([tagId, action]) => ({ tagId, action })
+        );
+        const rollbackSnapshot = tagRollbackSnapshotRef.current;
+
+        pendingTagOperationsRef.current.clear();
+        tagRollbackSnapshotRef.current = null;
+
+        if (operations.length === 0) return;
+
+        tagSaveChainRef.current = tagSaveChainRef.current
+          .catch(() => undefined)
+          .then(async () => {
+            measureRequest("tag.applyListTagChanges", {
+              listId,
+              count: operations.length,
+            });
+            const result = await applyListTagChangesMutation.mutateAsync({
+              listId,
+              operations,
+            });
+
+            reconcileSavedListTags(
+              queryClient,
+              dashboardKeys,
+              result.listId,
+              result.listTags
+            );
+            reconcileAffectedViewLists(
+              queryClient,
+              dashboardKeys,
+              result.affectedViews
+            );
+          })
+          .catch((error) => {
+            queryClient.setQueryData(queryKey, rollbackSnapshot?.allLists);
+            queryClient.setQueryData(dashboardKeys.currentView, rollbackSnapshot?.currentView);
+            queryClient.setQueryData(dashboardKeys.selectedView, rollbackSnapshot?.selectedView);
+            queryClient.setQueryData(dashboardKeys.views, rollbackSnapshot?.views);
+            console.error("Tag sync failed:", error);
           });
-          const result = await applyListTagChangesMutation.mutateAsync({
-            listId,
-            operations,
-          });
-
-          reconcileSavedListTags(
-            queryClient,
-            dashboardKeys,
-            result.listId,
-            result.listTags
-          );
-          reconcileAffectedViewLists(
-            queryClient,
-            dashboardKeys,
-            result.affectedViews
-          );
-        })
-        .catch((error) => {
-          queryClient.setQueryData(queryKey, rollbackSnapshot?.allLists);
-          queryClient.setQueryData(dashboardKeys.currentView, rollbackSnapshot?.currentView);
-          queryClient.setQueryData(dashboardKeys.selectedView, rollbackSnapshot?.selectedView);
-          queryClient.setQueryData(dashboardKeys.views, rollbackSnapshot?.views);
-          console.error("Tag sync failed:", error);
-        });
-    }, 150);
+      }, 150);
+    })();
   };
 
   const createTagMutation = useMutation(trpc.tag.create.mutationOptions({
@@ -311,12 +327,7 @@ export default function ListTagPicker({
 
   const deleteTagMutation = useMutation(trpc.tag.delete.mutationOptions({
     async onMutate(deletedTag) {
-      await Promise.all([
-        queryClient.cancelQueries({ queryKey: tagsQueryKey }),
-        queryClient.cancelQueries({ queryKey: dashboardKeys.allLists }),
-        queryClient.cancelQueries({ queryKey: dashboardKeys.currentView }),
-        queryClient.cancelQueries({ queryKey: dashboardKeys.selectedView }),
-      ]);
+      await cancelTagCacheQueries();
 
       const previousTags = queryClient.getQueryData<TagValue[]>(tagsQueryKey);
       const previousLists = queryClient.getQueryData<CurrentView>(queryKey);
@@ -378,9 +389,8 @@ export default function ListTagPicker({
       queryClient.setQueryData(dashboardKeys.currentView, context?.previousCurrentView);
       queryClient.setQueryData(dashboardKeys.selectedView, context?.previousSelectedView);
     },
-    async onSuccess() {
-      await queryClient.invalidateQueries({ queryKey: dashboardKeys.views });
-      await invalidateViewPayloadQueries(queryClient);
+    async onSuccess(result) {
+      reconcileAffectedViewLists(queryClient, dashboardKeys, result.affectedViews);
     },
   }));
 

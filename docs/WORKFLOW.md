@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.0.2-alpha -->
+<!-- Current Version: 1.0.2 -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start alongside `STATE.json`. It is the authoritative protocol for all implementation phases.
 
@@ -28,8 +28,8 @@ Codex does **not**: commit, push, run `npm run test:ci`, create branches, or run
 
 Run these steps at the start of every Claude Code session before asking for direction:
 
-1. `git pull origin master` â€” sync latest
-2. **Read `STATE.json`** â€” report: version, state, phase, phaseTitle, nextPhase, any in-progress branch, pre-versioning notes
+1. `git pull origin master` Ã¢â‚¬â€ sync latest
+2. **Read `STATE.json`** Ã¢â‚¬â€ report: version, state, phase, phaseTitle, nextPhase, any in-progress branch, pre-versioning notes
 3. **Query ChromaDB** (when running on `localhost:8000`):
    ```bash
    python scripts/query_docs.py "<your question about the current task>"
@@ -69,10 +69,10 @@ QUERY (ChromaDB) -> READ (STATE.json + minimal docs) -> CONFIRM (user direction)
 
 Check STATE.json before deciding how to respond to a fix or change request:
 
-- state = "alpha" — apply the fix directly as an in-alpha correction.
+- state = "alpha" â€” apply the fix directly as an in-alpha correction.
   No new Codex prompt, no version bump, no re-scope. Extend the current
   phase prompt with the additional changes only.
-- state = "stable" — open a new phase. Write a full Codex prompt with
+- state = "stable" â€” open a new phase. Write a full Codex prompt with
   version bump, READ THESE FILES FIRST, IMPLEMENTATION REQUIREMENTS,
   SAFETY CONSTRAINTS, and STOP AND SUMMARIZE.
 
@@ -83,13 +83,13 @@ Never re-scope a full phase for a fix when the current version is already alpha.
 ## Codex Prompt Format
 
 Every Codex prompt uses a two-section format. Section headings are markdown
-headers sitting above their code block — not inside it.
+headers sitting above their code block â€” not inside it.
 
-### Section 1 — Master Prompt
+### Section 1 â€” Master Prompt
 
 A plain text code block containing all of the following blocks in this exact order:
 
-    You are implementing Phase X.Y.Z — [Name] for Tidy.
+    You are implementing Phase X.Y.Z â€” [Name] for Tidy.
     Current stable version: X.Y.Z-stable.
     This implementation opens X.Y.Z-alpha.
 
@@ -100,7 +100,7 @@ A plain text code block containing all of the following blocks in this exact ord
     - STATE.json
     - docs/AI_HANDOFF.md
     - docs/CODEX_RULES.md
-    - [2–3 source files directly relevant to this change]
+    - [2â€“3 source files directly relevant to this change]
     - [if the phase creates or modifies scripts: list scripts/ to check for
       existing implementations before scoping anything new]
 
@@ -142,7 +142,7 @@ A plain text code block containing all of the following blocks in this exact ord
     2. Files modified (path + what changed)
     3. Any assumptions made during implementation
 
-### Section 2 — Validation
+### Section 2 â€” Validation
 
 A PowerShell code block. Structure:
 
@@ -158,8 +158,8 @@ A PowerShell code block. Structure:
 After npm run test:ci passes, Claude Code provides all of the following
 in a single message:
 
-1. Validation summary — pass counts, any warnings
-2. commit.ps1 call sequence — one call per changed file, in commit order:
+1. Validation summary â€” pass counts, any warnings
+2. commit.ps1 call sequence â€” one call per changed file, in commit order:
 
     .\scripts\commit.ps1 -Files "path/to/file" -Message "type(scope): message"
 
@@ -167,7 +167,7 @@ in a single message:
 
     .\scripts\promote.ps1
 
-4. Stable-promotion commit sequence — one call per versioning file:
+4. Stable-promotion commit sequence â€” one call per versioning file:
 
     .\scripts\commit.ps1 -Files "STATE.json" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
     .\scripts\commit.ps1 -Files "docs/VERSIONING.md" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
@@ -187,13 +187,13 @@ When a session ends before a phase is complete, Claude Code provides a Codex pro
 **Target file**: `docs/SESSION_LOG/YYYY-MM-DD-session-NN.md`
 
 **Required sections**:
-1. **What Was Done** â€” commits made, files changed, tests updated
-2. **In Progress** â€” active checkpoint name, branch name, last stable state
-3. **Current Version State** â€” from STATE.json (version, state, phase)
-4. **Open Decisions** â€” unresolved questions or architectural choices
-5. **Known Issues** â€” bugs discovered but not yet fixed
-6. **Uncommitted Work** â€” staged or unstaged changes and their purpose
-7. **Next Recommended Action** â€” exact next step for the resuming session
+1. **What Was Done** Ã¢â‚¬â€ commits made, files changed, tests updated
+2. **In Progress** Ã¢â‚¬â€ active checkpoint name, branch name, last stable state
+3. **Current Version State** Ã¢â‚¬â€ from STATE.json (version, state, phase)
+4. **Open Decisions** Ã¢â‚¬â€ unresolved questions or architectural choices
+5. **Known Issues** Ã¢â‚¬â€ bugs discovered but not yet fixed
+6. **Uncommitted Work** Ã¢â‚¬â€ staged or unstaged changes and their purpose
+7. **Next Recommended Action** Ã¢â‚¬â€ exact next step for the resuming session
 
 ---
 
@@ -211,10 +211,10 @@ See `docs/VERSIONING.md` for the five versioning locations and the full bump rul
 
 ## Versioning Locations (All Five, Every Bump)
 
-1. `STATE.json` â€” `version` + `state` fields
-2. `docs/VERSIONING.md` â€” history table + current state row
-3. `docs/AI_HANDOFF.md` â€” `<!-- Current Version: X.Y.Z -->` comment at top
-4. `package.json` â€” `version` field
-5. `docs/WORKFLOW.md` â€” `<!-- Current Version: X.Y.Z -->` comment at top (this file)
+1. `STATE.json` Ã¢â‚¬â€ `version` + `state` fields
+2. `docs/VERSIONING.md` Ã¢â‚¬â€ history table + current state row
+3. `docs/AI_HANDOFF.md` Ã¢â‚¬â€ `<!-- Current Version: X.Y.Z -->` comment at top
+4. `package.json` Ã¢â‚¬â€ `version` field
+5. `docs/WORKFLOW.md` Ã¢â‚¬â€ `<!-- Current Version: X.Y.Z -->` comment at top (this file)
 
 `.\scripts\promote.ps1` handles all five automatically.

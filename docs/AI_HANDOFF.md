@@ -1,40 +1,26 @@
-<!-- Current Version: 1.0.1 -->
+<!-- Current Version: 1.0.2-alpha -->
 # AI Handoff
-**Current Version**: 1.0.1-alpha â€” read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.0.1 â€” AGENTS.md Hardening
-**Next**: 1.0.2 â€” Commit Sequence Automation
+**Current Version**: 1.0.2-alpha — read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.0.2 — Commit Automation and Prompt Format Hardening
+**Next**: 1.1.0 — Graphify Integration
 ---
 ## What Was Last Done
-**Phase 1.0.1** hardened the AI agent startup protocol and fixed structural
-issues in `AGENTS.md`:
-- Rewrote `AGENTS.md` as LF-only with 4-space indented code blocks (no triple
-  backticks) to prevent inline-breaking when loaded via `@AGENTS.md`
-- Added Startup Report Format, File Read Priority table, and Claude Code
-  Command Vocabulary sections to `AGENTS.md`
-- Made "wait for direction" conditional â€” proceeds to Codex prompts immediately
-  when user provides scope at session start
-- Added `next.config.ts` â€” `allowedDevOrigins: ['127.0.0.1']` to fix HMR
-  cross-origin blocking in dev
-- Added v1.0.2 entry to `docs/FUTURE_PLANS.md` for commit sequence automation
-- Bumped all five versioning locations to 1.0.1-alpha
+**Phase 1.0.2** opened commit automation and hardened the Codex prompt workflow:
+- Standardized post-validation commit sequences on canonical `scripts/commit.ps1`
+- Rewrote the `docs/WORKFLOW.md` Codex prompt format around READ THESE FILES FIRST, CURRENT PROJECT STATE, IMPLEMENTATION REQUIREMENTS, SAFETY CONSTRAINTS, and STOP AND SUMMARIZE blocks
+- Updated post-validation workflow and commit discipline docs to use `commit.ps1` instead of raw git add + git commit blocks
+- Updated `docs/FUTURE_PLANS.md`, `docs/VERSIONING.md`, `STATE.json`, `package.json`, and workflow version metadata for 1.0.2-alpha
 **Pre-versioning phases** (documented fully in `docs/PHASE_LOG.md`):
-- **Phase 1: Dexie Foundation** â€” done, merged to master
-- **Phase 2: Outbox Sync Queue** â€” done, ready for merge review
-- **Phase 3: View Filter Hardening** â€” in progress, active on
+- **Phase 1: Dexie Foundation** — done, merged to master
+- **Phase 2: Outbox Sync Queue** — done, ready for merge review
+- **Phase 3: View Filter Hardening** — in progress, active on
   `checkpoint/fix-cross-view-list-moves` (3 of 7 checkpoints done)
 ## Active Branch
 `master`
 ## What the Next Session Should Do
 1. Read `STATE.json` and `docs/FUTURE_PLANS.md`
-2. Query ChromaDB: `python scripts/query_docs.py "commit sequence automation v1.0.2"`
-3. Scope out v1.0.2 â€” Commit Sequence Automation:
-   - `scripts/phase-commit-sequence.ps1` â€” reads `.commit-sequence` manifest,
-     commits each `path1[,pathN]|message` entry one by one
-   - `docs/WORKFLOW.md` Post-Validation section â€” rewrite to say Claude Code
-     writes `.commit-sequence`, user runs the script
-   - `AGENTS.md` + `docs/CODEX_RULES.md` â€” add no-batching and no-Co-Authored-By
-     commit discipline rules
-   - `.gitignore` â€” add `.commit-sequence`
+2. Query ChromaDB: `python scripts/query_docs.py "Graphify Integration v1.1.0"`
+3. Scope out v1.1.0 — Graphify Integration
 ---
 
 ## Current Product Snapshot

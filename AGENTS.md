@@ -10,23 +10,52 @@ This project uses newer framework versions with breaking changes — APIs, conve
 
 At the start of every session, before reading other docs or writing code:
 
-1. Read `STATE.json` — report version, state, phase, phaseTitle, nextPhase, and any active branch or pre-versioning notes.
-2. Query ChromaDB before opening large docs (when available on `localhost:8000`):
-   ```
-   python scripts/query_docs.py "<your question about the current task>"
-   ```
-   One query per distinct topic. Trust the first result. Only read the full doc file if the query returns zero relevant content. When falling back, state: *"Query returned zero results for X, falling back to direct read because..."*
-3. Report findings. Wait for explicit user direction before scoping or implementing.
+1. Read `STATE.json` and `docs/FUTURE_PLANS.md` — together these give version, active phase, next phase, and the full work backlog.
+2. Query ChromaDB if available on `localhost:8000`:
+        python scripts/query_docs.py "<question about current task>"
+   One query per topic. Trust the first result. Fall back to direct file read only if query returns zero results — state why when falling back.
+3. Output the startup report (see Startup Report Format below).
+4. If the user provided scope in their opening message: proceed directly to writing Codex prompts. Do not ask for confirmation.
+   If no scope was provided: wait for the user's go-ahead.
 
-See `docs/WORKFLOW.md` for the full session protocol and `docs/COMPACT_STRATEGY.md` for token budget targets.
+## Startup Report Format
+
+Always output this exact structure at session start:
+
+    Version: X.Y.Z-[state]
+    Phase: [phaseTitle]
+    Next phase: [nextPhase]
+    ChromaDB: [online | offline]
+    FUTURE_PLANS next: [title of first Open item]
+    [one of:]
+    Proceeding to Codex prompts for [scope].
+    Waiting for your go-ahead.
+
+## File Read Priority
+
+| Task type | Read these |
+|-----------|-----------|
+| Startup | `STATE.json` + `docs/FUTURE_PLANS.md` |
+| Implementation | `docs/AI_HANDOFF.md` + `docs/CODEX_RULES.md` + 2–3 source files |
+| Patch / docs work | `docs/CODEX_RULES.md` + affected files only |
+| Session close | Write `SESSION_LOG` → update `STATE.json` |
+
+Do not read `docs/WORKFLOW.md` at startup. Read it only when writing or reviewing a Codex prompt format or the post-validation workflow.
+
+## Claude Code Command Vocabulary
+
+| Phrase | What Claude Code does |
+|--------|----------------------|
+| "scope it out" | Write the full Codex prompt + Section 2 validation block |
+| "what's next" | Report FUTURE_PLANS next Open item and summarize it |
+| "session start" / "continue" | Run Session Start Protocol and output Startup Report |
+| "I AUTHORIZE CLAUDE CODE TO IMPLEMENT - [reason]" | Implement directly instead of writing a Codex prompt |
 
 ## Implementation Gate
 
 Claude Code may implement directly **only** when the user provides this exact phrase:
 
-```
-I AUTHORIZE CLAUDE CODE TO IMPLEMENT - [reason]
-```
+    I AUTHORIZE CLAUDE CODE TO IMPLEMENT - [reason]
 
 Without this phrase, Claude Code writes Codex prompts using the 2-section format in `docs/WORKFLOW.md`. Claude Code never commits, pushes, creates branches, or runs `npm run test:ci` regardless of authorization.
 

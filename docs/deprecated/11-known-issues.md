@@ -26,7 +26,7 @@ Risk tends to appear where local UI, cache state, and server state diverge:
 - Auth logout with cached user data.
 
 ## Invariants
-- Treat this file and `backlog.md` as living documents.
+- Treat this file and `docs/FUTURE_PLANS.md` as living documents.
 - Do not remove an issue because it is inconvenient. Remove it only after code and validation prove it is resolved.
 - Security/ownership issues outrank UI polish.
 
@@ -46,6 +46,6 @@ Risk tends to appear where local UI, cache state, and server state diverge:
 - For sync issues, read `05-dashboard-state-cache.md` and `06-optimistic-sync.md`.
 
 ## What Codex Must Update After Editing
-- Remove or amend fixed issues with a note in `15-decision-log.md` when the fix changes behavior.
-- Add newly discovered issues here and to `backlog.md`.
+- Remove or amend fixed issues with a note in `docs/DECISIONS.md` when the fix changes behavior.
+- Add newly discovered issues here and to `docs/FUTURE_PLANS.md`.
 - Update `13-testing-and-validation.md` with regression checks for fixed bugs.

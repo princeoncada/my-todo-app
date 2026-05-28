@@ -350,4 +350,4 @@ Custom views currently use `ViewMatchMode.ALL`; a custom view must have at least
 - Update `03-data-model.md` if API changes depend on model changes.
 - Update `05-dashboard-state-cache.md` if query keys or payload shapes change.
 - Update `13-testing-and-validation.md` with new validation steps.
-- Add security or ownership follow-ups to `backlog.md`.
+- Add security or ownership follow-ups to `docs/FUTURE_PLANS.md`.

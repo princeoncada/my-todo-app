@@ -30,7 +30,7 @@ Current scopes:
 - `components/list/ListItemComponent.tsx`: item delete queue.
 - `components/list/ListTagPicker.tsx`: has local tag batching chain, separate from `useOptimisticSync`.
 - `lib/optimistic-debug.tsx`: dev-only measurement labels.
-- `docs/optimistic-updates.md`: older high-level notes.
+- `docs/deprecated/optimistic-updates.md`: older high-level notes (deprecated).
 
 ## Data Flow
 General optimistic mutation:
@@ -78,5 +78,5 @@ List creation race:
 
 ## What Codex Must Update After Editing
 - Update this file for new scopes, changed queue semantics, rollback rules, or offline persistence.
-- Update `backlog.md` with sync reliability, retry, observability, or offline-first work.
+- Update `docs/FUTURE_PLANS.md` with sync reliability, retry, observability, or offline-first work.
 - Update `13-testing-and-validation.md` with new manual race cases.

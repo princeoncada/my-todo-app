@@ -1,3 +1,5 @@
+> **DEPRECATED**: Content consolidated into `docs/PHASE_LOG.md` (Phase 2: Outbox Sync Queue section). This file is retained for detailed checkpoint reference.
+
 # Phase 2: Outbox Sync Queue
 
 ## Goal

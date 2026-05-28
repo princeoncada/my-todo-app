@@ -73,4 +73,4 @@ View selection:
 ## What Codex Must Update After Editing
 - Update this file for any tag/view workflow, match mode, recompute, or cache reconciliation change.
 - Update `03-data-model.md` for schema or enum changes.
-- Update `backlog.md` with view/tag UX, performance, or consistency follow-ups.
+- Update `docs/FUTURE_PLANS.md` with view/tag UX, performance, or consistency follow-ups.

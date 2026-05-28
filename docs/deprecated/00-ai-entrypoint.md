@@ -1,7 +1,21 @@
+<!-- Current Version: 1.0.0-alpha -->
+
+> **DEPRECATED — WORKFLOW LAYER**: This file's orientation and invariants content has been migrated to `docs/AI_HANDOFF.md`. Implementation rules have moved to `docs/CODEX_RULES.md`. The feature doc routing table below remains useful as a reference; for the full session start protocol read `AGENTS.md` and `docs/WORKFLOW.md`.
+
 # AI Entrypoint
 
 ## Purpose
 This is the first file future Codex sessions should read for Tidy. Its job is to reduce repo scanning by pointing to compact, repo-specific docs before touching code.
+
+## Versioning and Workflow
+
+Read `STATE.json` before this file. It is the compact oracle for the current version, active phase, and any in-progress branch — faster than reading VERSIONING.md.
+
+- `STATE.json` — current version, phase, nextPhase, active branch
+- `docs/WORKFLOW.md` — full Claude Code + Codex session protocol (prompt format, phase cycle, session checkpoints)
+- `docs/VERSIONING.md` — version history, pre-versioning baseline, planned phases
+- `docs/COMPACT_STRATEGY.md` — token budget rules, ChromaDB query discipline, what not to read
+- `docs/SESSION_LOG/` — per-session checkpoint logs (written at end of unfinished phases)
 
 Every implementation PR must update the relevant `docs/ai/*.md` file and `docs/ai/backlog.md` in the same PR.
 
@@ -14,6 +28,8 @@ Read `docs/ai/16-local-first-product-roadmap.md` before implementing major sync,
 Read `docs/ai/phase-logs/phase-1-dexie-foundation.md` before any Phase 1 Dexie/local-first foundation checkpoint work.
 
 Read `docs/ai/phase-logs/phase-2-outbox-sync-queue.md` before any Phase 2 outbox sync queue checkpoint work.
+
+Read `docs/ai/phase-logs/phase-3-view-filter-hardening.md` before any Phase 3 view/filter/tag projection checkpoint work.
 
 ## Mandatory Branch Isolation For Architecture Work
 
@@ -74,6 +90,7 @@ The main product surface is the authenticated dashboard:
 - `docs/ai/16-local-first-product-roadmap.md`: product-readiness roadmap for local-first sync, outbox queues, rollback safety, scale prep, security, observability, and background jobs.
 - `docs/ai/phase-logs/phase-1-dexie-foundation.md`: Phase 1 Dexie foundation checkpoints, validation gates, and phase log.
 - `docs/ai/phase-logs/phase-2-outbox-sync-queue.md`: Phase 2 outbox sync queue checkpoints, validation gates, and phase log.
+- `docs/ai/phase-logs/phase-3-view-filter-hardening.md`: Phase 3 view/filter/tag projection hardening checkpoints, validation gates, and phase log.
 - `docs/ai/backlog.md`: living implementation backlog.
 
 ## Data Flow
@@ -115,6 +132,7 @@ The main product surface is the authenticated dashboard:
 - Major sync, persistence, offline, rollback, or product-readiness task: `16-local-first-product-roadmap.md`, `06-optimistic-sync.md`, `14-production-readiness.md`.
 - Phase 1 Dexie/local-first foundation task: `phase-logs/phase-1-dexie-foundation.md`, `16-local-first-product-roadmap.md`, `06-optimistic-sync.md`.
 - Phase 2 outbox sync queue task: `phase-logs/phase-2-outbox-sync-queue.md`, `phase-logs/phase-1-dexie-foundation.md`, `16-local-first-product-roadmap.md`, `06-optimistic-sync.md`.
+- Phase 3 view/filter/tag projection task: `phase-logs/phase-3-view-filter-hardening.md`, `05-dashboard-state-cache.md`, `08-views-tags-system.md`, `06-optimistic-sync.md`.
 
 ## What Codex Must Update After Editing
 - Update the most relevant `docs/ai/*.md` file with changed behavior, files, data flow, invariants, or risks.

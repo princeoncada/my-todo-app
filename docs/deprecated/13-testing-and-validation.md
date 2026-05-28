@@ -22,7 +22,7 @@ The repo has Vitest unit tests and Playwright E2E tests. Available scripts:
 
 Dashboard E2E tests require `tests/.auth/user.json`, real Supabase public env vars, and `DATABASE_URL`. Generate storage state locally with `E2E_TEST_EMAIL` and `E2E_TEST_PASSWORD` by running `npm run test:e2e:auth:setup`.
 
-See `docs/testing-validation.md`, `docs/testing.md`, and `ai-docs/testing-workflow.md` before changing test infrastructure or implementing app behavior.
+See `docs/deprecated/testing-validation.md` and `docs/deprecated/testing.md` for older testing notes (deprecated; verify against this file first).
 
 ## Important Files
 
@@ -83,12 +83,12 @@ Manual dashboard checks:
 ## What Codex Should Read Before Editing
 
 - This file before finishing any code change.
-- `docs/testing-validation.md` before starting implementation.
+- This file before starting implementation.
 - Relevant feature doc for manual scenario list.
 - `package.json` before invoking scripts.
 
 ## What Codex Must Update After Editing
 
 - Add new validation commands or manual test cases here.
-- Update `backlog.md` testing section with missing automated coverage.
+- Update `docs/FUTURE_PLANS.md` testing section with missing automated coverage.
 - Mention in final PR notes which validations ran and which could not run.

@@ -74,4 +74,4 @@ View reorder:
 ## What Codex Must Update After Editing
 - Update this file for new draggable types, id conventions, reorder payloads, or hover/drop behavior.
 - Update `13-testing-and-validation.md` with manual DnD checks.
-- Add mobile/accessibility follow-ups to `backlog.md` when discovered.
+- Add mobile/accessibility follow-ups to `docs/FUTURE_PLANS.md` when discovered.

@@ -1,3 +1,5 @@
+> **DEPRECATED**: Content migrated to `docs/AI_HANDOFF.md` (Current Product Snapshot, Architecture Invariants, Data Flow, Known Risks). This file is retained for reference but is no longer the source of truth.
+
 # Product Current State
 
 ## Purpose

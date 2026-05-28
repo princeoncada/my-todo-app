@@ -79,4 +79,4 @@ Reconciliation:
 - Update this file for new query keys, cache helpers, projection rules, or reconciliation behavior.
 - Update `06-optimistic-sync.md` if queue semantics change.
 - Update `08-views-tags-system.md` if view membership/filtering changes.
-- Add cache consistency risks or follow-ups to `backlog.md`.
+- Add cache consistency risks or follow-ups to `docs/FUTURE_PLANS.md`.

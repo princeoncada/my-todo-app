@@ -83,4 +83,4 @@ Ordering:
 - Update this doc for any model, relation, enum, unique constraint, index, cascade, or ordering change.
 - Update `04-auth-and-api.md` for router input/output changes.
 - Update `05-dashboard-state-cache.md` if response shapes change.
-- Update `backlog.md` with migration, backfill, or production data tasks.
+- Update `docs/FUTURE_PLANS.md` with migration, backfill, or production data tasks.

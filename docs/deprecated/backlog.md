@@ -1,3 +1,5 @@
+> **DEPRECATED**: Content migrated to `docs/FUTURE_PLANS.md` (NOW/NEXT/LATER items, active phases, known risks). This file is retained for reference but is no longer the source of truth.
+
 # AI Backlog
 
 ## Purpose
@@ -100,6 +102,33 @@ When implementation work completes:
   - Authenticated E2E is required when dashboard behavior changes and credentials/storage state are available.
   - Docs-only checkpoints do not require new tests unless test infrastructure changes.
   - Final checkpoint validation: typecheck, lint, unit tests, and non-auth E2E passed; `npm run build` must be rerun in an environment with access to Next Google font fetches or after fonts are made local.
+
+## Phase 3: View Filter Hardening
+- **Priority:** High / projection correctness.
+- **Status:** In progress.
+- **Phase log:** `docs/ai/phase-logs/phase-3-view-filter-hardening.md`.
+- **Umbrella branch:** `phase/view-filter-hardening`.
+- **Checkpoint branches:**
+  - `checkpoint/phase-three-roadmap`
+  - `checkpoint/reproduce-view-filter-bug`
+  - `checkpoint/add-projection-regression-tests`
+  - `checkpoint/fix-view-list-projection`
+  - `checkpoint/fix-tag-relation-consistency`
+  - `checkpoint/fix-cross-view-list-moves`
+  - `checkpoint/manual-regression-docs`
+- **Problem:**
+  - Lists created in All Lists or custom views do not consistently appear in other custom views even when filter tags should match.
+- **Acceptance criteria:**
+  - All Lists shows all user lists.
+  - ANY custom views include lists with at least one required tag.
+  - ALL custom views include lists with all required tags.
+  - Retagging, creating, moving, reordering, refreshing, and switching views keeps projection deterministic.
+  - Runtime checkpoints add/update matching projection tests.
+  - No Dexie expansion, dashboard source-of-truth rewrite, drag/drop rewrite, or broad tRPC rewrite is introduced.
+- **Validation notes:**
+  - Start with `lib/dashboard-cache.ts`, `tests/unit/dashboard-cache.test.ts`, view/list/tag components, and tRPC view/tag/list routers.
+  - Use `docs/testing-validation.md`, `docs/testing.md`, `ai-docs/testing-workflow.md`, and `docs/ai/13-testing-and-validation.md` as validation source of truth.
+  - Authenticated E2E is required for dashboard behavior if credentials/storage state are available.
 
 ## NOW
 

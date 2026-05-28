@@ -1,8 +1,9 @@
 {
   "name": "todo-app",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
+    "chroma": "chroma run --path ./chroma-data",
     "dev": "next dev",
     "build": "prisma generate && next build",
     "postinstall": "prisma generate",

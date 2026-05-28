@@ -1,3 +1,5 @@
+> **DEPRECATED**: Content consolidated into `docs/PHASE_LOG.md` (Phase 1: Dexie Foundation section). This file is retained for detailed checkpoint reference.
+
 # Phase 1: Dexie Foundation
 
 ## Goal

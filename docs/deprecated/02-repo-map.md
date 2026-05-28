@@ -111,9 +111,8 @@ Top-level areas:
 - `public/apple-icon.png`: referenced by metadata but not present in the current file list; keep the backlog item until fixed.
 
 ## Historical And AI Docs
-- `docs/ai/00-ai-entrypoint.md`: first AI doc to read; summarizes stack, main surfaces, and flow.
+- `docs/AI_HANDOFF.md`: first doc to read each session; product snapshot, architecture invariants, active branch, known risks.
 - `docs/ai/task-routing-guide.md`: task-to-doc routing map.
-- `docs/ai/01-product-current-state.md`: current product capabilities.
 - `docs/ai/02-repo-map.md`: this file.
 - `docs/ai/03-data-model.md`: Prisma models, ownership, ordering, and view membership.
 - `docs/ai/04-auth-and-api.md`: Supabase and tRPC contracts.
@@ -124,12 +123,12 @@ Top-level areas:
 - `docs/ai/09-ui-components.md`: component conventions.
 - `docs/ai/10-mobile-and-pwa-readiness.md`: responsive and PWA state.
 - `docs/ai/11-known-issues.md`: known bugs and risky areas.
-- `docs/ai/12-implementation-rules.md`: must-follow implementation rules.
+- `docs/CODEX_RULES.md`: must-follow implementation rules.
 - `docs/ai/13-testing-and-validation.md`: validation guidance.
 - `docs/ai/14-production-readiness.md`: deployment and ops gaps.
-- `docs/ai/15-decision-log.md`: decisions and rationale.
-- `docs/ai/backlog.md`: structured future work backlog.
-- `docs/optimistic-updates.md`, `docs/app-reverse-engineering.md`: older notes that may drift; verify against `docs/ai/*` and source before relying on them.
+- `docs/DECISIONS.md`: architecture decisions and rationale.
+- `docs/FUTURE_PLANS.md`: structured future work backlog.
+- `docs/deprecated/optimistic-updates.md`, `docs/deprecated/app-reverse-engineering.md`: older notes; verify against `docs/ai/*` and source before relying on them.
 
 ## Data Flow
 Route ownership:
@@ -167,7 +166,7 @@ Feature ownership:
 
 ## Known Risks
 - `app/generated/prisma` is generated output under `app/`; future edits should not manually patch it.
-- Existing docs in `docs/optimistic-updates.md` and `docs/app-reverse-engineering.md` may drift unless AI docs are maintained.
+- Deprecated docs in `docs/deprecated/optimistic-updates.md` and `docs/deprecated/app-reverse-engineering.md` are not maintained; rely on `docs/ai/*` instead.
 - Some components own substantial logic directly, especially `ListsContainer`, `ViewsSidebarPreview`, `ListTagPicker`, and `ListComponent`.
 - `proxy.ts` currently matches only `/dashboard`; nested dashboard routes would need matcher updates.
 - `app/layout.tsx` references `/apple-icon.png`, but only `public/icon-clean.png` appears in the current tracked public asset list.
@@ -182,4 +181,4 @@ Feature ownership:
 ## What Codex Must Update After Editing
 - Add new files, ownership shifts, routes, routers, procedures, cache helpers, or component responsibilities here.
 - Update the relevant feature doc with new data flow, invariants, validation, and risk notes.
-- Update `backlog.md` with completed items, newly discovered risks, or follow-up refactors.
+- Update `docs/FUTURE_PLANS.md` with completed items, newly discovered risks, or follow-up refactors.

@@ -1,3 +1,5 @@
+> **DEPRECATED**: Superseded by the 2-section Codex prompt format defined in `docs/WORKFLOW.md`. This file is retained for reference.
+
 # Codex Prompt Template
 
 Use this template when ChatGPT has already acted as architect, debugger, or prompt writer and Codex should execute a focused implementation directly.

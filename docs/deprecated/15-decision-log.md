@@ -1,3 +1,5 @@
+> **DEPRECATED**: Content migrated to `docs/DECISIONS.md`. This file is retained for reference but is no longer the source of truth.
+
 # Decision Log
 
 ## Purpose

@@ -69,4 +69,4 @@ Visual feedback:
 ## What Codex Must Update After Editing
 - Update this file when adding/removing components, moving ownership, changing UI state conventions, or changing layout behavior.
 - Add visual/manual checks to `13-testing-and-validation.md`.
-- Add UI polish follow-ups to `backlog.md`.
+- Add UI polish follow-ups to `docs/FUTURE_PLANS.md`.

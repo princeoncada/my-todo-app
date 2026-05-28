@@ -1,3 +1,5 @@
+> **DEPRECATED**: Content migrated to `docs/CODEX_RULES.md` (standing Codex ruleset, commit discipline, invariants, implementation workflow). This file is retained for reference.
+
 # Implementation Rules
 
 ## Purpose

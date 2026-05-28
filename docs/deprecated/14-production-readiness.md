@@ -77,5 +77,5 @@ Operationally sensitive flows:
 
 ## What Codex Must Update After Editing
 - Update this file for env vars, deployment scripts, observability, rate limits, migrations, PWA/offline production behavior, or security posture.
-- Update `backlog.md` production readiness and observability sections.
+- Update `docs/FUTURE_PLANS.md` production readiness and observability sections.
 - Update `13-testing-and-validation.md` with deployment validation steps.

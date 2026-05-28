@@ -72,4 +72,4 @@ Future PWA/offline flow would need:
 ## What Codex Must Update After Editing
 - Update this file for responsive, touch, metadata, manifest, service worker, or offline queue changes.
 - Update `14-production-readiness.md` for deployment/runtime implications.
-- Update `backlog.md` under mobile/PWA and offline-first sections.
+- Update `docs/FUTURE_PLANS.md` under mobile/PWA and offline-first sections.

@@ -6,15 +6,39 @@
 This project uses newer framework versions with breaking changes — APIs, conventions, and file structure may differ from older assumptions. Follow existing repo patterns first. If you are changing Next.js app APIs and `node_modules/next/dist/docs/` exists, read the relevant local Next guide before writing code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
+## Session Start Protocol
+
+At the start of every session, before reading other docs or writing code:
+
+1. Read `STATE.json` — report version, state, phase, phaseTitle, nextPhase, and any active branch or pre-versioning notes.
+2. Query ChromaDB before opening large docs (when available on `localhost:8000`):
+   ```
+   python scripts/query_docs.py "<your question about the current task>"
+   ```
+   One query per distinct topic. Trust the first result. Only read the full doc file if the query returns zero relevant content. When falling back, state: *"Query returned zero results for X, falling back to direct read because..."*
+3. Report findings. Wait for explicit user direction before scoping or implementing.
+
+See `docs/WORKFLOW.md` for the full session protocol and `docs/COMPACT_STRATEGY.md` for token budget targets.
+
+## Implementation Gate
+
+Claude Code may implement directly **only** when the user provides this exact phrase:
+
+```
+I AUTHORIZE CLAUDE CODE TO IMPLEMENT - [reason]
+```
+
+Without this phrase, Claude Code writes Codex prompts using the 2-section format in `docs/WORKFLOW.md`. Claude Code never commits, pushes, creates branches, or runs `npm run test:ci` regardless of authorization.
+
 ## Required Reading Path
 
 Before editing any file, route yourself through the repo-specific AI docs instead of scanning the whole repository:
 
-1. Start with `docs/ai/00-ai-entrypoint.md`.
-2. Read `docs/ai/12-implementation-rules.md` before implementation.
-3. Read `docs/ai/13-testing-and-validation.md` before validation.
-4. Use `docs/ai/task-routing-guide.md` to choose only the feature-specific docs needed for the task.
-5. Read feature-specific docs only after understanding the task and the required scope.
+0. Read `STATE.json` first — compact project oracle (version, active phase, notes).
+1. Read `docs/AI_HANDOFF.md` — current product snapshot, invariants, data flow, known risks, and next action.
+2. Read `docs/CODEX_RULES.md` before implementation — scope control, invariants, commit discipline, required tests, task routing table.
+
+See `docs/PHASE_LOG.md` for active phase checkpoint context. See `docs/FUTURE_PLANS.md` for the prioritized work backlog.
 
 Do not broadly inspect the repo unless the task cannot be understood from the AI docs plus the smallest relevant source files.
 
@@ -22,7 +46,7 @@ Do not broadly inspect the repo unless the task cannot be understood from the AI
 
 Every Codex implementation must update or add tests in the same branch. Before coding, identify the happy path, common cases, edge cases, unit coverage, and E2E coverage. After coding, run `npm run test:ci` and report exact results. Do not mark complete if tests were not added or updated unless clearly justified.
 
-Use `docs/testing-validation.md` as the source of truth for the test-first change workflow, coverage by change type, edge-case checklist, and definition of done.
+Use `docs/CODEX_RULES.md` (Required Tests section) as the source of truth for test commands, the manual regression checklist, and definition of done.
 
 ## Scope Control
 
@@ -47,6 +71,6 @@ Unless the task specifically changes these areas, preserve:
 
 ## Documentation Expectations
 
-- Update relevant `docs/ai/*.md` files when behavior, data flow, validation, invariants, risks, or implementation patterns change.
-- Update `docs/ai/backlog.md` when completing documented work or discovering follow-up risks.
+- Update `docs/AI_HANDOFF.md` when behavior, data flow, invariants, or risks change.
+- Update `docs/FUTURE_PLANS.md` when completing documented work or discovering follow-up risks.
 - Prefer concise docs updates that help future agents avoid extra repo scanning.

@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.0.1-alpha -->
+<!-- Current Version: 1.0.1 -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start alongside `STATE.json`. It is the authoritative protocol for all implementation phases.
 
@@ -28,8 +28,8 @@ Codex does **not**: commit, push, run `npm run test:ci`, create branches, or run
 
 Run these steps at the start of every Claude Code session before asking for direction:
 
-1. `git pull origin master` — sync latest
-2. **Read `STATE.json`** — report: version, state, phase, phaseTitle, nextPhase, any in-progress branch, pre-versioning notes
+1. `git pull origin master` â€” sync latest
+2. **Read `STATE.json`** â€” report: version, state, phase, phaseTitle, nextPhase, any in-progress branch, pre-versioning notes
 3. **Query ChromaDB** (when running on `localhost:8000`):
    ```bash
    python scripts/query_docs.py "<your question about the current task>"
@@ -71,17 +71,17 @@ QUERY (ChromaDB) -> READ (STATE.json + minimal docs) -> CONFIRM (user direction)
 
 Every Codex prompt must use this 2-section format:
 
-### Section 1 — Plain Text Block (Codex reads and implements)
+### Section 1 â€” Plain Text Block (Codex reads and implements)
 
 ```
-SECTION 1 — FOR CODEX
+SECTION 1 â€” FOR CODEX
 
 Read first:
 - STATE.json
 - docs/AI_HANDOFF.md
 - docs/CODEX_RULES.md
 - [phase log section from docs/PHASE_LOG.md if phase work]
-- [2–3 source files directly affected]
+- [2â€“3 source files directly affected]
 
 Current state:
 Version: [X.Y.Z-alpha]
@@ -104,13 +104,13 @@ Files to change:
 [Explicit list of files to edit]
 
 Documentation to update:
-- docs/AI_HANDOFF.md — note any changed invariants, data flow, risks, or key files
-- docs/FUTURE_PLANS.md — mark completed work, add discovered risks or follow-up tasks
+- docs/AI_HANDOFF.md â€” note any changed invariants, data flow, risks, or key files
+- docs/FUTURE_PLANS.md â€” mark completed work, add discovered risks or follow-up tasks
 
 After implementing: stop and summarize changes made. Do not run any scripts.
 ```
 
-### Section 2 — PowerShell Block (User runs after Codex finishes)
+### Section 2 â€” PowerShell Block (User runs after Codex finishes)
 
 ```powershell
 # Run AFTER Codex implementation is complete
@@ -129,10 +129,10 @@ npm run test:ci
 
 After `npm run test:ci` passes, Claude Code provides **all of the following in a single message**:
 
-1. **Validation summary** — typecheck/lint/test pass counts, any warnings
+1. **Validation summary** â€” typecheck/lint/test pass counts, any warnings
 2. **Implementation commit block**:
    ```
-   git add [specific files — never git add -A]
+   git add [specific files â€” never git add -A]
    git commit -m "feat([scope]): [what changed and why]"
    ```
 3. **Promote block** (run immediately after implementation commit):
@@ -160,13 +160,13 @@ When a session ends before a phase is complete, Claude Code provides a Codex pro
 **Target file**: `docs/SESSION_LOG/YYYY-MM-DD-session-NN.md`
 
 **Required sections**:
-1. **What Was Done** — commits made, files changed, tests updated
-2. **In Progress** — active checkpoint name, branch name, last stable state
-3. **Current Version State** — from STATE.json (version, state, phase)
-4. **Open Decisions** — unresolved questions or architectural choices
-5. **Known Issues** — bugs discovered but not yet fixed
-6. **Uncommitted Work** — staged or unstaged changes and their purpose
-7. **Next Recommended Action** — exact next step for the resuming session
+1. **What Was Done** â€” commits made, files changed, tests updated
+2. **In Progress** â€” active checkpoint name, branch name, last stable state
+3. **Current Version State** â€” from STATE.json (version, state, phase)
+4. **Open Decisions** â€” unresolved questions or architectural choices
+5. **Known Issues** â€” bugs discovered but not yet fixed
+6. **Uncommitted Work** â€” staged or unstaged changes and their purpose
+7. **Next Recommended Action** â€” exact next step for the resuming session
 
 ---
 
@@ -184,10 +184,10 @@ See `docs/VERSIONING.md` for the five versioning locations and the full bump rul
 
 ## Versioning Locations (All Five, Every Bump)
 
-1. `STATE.json` — `version` + `state` fields
-2. `docs/VERSIONING.md` — history table + current state row
-3. `docs/AI_HANDOFF.md` — `<!-- Current Version: X.Y.Z -->` comment at top
-4. `package.json` — `version` field
-5. `docs/WORKFLOW.md` — `<!-- Current Version: X.Y.Z -->` comment at top (this file)
+1. `STATE.json` â€” `version` + `state` fields
+2. `docs/VERSIONING.md` â€” history table + current state row
+3. `docs/AI_HANDOFF.md` â€” `<!-- Current Version: X.Y.Z -->` comment at top
+4. `package.json` â€” `version` field
+5. `docs/WORKFLOW.md` â€” `<!-- Current Version: X.Y.Z -->` comment at top (this file)
 
 `.\scripts\promote.ps1` handles all five automatically.

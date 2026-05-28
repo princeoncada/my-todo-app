@@ -1,4 +1,4 @@
-﻿# Versioning
+# Versioning
 
 ## Version Format
 

@@ -22,7 +22,7 @@ Each item includes priority, status, files, acceptance criteria, and validation 
 
 ### v1.0.2 — Commit Automation and Prompt Format Hardening
 - **Priority:** Workflow / developer experience
-- **Status:** Open
+- **Status:** Done — committed to master 2026-05-28
 - **Problem:** After validation passes, Claude Code gives 20+ individual git commit commands to run by hand. The fix is a single-file commit helper and hardened prompt format.
 - **Scope:**
   - `scripts/commit.ps1` — parameter-driven commit helper;

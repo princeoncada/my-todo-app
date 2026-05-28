@@ -1,15 +1,14 @@
-<!-- Current Version: 1.0.2 -->
+<!-- Current Version: 1.0.3-alpha -->
 # AI Handoff
-**Current Version**: 1.0.2-alpha â€” read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.0.2 â€” Commit Automation and Prompt Format Hardening
-**Next**: 1.1.0 â€” Graphify Integration
+**Current Version**: 1.0.3-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.0.3 - Promote Encoding Fix and Source-of-Truth Hardening
+**Next**: 1.1.0 - Graphify Integration
 ---
 ## What Was Last Done
-**Phase 1.0.2** opened commit automation and hardened the Codex prompt workflow:
-- Standardized post-validation commit sequences on canonical `scripts/commit.ps1`
-- Rewrote the `docs/WORKFLOW.md` Codex prompt format around READ THESE FILES FIRST, CURRENT PROJECT STATE, IMPLEMENTATION REQUIREMENTS, SAFETY CONSTRAINTS, and STOP AND SUMMARIZE blocks
-- Updated post-validation workflow and commit discipline docs to use `commit.ps1` instead of raw git add + git commit blocks
-- Updated `docs/FUTURE_PLANS.md`, `docs/VERSIONING.md`, `STATE.json`, `package.json`, and workflow version metadata for 1.0.2-alpha
+**Phase 1.0.3** opened promote encoding and source-of-truth hardening:
+- Fixed `scripts/promote.ps1` STATE.json and Update-FileText reads to use UTF8
+- Added AGENTS.md guidance that repo docs are the only source of truth for state, version, and next-work answers
+- Marked the v1.0.2 future-plan patch Done and bumped all versioning locations to 1.0.3-alpha
 **Pre-versioning phases** (documented fully in `docs/PHASE_LOG.md`):
 - **Phase 1: Dexie Foundation** â€” done, merged to master
 - **Phase 2: Outbox Sync Queue** â€” done, ready for merge review
@@ -20,7 +19,7 @@
 ## What the Next Session Should Do
 1. Read `STATE.json` and `docs/FUTURE_PLANS.md`
 2. Query ChromaDB: `python scripts/query_docs.py "Graphify Integration v1.1.0"`
-3. Scope out v1.1.0 â€” Graphify Integration
+3. Scope out v1.1.0 - Graphify Integration
 ---
 
 ## Current Product Snapshot

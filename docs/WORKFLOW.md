@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.0.0 -->
+<!-- Current Version: 1.0.1 -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start alongside `STATE.json`. It is the authoritative protocol for all implementation phases.
 

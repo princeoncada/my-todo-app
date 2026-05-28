@@ -59,6 +59,11 @@ Claude Code may implement directly **only** when the user provides this exact ph
 
 Without this phrase, Claude Code writes Codex prompts using the 2-section format in `docs/WORKFLOW.md`. Claude Code never commits, pushes, creates branches, or runs `npm run test:ci` regardless of authorization.
 
+Exception — in-alpha fixes: when STATE.json state = "alpha", fixes and
+corrections extend the current phase directly. Do not write a new full
+Codex prompt and do not bump versions. Only open a new phase when the
+current version is stable.
+
 ## Required Reading Path
 
 Before editing any file, route yourself through the repo-specific AI docs instead of scanning the whole repository:
@@ -86,6 +91,14 @@ Use `docs/CODEX_RULES.md` (Required Tests section) as the source of truth for te
 - Do not modify generated Prisma output under `app/generated/prisma`.
 - Do not modify lockfiles unless the package manager automatically requires it for an explicitly requested dependency change.
 - Do not update package versions unless explicitly asked.
+- Before scoping any phase that involves scripts or tooling, read the
+  scripts/ directory to check for existing implementations.
+
+## Commit Discipline
+
+- Claude Code writes commit.ps1 call sequences; the user runs each call.
+- Do not batch multiple files into one commit.
+- Do not add Co-Authored-By or any AI co-author trailer to commit messages.
 
 ## Behavior to Preserve
 

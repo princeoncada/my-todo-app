@@ -89,6 +89,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.0.1 | alpha | 2026-05-28 | AGENTS.md Hardening | Rewrites AGENTS.md startup guidance, removes inline-breaking fenced blocks, documents Claude Code command vocabulary, and tracks the v1.0.2 commit automation patch. |
 | 1.0.0 | stable | 2026-05-28 | AI Workflow Foundation | First versioned release. STATE.json, VERSIONING, WORKFLOW, COMPACT_STRATEGY, ChromaDB scripts, validate/promote automation, AGENTS.md + entrypoint updates. |
 
 ---
@@ -97,7 +98,8 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | Phase | Description |
 |---------|-------|-------------|
-| **1.0.0** | AI Workflow Foundation | STATE.json, versioning, workflow docs, ChromaDB doc query scripts, automation scripts. **(current)** |
+| 1.0.0 | AI Workflow Foundation | STATE.json, versioning, workflow docs, ChromaDB doc query scripts, automation scripts. |
+| **1.0.1** | AGENTS.md Hardening | LF-only AGENTS.md rewrite, indented command examples, streamlined startup protocol, and Claude Code command vocabulary. **(current)** |
 | 1.1.0 | Graphify Integration | Install graphify, generate codebase-graph.json, add graph navigation discipline to AGENTS.md |
 | 1.2.0 | Phase 3 Completion | Finish View Filter Hardening checkpoints 4â€“6 |
 | 2.0.0 | Phase 4: Operation Coalescing | Outbox coalescing + replay client wiring |

@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0-alpha",
+  "state": "alpha",
+  "phase": "1.0.0",
+  "phaseTitle": "AI Workflow Foundation: Versioning, Workflow Docs, ChromaDB, and Automation Scripts",
+  "nextPhase": "1.1.0 — Graphify Integration",
+  "seriesComplete": false,
+  "lastUpdated": "2026-05-28",
+  "preVersioningBaseline": {
+    "phasesComplete": [
+      "Phase 1: Dexie Foundation (merged to master)",
+      "Phase 2: Outbox Sync Queue (ready for merge)"
+    ],
+    "inProgress": [
+      "Phase 3: View Filter Hardening — active on checkpoint/fix-cross-view-list-moves (checkpoint 3 of 6)"
+    ],
+    "notes": "All pre-versioning work documented in docs/VERSIONING.md under Pre-Versioning Baseline."
+  }
+}

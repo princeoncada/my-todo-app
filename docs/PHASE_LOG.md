@@ -6,7 +6,7 @@ Chronological record of all implementation phases and their checkpoint validatio
 
 ## Phase 1.0.0: AI Workflow Foundation — COMPLETE
 
-**Version**: 1.0.0-alpha → 1.0.0-stable (pending promotion)
+**Version**: 1.0.0-alpha -> 1.0.0-stable (pending promotion)
 **Date**: 2026-05-28
 **Branch**: (committed directly to master / current branch)
 
@@ -64,34 +64,34 @@ Fix and harden view/list/tag projection consistency without changing the dashboa
 
 **checkpoint/reproduce-view-filter-bug** — Done (2026-05-10)
 - Files: `tests/unit/dashboard-cache.test.ts`, phase log
-- Validation: typecheck ✅ lint ✅ test ✅ (11 files, 90 tests, 1 expected failure documenting ANY-mode bug)
+- Validation: typecheck [done] lint [done] test [done] (11 files, 90 tests, 1 expected failure documenting ANY-mode bug)
 - Risks: Uses `it.fails` to document the bug; next checkpoint adds broader tests
 
 **checkpoint/add-projection-regression-tests** — Done (2026-05-10)
 - Files: `tests/unit/dashboard-cache.test.ts`, phase log
-- Validation: typecheck ✅ lint ✅ test ✅ (11 files, 96 tests, 2 expected failures for ANY-mode gaps)
+- Validation: typecheck [done] lint [done] test [done] (11 files, 96 tests, 2 expected failures for ANY-mode gaps)
 - Risks: ANY-mode tests remain expected failures until fix checkpoint
 
 **checkpoint/fix-view-list-projection** — Done (2026-05-10)
 - Files: `lib/dashboard-cache.ts`, `tests/unit/dashboard-cache.test.ts`, phase log
-- Validation: typecheck ✅ lint ✅ test ✅ (11 files, 98 tests, 0 expected failures)
+- Validation: typecheck [done] lint [done] test [done] (11 files, 98 tests, 0 expected failures)
 - Risks: Fixes core ANY-mode helper; live tag relation cache consistency and cross-view moves still untested
 
 **checkpoint/fix-tag-relation-consistency** — Done (2026-05-10)
 - Files: `tests/unit/dashboard-cache.test.ts`, phase log
-- Validation: typecheck ✅ lint ✅ test ✅ (11 files, 102 tests); `test:e2e:smoke` timed out (180s)
+- Validation: typecheck [done] lint [done] test [done] (11 files, 102 tests); `test:e2e:smoke` timed out (180s)
 - Risks: Tag relation covered at cache helper level; live authenticated dashboard tag flows need manual/auth E2E. Smoke E2E should rerun before phase merge.
 
-**checkpoint/fix-cross-view-list-moves** — 🔄 ACTIVE
+**checkpoint/fix-cross-view-list-moves** — [in progress] ACTIVE
 - Purpose: Fix cross-view behavior when a list is created, moved, retagged, or reordered while switching views. A list must appear in every view it qualifies for and disappear from views it no longer qualifies for. Reorder must not alter tag membership.
-- Target validation: add/update tests → typecheck ✅ lint ✅ test ✅ `test:e2e:smoke` ✅
+- Target validation: add/update tests -> typecheck [done] lint [done] test [done] `test:e2e:smoke` [done]
 
 **checkpoint/manual-regression-docs** — Planned
 - Purpose: Finalize docs, validation evidence, known risks, next phase recommendations
-- Target: `npm run test:ci` ✅ `npm run build` ✅ smoke E2E ✅ auth E2E if available
+- Target: `npm run test:ci` [done] `npm run build` [done] smoke E2E [done] auth E2E if available
 
 ### Merge Gate
-`phase/view-filter-hardening` → `master` requires:
+`phase/view-filter-hardening` -> `master` requires:
 - Projection regression tests pass
 - `npm run test:ci` passes
 - Authenticated E2E runs if credentials available
@@ -139,7 +139,7 @@ Dashboard data still from server/TanStack/tRPC. No auto-running sync worker. No 
 | basic-sync-status-surface | Done | 2026-05-10 | `lib/sync/sync-status-surface.ts`, tests |
 | phase-two-regression-docs | Done | 2026-05-10 | docs only; build blocked by Google font fetch in env |
 
-All validation: typecheck ✅ lint ✅ unit tests ✅ (11 files, 90 tests); smoke E2E ✅ where run.
+All validation: typecheck [done] lint [done] unit tests [done] (11 files, 90 tests); smoke E2E [done] where run.
 
 ---
 
@@ -182,4 +182,4 @@ Redis, Sentry, QStash, Inngest, full CRDT/multiplayer sync, drag/drop rewrite, f
 | first-dexie-integration | Done | 2026-05-10 | `lib/local-db/metadata-repository.ts`, `hooks/use-local-db-health-check.ts`, `trpc/client.tsx`, tests |
 | expand-dexie-coverage | Done | 2026-05-10 | `lib/local-db/local-db-diagnostics.ts`, tests |
 
-All validation: typecheck ✅ lint ✅ test ✅ (progressing to 3 files, 20 tests) smoke E2E ✅ build ✅.
+All validation: typecheck [done] lint [done] test [done] (progressing to 3 files, 20 tests) smoke E2E [done] build [done].

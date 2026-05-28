@@ -1,9 +1,9 @@
 {
-    "version":  "1.0.2",
-    "state":  "stable",
-    "phase":  "1.0.2",
-    "phaseTitle":  "Commit Automation and Prompt Format Hardening",
-    "nextPhase":  "1.1.0 â€” Graphify Integration",
+    "version":  "1.0.3-alpha",
+    "state":  "alpha",
+    "phase":  "1.0.3",
+    "phaseTitle":  "Promote Encoding Fix and Source-of-Truth Hardening",
+    "nextPhase":  "1.1.0 - Graphify Integration",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-28",
     "preVersioningBaseline":  {

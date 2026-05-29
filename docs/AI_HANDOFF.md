@@ -1,10 +1,15 @@
-<!-- Current Version: 1.0.6 -->
+<!-- Current Version: 1.0.7-alpha -->
 # AI Handoff
-**Current Version**: 1.0.6-alpha - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.0.6 - Mojibake Resolution and Scan
+**Current Version**: 1.0.7-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.0.7 - Anti-Drift Baseline
 **Next**: 1.1.0 - Graphify Integration
 ---
 ## What Was Last Done
+**Phase 1.0.7** opened the anti-drift baseline:
+- Bumped all five versioning locations to 1.0.7-alpha and removed stale version markers
+- Added a version-consistency gate to `scripts/validate.ps1` (fails when the five locations disagree)
+- Added a Drift Guardrails section and disambiguated the Startup Report in `AGENTS.md`
+- Added 1.1.0 (Graphify) and 1.2.0 (ChromaDB Bootstrap) to the roadmap; renumbered Phase 3 Completion to 1.3.0
 **Phase 1.0.6** opened mojibake resolution and scan hardening:
 - Created `scripts/fix-mojibake.ps1` for idempotent repair of known bad sequences in docs
 - Repaired `docs/AI_HANDOFF.md`, `docs/VERSIONING.md`, `docs/WORKFLOW.md`, and scanned `AGENTS.md`

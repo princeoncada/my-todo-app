@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.0.8 -->
+<!-- Current Version: 1.0.9-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start alongside `STATE.json`. It is the authoritative protocol for all implementation phases.
 
@@ -166,6 +166,11 @@ in a single message:
 3. Promote block (run immediately after all commits complete):
 
     .\scripts\promote.ps1
+
+   promote.ps1 self-verifies that all five versioning locations carry the new
+   version and exits non-zero if not. Do NOT re-run the full validation suite
+   after promote - the code did not change, only version strings. If promote
+   reports success, proceed directly to the promotion commits.
 
 4. Stable-promotion commit sequence - one call per versioning file:
 

@@ -1,6 +1,6 @@
 {
-    "version":  "1.0.7-alpha",
-    "state":  "alpha",
+    "version":  "1.0.7",
+    "state":  "stable",
     "phase":  "1.0.7",
     "phaseTitle":  "Anti-Drift Baseline",
     "nextPhase":  "1.1.0 - Graphify Integration",

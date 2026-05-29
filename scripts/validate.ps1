@@ -54,6 +54,37 @@ if (Test-Path "STATE.json") {
     Add-Result "STATE.json" $false "file missing"
 }
 
+# Version consistency gate - all five versioning locations must carry STATE.json's version verbatim
+if (Test-Path "STATE.json") {
+    $verState = Get-Content "STATE.json" -Raw -Encoding UTF8 | ConvertFrom-Json
+    $ver      = $verState.version
+    $verErrors = @()
+
+    $pkgVer = (Get-Content "package.json" -Raw -Encoding UTF8 | ConvertFrom-Json).version
+    if ($pkgVer -ne $ver) { $verErrors += "package.json=$pkgVer" }
+
+    $handoff = Get-Content "docs/AI_HANDOFF.md" -Raw -Encoding UTF8
+    if ($handoff -notmatch ("<!-- Current Version: " + [regex]::Escape($ver) + " -->")) { $verErrors += "AI_HANDOFF.md comment" }
+
+    $workflow = Get-Content "docs/WORKFLOW.md" -Raw -Encoding UTF8
+    if ($workflow -notmatch ("<!-- Current Version: " + [regex]::Escape($ver) + " -->")) { $verErrors += "WORKFLOW.md comment" }
+
+    $versioning = Get-Content "docs/VERSIONING.md" -Raw -Encoding UTF8
+    if ($versioning -notmatch ("Current version:\*\*\s*" + [regex]::Escape($ver) + "(\s|$)")) { $verErrors += "VERSIONING.md current line" }
+
+    $suffixAlpha = $ver -match "-alpha$"
+    if ($suffixAlpha -and $verState.state -ne "alpha") { $verErrors += "state=$($verState.state) but version is -alpha" }
+    if ((-not $suffixAlpha) -and $verState.state -ne "stable") { $verErrors += "state=$($verState.state) but version has no -alpha suffix" }
+
+    if ($verErrors.Count -eq 0) {
+        Add-Result "version consistency" $true "$ver across all five locations"
+    } else {
+        Add-Result "version consistency" $false ("mismatch: " + ($verErrors -join ", "))
+    }
+} else {
+    Add-Result "version consistency" $false "STATE.json missing"
+}
+
 # ChromaDB
 if (-not $SkipChroma) {
     try {

@@ -1,8 +1,8 @@
 {
-    "version":  "1.0.7",
-    "state":  "stable",
-    "phase":  "1.0.7",
-    "phaseTitle":  "Anti-Drift Baseline",
+    "version":  "1.0.8-alpha",
+    "state":  "alpha",
+    "phase":  "1.0.8",
+    "phaseTitle":  "Doc Continuity Model",
     "nextPhase":  "1.1.0 - Graphify Integration",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-29",

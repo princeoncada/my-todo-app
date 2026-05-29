@@ -38,9 +38,11 @@ new place - that is how drift starts.
 | Next backlog item | `docs/FUTURE_PLANS.md` (first Open) | reported at startup | Point: read fresh each session |
 | Roadmap <-> backlog | VERSIONING Planned Phases <-> FUTURE_PLANS | each other | Manual - update both on any renumber |
 | Session state snapshot | `STATE.json` + `docs/FUTURE_PLANS.md` | the chathead opener | Point: opener tells the AI to read them; it must NOT embed a snapshot |
+| Project rules / entrypoint | `AGENTS.md` | `CLAUDE.md` (imports it via `@AGENTS.md`) | Point: CLAUDE.md must stay a one-line import and never restate rules |
 
 Rules:
 - Adding a new copy of an owned fact is drift. Point to the owner instead.
+- `CLAUDE.md` is a thin `@AGENTS.md` import - never add rule text directly to it.
 - On any phase renumber, update VERSIONING Planned Phases, FUTURE_PLANS, and
   PHASE_LOG target-version references together - they are not auto-synced.
 - The chathead opener instructs reading `STATE.json` + `docs/FUTURE_PLANS.md`; it
@@ -58,8 +60,8 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.0.8
-- **Current phase:** 1.0.8 - Doc Continuity Model
+- **Current version:** 1.0.9-alpha
+- **Current phase:** 1.0.9 - Promote Self-Verify and CLAUDE.md Continuity
 - **Next phase:** 1.1.0 - Graphify Integration
 
 ---
@@ -120,6 +122,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.0.9 | alpha | 2026-05-29 | Promote Self-Verify and CLAUDE.md Continuity | promote.ps1 self-verifies the five versioning locations and fixes its commit echo; WORKFLOW.md drops the redundant post-promote validation; Doc Continuity Model now covers CLAUDE.md. |
 | 1.0.8 | stable | 2026-05-29 | Doc Continuity Model | Doc Continuity Model added to VERSIONING.md; opener state snapshot removed and AGENTS.md/WORKFLOW.md updated to point at STATE.json + FUTURE_PLANS; stale PHASE_LOG target-version fixed (1.2.0 -> 1.3.0). |
 | 1.0.7 | stable | 2026-05-29 | Anti-Drift Baseline | Version-consistency gate added to validate.ps1; Drift Guardrails + Startup Report disambiguation in AGENTS.md; 1.1.0/1.2.0 roadmap entries added; stale version markers removed. |
 | 1.0.6 | stable | 2026-05-28 | Mojibake Resolution and Scan | fix-mojibake.ps1 created; AI_HANDOFF.md, VERSIONING.md, WORKFLOW.md repaired; mojibake scan step added to validate.ps1. |
@@ -141,6 +144,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 | 1.0.2 | Commit Automation and Prompt Format Hardening | Single-file commit helper and structured Codex prompt/post-validation workflow. |
 | 1.0.7 | Anti-Drift Baseline | Version-consistency gate, Drift Guardrails, Startup Report disambiguation, roadmap grooming |
 | 1.0.8 | Doc Continuity Model | Per-fact owner map (Point/Sync/Gate) in VERSIONING.md; opener state snapshot removed; PHASE_LOG renumber fix |
+| 1.0.9 | Promote Self-Verify and CLAUDE.md Continuity | promote.ps1 self-verifies output; drop redundant post-promote validation; CLAUDE.md added to continuity model |
 | 1.1.0 | Graphify Integration | Port hfk-system graphify wiring (generate-codebase-graph scripts, .graphifyignore, CODEBASE_GRAPH.md), generate codebase-graph.json, route orientation through the graph in AGENTS.md |
 | 1.2.0 | ChromaDB Bootstrap | Operationalize ChromaDB: reconcile query/ingest scripts, npm run chroma, create + ingest chroma-data, validate.ps1 auto-start + ingest |
 | 1.3.0 | Phase 3 Completion | Finish View Filter Hardening checkpoints 4-6 |

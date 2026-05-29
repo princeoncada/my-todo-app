@@ -31,7 +31,7 @@ Introduced the full HFK-style AI workflow infrastructure to tidy:
 
 ## Phase 3: View Filter Hardening  -  IN PROGRESS (pre-1.0.0)
 
-**Target version**: 1.2.0
+**Target version**: 1.3.0
 **Branch**: `phase/view-filter-hardening` (checkpoints on `checkpoint/*`)
 **Phase log detail**: this section (consolidated from `docs/ai/phase-logs/phase-3-view-filter-hardening.md`)
 

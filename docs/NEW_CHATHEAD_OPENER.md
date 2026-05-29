@@ -19,9 +19,6 @@ Before doing anything else:
    - FUTURE_PLANS next Open item
 4. Run: git status --short and report any uncommitted work
 
-Current expected state: [current state].
-Next planned work: [future plans listed]
-
 Do not read other docs or begin implementation until I confirm.
 See CLAUDE.md and docs/CODEX_RULES.md for full rules after confirmation.
 

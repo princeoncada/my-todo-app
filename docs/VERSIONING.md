@@ -23,6 +23,29 @@ Every version bump must update **all five** in the same commit:
 
 Use `.\scripts\promote.ps1` to promote `-alpha` -> `-stable` across all five locations automatically.
 
+## Doc Continuity Model
+
+Every fact that appears in more than one doc has exactly ONE owner. Other docs must
+either reference the owner (Point), be synced from it by a script (Sync), or be
+checked against it by `validate.ps1` (Gate). Never hand-copy an owned fact into a
+new place - that is how drift starts.
+
+| Fact | Owner | Where it also appears | Kept in sync by |
+|------|-------|-----------------------|-----------------|
+| Version + state string | `STATE.json` (`version`, `state`) | VERSIONING (current + history), AI_HANDOFF (comment + prose), package.json, WORKFLOW (comment) | Sync: `promote.ps1` + Gate: `validate.ps1` |
+| Phase identity (number + title) | `STATE.json` (`phase`, `phaseTitle`) | VERSIONING, AI_HANDOFF, PHASE_LOG | Manual today - GAP (FUTURE_PLANS NEXT-9) |
+| Next phase (roadmap) | `STATE.json` (`nextPhase`) | VERSIONING (Next phase + Planned Phases), AI_HANDOFF | Manual today - GAP (FUTURE_PLANS NEXT-9) |
+| Next backlog item | `docs/FUTURE_PLANS.md` (first Open) | reported at startup | Point: read fresh each session |
+| Roadmap <-> backlog | VERSIONING Planned Phases <-> FUTURE_PLANS | each other | Manual - update both on any renumber |
+| Session state snapshot | `STATE.json` + `docs/FUTURE_PLANS.md` | the chathead opener | Point: opener tells the AI to read them; it must NOT embed a snapshot |
+
+Rules:
+- Adding a new copy of an owned fact is drift. Point to the owner instead.
+- On any phase renumber, update VERSIONING Planned Phases, FUTURE_PLANS, and
+  PHASE_LOG target-version references together - they are not auto-synced.
+- The chathead opener instructs reading `STATE.json` + `docs/FUTURE_PLANS.md`; it
+  must never embed a "current state" or "next work" snapshot.
+
 ## Rules
 
 **Bug Fix Rule**: Any bug discovered after a stable release always opens a `Z+1` patch. Never modify a stable release in place. The implementation prompt must bump all five locations to `X.Y.(Z+1)-alpha`.
@@ -35,8 +58,8 @@ Use `.\scripts\promote.ps1` to promote `-alpha` -> `-stable` across all five loc
 
 ## Current State
 
-- **Current version:** 1.0.7
-- **Current phase:** 1.0.7 - Anti-Drift Baseline
+- **Current version:** 1.0.8-alpha
+- **Current phase:** 1.0.8 - Doc Continuity Model
 - **Next phase:** 1.1.0 - Graphify Integration
 
 ---
@@ -97,6 +120,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.0.8 | alpha | 2026-05-29 | Doc Continuity Model | Doc Continuity Model added to VERSIONING.md; opener state snapshot removed and AGENTS.md/WORKFLOW.md updated to point at STATE.json + FUTURE_PLANS; stale PHASE_LOG target-version fixed (1.2.0 -> 1.3.0). |
 | 1.0.7 | stable | 2026-05-29 | Anti-Drift Baseline | Version-consistency gate added to validate.ps1; Drift Guardrails + Startup Report disambiguation in AGENTS.md; 1.1.0/1.2.0 roadmap entries added; stale version markers removed. |
 | 1.0.6 | stable | 2026-05-28 | Mojibake Resolution and Scan | fix-mojibake.ps1 created; AI_HANDOFF.md, VERSIONING.md, WORKFLOW.md repaired; mojibake scan step added to validate.ps1. |
 | 1.0.5 | stable | 2026-05-28 | New Chathead Opener | docs/NEW_CHATHEAD_OPENER.md created with START/END copy-paste format; WORKFLOW.md session checkpoint updated to reference opener file; AGENTS.md command vocabulary extended with handoff command. |
@@ -116,6 +140,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 | 1.0.1 | AGENTS.md Hardening | LF-only AGENTS.md rewrite, indented command examples, streamlined startup protocol, and Claude Code command vocabulary. |
 | 1.0.2 | Commit Automation and Prompt Format Hardening | Single-file commit helper and structured Codex prompt/post-validation workflow. |
 | 1.0.7 | Anti-Drift Baseline | Version-consistency gate, Drift Guardrails, Startup Report disambiguation, roadmap grooming |
+| 1.0.8 | Doc Continuity Model | Per-fact owner map (Point/Sync/Gate) in VERSIONING.md; opener state snapshot removed; PHASE_LOG renumber fix |
 | 1.1.0 | Graphify Integration | Port hfk-system graphify wiring (generate-codebase-graph scripts, .graphifyignore, CODEBASE_GRAPH.md), generate codebase-graph.json, route orientation through the graph in AGENTS.md |
 | 1.2.0 | ChromaDB Bootstrap | Operationalize ChromaDB: reconcile query/ingest scripts, npm run chroma, create + ingest chroma-data, validate.ps1 auto-start + ingest |
 | 1.3.0 | Phase 3 Completion | Finish View Filter Hardening checkpoints 4-6 |

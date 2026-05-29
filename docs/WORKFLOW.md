@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.0.7 -->
+<!-- Current Version: 1.0.8-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start alongside `STATE.json`. It is the authoritative protocol for all implementation phases.
 
@@ -195,9 +195,10 @@ When a session ends before a phase is complete, Claude Code provides a Codex pro
 6. **Uncommitted Work** - staged or unstaged changes and their purpose
 7. **Next Recommended Action** - exact next step for the resuming session
 
-After writing the session log, update docs/NEW_CHATHEAD_OPENER.md:
-- Set "Current expected state" to the just-promoted stable version
-- Set "Next planned work" to the next phase from STATE.json nextPhase
+After writing the session log, do NOT embed state into docs/NEW_CHATHEAD_OPENER.md.
+The opener intentionally points to STATE.json + docs/FUTURE_PLANS.md (see the Doc
+Continuity Model in docs/VERSIONING.md). Only edit the opener if its instructions
+change - never to update a version/phase snapshot.
 
 ---
 

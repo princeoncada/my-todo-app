@@ -41,6 +41,45 @@ Each item includes priority, status, files, acceptance criteria, and validation 
   - No raw git add + git commit blocks remain in any workflow doc
 ---
 
+## Upcoming Phases (Roadmap)
+
+These mirror the version roadmap in `docs/VERSIONING.md` (Planned Phases),
+cross-referenced so backlog and roadmap stay in sync.
+
+### v1.1.0 - Graphify Integration
+- **Priority:** Workflow / token-cost reduction
+- **Status:** Open
+- **Problem:** The AI orients by scanning many source files at session start. hfk-system reduces this 30-50% with a Graphify knowledge graph; tidy has none.
+- **Scope:**
+  - Port `scripts/generate-codebase-graph.ps1` + `generate_codebase_graph.py` from hfk-system (adapt protected paths to tidy)
+  - Add `.graphifyignore` and `docs/CODEBASE_GRAPH.md`
+  - Generate `codebase-graph.json`; add a `graph:codebase` npm script
+  - Route AGENTS.md startup orientation through the graph instead of source scanning
+  - Add a graph-refresh + freshness check step to `scripts/validate.ps1`
+- **Acceptance criteria:**
+  - `codebase-graph.json` exists and excludes `app/generated/prisma`, `.next`, `node_modules`, `graphify-out`
+  - AGENTS.md startup reads STATE.json + codebase-graph.json first
+  - validate.ps1 refreshes the graph and flags staleness (HEAD vs GRAPH_REPORT.md)
+- **Validation notes:** Port faithfully from hfk-system; document any deviation. The graphify CLI must be on PATH.
+
+### v1.2.0 - ChromaDB Bootstrap
+- **Priority:** Workflow / startup reliability
+- **Status:** Open
+- **Problem:** The startup protocol calls `python scripts/query_docs.py`, but ChromaDB was never bootstrapped (`chroma-data/` absent), so the query silently fails and weak models may fabricate results.
+- **Scope:**
+  - Reconcile `query_docs.py` + `ingest_docs.py` against hfk-system working versions; adapt collection name to `tidy_docs`
+  - Confirm the `chroma` npm script; ensure `chromadb` is in requirements.txt
+  - Create + ingest `chroma-data/`; decide commit / .gitignore policy (match hfk-system)
+  - Port the hfk-system validate.ps1 ChromaDB auto-start + ingest block
+  - Wire the AGENTS.md offline guardrail to the real failure path
+- **Acceptance criteria:**
+  - `npm run chroma` serves on :8000; `query_docs.py "<topic>"` returns a real tidy-doc chunk
+  - validate.ps1 auto-starts ChromaDB and ingests, or FAILs loudly (no silent skip)
+  - Startup reports online/offline honestly; never fabricates results
+- **Validation notes:** The chroma CLI must be on PATH. Port faithfully from hfk-system.
+
+---
+
 ## Active Phases
 
 ### Phase 3: View Filter Hardening

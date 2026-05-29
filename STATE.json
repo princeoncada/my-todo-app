@@ -1,8 +1,8 @@
 {
-    "version":  "1.0.8",
-    "state":  "stable",
-    "phase":  "1.0.8",
-    "phaseTitle":  "Doc Continuity Model",
+    "version":  "1.0.9-alpha",
+    "state":  "alpha",
+    "phase":  "1.0.9",
+    "phaseTitle":  "Promote Self-Verify and CLAUDE.md Continuity",
     "nextPhase":  "1.1.0 - Graphify Integration",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-29",

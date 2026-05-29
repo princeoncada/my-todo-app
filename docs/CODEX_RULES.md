@@ -24,8 +24,8 @@ Standing ruleset for every Codex implementation session. Read this before writin
 - If a commit cannot be described with one direct sentence, split it
 - Architecture phase branches must avoid large dump commits
 - Before scoping any phase that creates scripts or tooling, list scripts/
-  to verify no equivalent already exists — never duplicate an existing script
-- When STATE.json state = "alpha", apply fixes as in-alpha corrections only —
+  to verify no equivalent already exists  -  never duplicate an existing script
+- When STATE.json state = "alpha", apply fixes as in-alpha corrections only  - 
   do not re-scope, do not bump versions
 
 ---
@@ -40,7 +40,7 @@ Unless the task specifically changes these areas, never touch:
 - Drag-and-drop invariants: local-only hover state, stable cache/server writes on committed events only
 - View/list/item ordering semantics
 - Supabase user scoping and `protectedProcedure` patterns
-- Dexie isolation (Phase 1–2): no auto-running sync, no dashboard source-of-truth change
+- Dexie isolation (Phase 1 - 2): no auto-running sync, no dashboard source-of-truth change
 
 ---
 
@@ -60,12 +60,12 @@ Unless the task specifically changes these areas, never touch:
 
 ## Implementation Workflow
 
-1. Read `STATE.json` — current version, active phase, active branch
-2. Read `docs/AI_HANDOFF.md` — product snapshot, invariants, known risks
+1. Read `STATE.json`  -  current version, active phase, active branch
+2. Read `docs/AI_HANDOFF.md`  -  product snapshot, invariants, known risks
 3. Use the task routing table below to pick the smallest relevant source file set
 4. Identify required test coverage before coding (see Required Tests below)
 5. Read the active phase log from `docs/PHASE_LOG.md` (if implementing phase work)
-6. Read 2–3 source files directly relevant to the change
+6. Read 2 - 3 source files directly relevant to the change
 7. Make the code change and matching test change in the same branch
 8. Validate: `npm run test:ci` after implementation (user runs this, not Codex)
 9. Update `docs/AI_HANDOFF.md` if invariants or risks changed; update `docs/FUTURE_PLANS.md` for new gaps
@@ -103,7 +103,7 @@ Usage example:
 Avoid: `update stuff`, `local-first work`, `big sync changes`, `wip`
 
 Never do:
-- Use raw git add + git commit — always use .\scripts\commit.ps1
+- Use raw git add + git commit  -  always use .\scripts\commit.ps1
 - Batch multiple files into one commit
 - Add Co-Authored-By or any AI co-author trailer to commit messages
 
@@ -118,16 +118,16 @@ Every implementation PR must:
 - Not mark complete if tests were not added or updated unless clearly justified with a documented reason
 
 Test commands:
-- `npm run test` — Vitest unit tests
-- `npm run test:e2e` — non-authenticated Playwright E2E
-- `npm run test:e2e:auth:setup` — write auth storage state to `tests/.auth/user.json`
-- `npm run test:e2e:auth` — authenticated dashboard Playwright E2E (requires `tests/.auth/user.json` + Supabase env vars)
-- `npm run test:ci` — typecheck + lint + unit + default E2E
-- `npm run typecheck` — TypeScript only
-- `npm run lint` — ESLint only
+- `npm run test`  -  Vitest unit tests
+- `npm run test:e2e`  -  non-authenticated Playwright E2E
+- `npm run test:e2e:auth:setup`  -  write auth storage state to `tests/.auth/user.json`
+- `npm run test:e2e:auth`  -  authenticated dashboard Playwright E2E (requires `tests/.auth/user.json` + Supabase env vars)
+- `npm run test:ci`  -  typecheck + lint + unit + default E2E
+- `npm run typecheck`  -  TypeScript only
+- `npm run lint`  -  ESLint only
 
 Manual dashboard regression checklist (run after any cache/optimistic/DnD change):
-- Login, logout — confirm cache clears after logout
+- Login, logout  -  confirm cache clears after logout
 - Create list in All Lists; create list inside a custom view (verify required tags are inherited)
 - Add item immediately after creating a list before server response settles
 - Rename list and item, then refresh
@@ -136,8 +136,8 @@ Manual dashboard regression checklist (run after any cache/optimistic/DnD change
 - Drag lists in All Lists and in a custom view
 - Drag item within a list and across lists
 - Create, rename, update filter, delete, select, and reorder custom views
-- Create tag, attach/detach tags quickly, delete tag — verify affected custom views update
-- Fast-switch views — verify stale fetches do not repaint the dashboard
+- Create tag, attach/detach tags quickly, delete tag  -  verify affected custom views update
+- Fast-switch views  -  verify stale fetches do not repaint the dashboard
 
 ---
 
@@ -170,4 +170,4 @@ After every implementation:
 
 ## Next.js Version Warning
 
-This project uses **Next.js 16** — not a version you can assume from training data. If changing Next.js app APIs and `node_modules/next/dist/docs/` exists, read the relevant local Next guide before writing code. Heed deprecation notices.
+This project uses **Next.js 16**  -  not a version you can assume from training data. If changing Next.js app APIs and `node_modules/next/dist/docs/` exists, read the relevant local Next guide before writing code. Heed deprecation notices.

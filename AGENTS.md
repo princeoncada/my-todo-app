@@ -3,17 +3,17 @@
 <!-- BEGIN:nextjs-agent-rules -->
 ## This is NOT the Next.js you know
 
-This project uses newer framework versions with breaking changes — APIs, conventions, and file structure may differ from older assumptions. Follow existing repo patterns first. If you are changing Next.js app APIs and `node_modules/next/dist/docs/` exists, read the relevant local Next guide before writing code. Heed deprecation notices.
+This project uses newer framework versions with breaking changes  -  APIs, conventions, and file structure may differ from older assumptions. Follow existing repo patterns first. If you are changing Next.js app APIs and `node_modules/next/dist/docs/` exists, read the relevant local Next guide before writing code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
 ## Session Start Protocol
 
 At the start of every session, before reading other docs or writing code:
 
-1. Read `STATE.json` and `docs/FUTURE_PLANS.md` — together these give version, active phase, next phase, and the full work backlog.
+1. Read `STATE.json` and `docs/FUTURE_PLANS.md`  -  together these give version, active phase, next phase, and the full work backlog.
 2. Query ChromaDB if available on `localhost:8000`:
         python scripts/query_docs.py "<question about current task>"
-   One query per topic. Trust the first result. Fall back to direct file read only if query returns zero results — state why when falling back.
+   One query per topic. Trust the first result. Fall back to direct file read only if query returns zero results  -  state why when falling back.
 3. Output the startup report (see Startup Report Format below).
 4. If the user provided scope in their opening message: proceed directly to writing Codex prompts. Do not ask for confirmation.
    If no scope was provided: wait for the user's go-ahead.
@@ -40,9 +40,9 @@ Always output this exact structure at session start:
 | Task type | Read these |
 |-----------|-----------|
 | Startup | `STATE.json` + `docs/FUTURE_PLANS.md` |
-| Implementation | `docs/AI_HANDOFF.md` + `docs/CODEX_RULES.md` + 2–3 source files |
+| Implementation | `docs/AI_HANDOFF.md` + `docs/CODEX_RULES.md` + 2 - 3 source files |
 | Patch / docs work | `docs/CODEX_RULES.md` + affected files only |
-| Session close | Write `SESSION_LOG` → update `STATE.json` |
+| Session close | Write `SESSION_LOG` -> update `STATE.json` |
 
 Do not read `docs/WORKFLOW.md` at startup. Read it only when writing or reviewing a Codex prompt format or the post-validation workflow.
 
@@ -54,7 +54,7 @@ Do not read `docs/WORKFLOW.md` at startup. Read it only when writing or reviewin
 | "what's next" | Read docs/FUTURE_PLANS.md fresh, report next Open item and summarize it |
 | "session start" / "continue" | Run Session Start Protocol and output Startup Report |
 | "session checkpoint" / "handoff" | Write SESSION_LOG entry, then update docs/NEW_CHATHEAD_OPENER.md with current stable version and next phase |
-| "I AUTHORIZE CLAUDE CODE TO IMPLEMENT - [reason]" | Fallback only — use when Codex hits its token limit mid-implementation. Claude Code never suggests this phrase; the user initiates it. |
+| "I AUTHORIZE CLAUDE CODE TO IMPLEMENT - [reason]" | Fallback only  -  use when Codex hits its token limit mid-implementation. Claude Code never suggests this phrase; the user initiates it. |
 
 When validation checks fail after a Codex implementation, Claude Code must provide a fix master prompt immediately. Never ask the user to authorize direct implementation.
 
@@ -66,7 +66,7 @@ Claude Code may implement directly **only** when the user provides this exact ph
 
 Without this phrase, Claude Code writes Codex prompts using the 2-section format in `docs/WORKFLOW.md`. Claude Code never commits, pushes, creates branches, or runs `npm run test:ci` regardless of authorization.
 
-Exception — in-alpha fixes: when STATE.json state = "alpha", fixes and
+Exception  -  in-alpha fixes: when STATE.json state = "alpha", fixes and
 corrections extend the current phase directly. Do not write a new full
 Codex prompt and do not bump versions. Only open a new phase when the
 current version is stable.
@@ -79,9 +79,9 @@ never suggest it as an alternative to writing a Codex prompt.
 
 Before editing any file, route yourself through the repo-specific AI docs instead of scanning the whole repository:
 
-0. Read `STATE.json` first — compact project oracle (version, active phase, notes).
-1. Read `docs/AI_HANDOFF.md` — current product snapshot, invariants, data flow, known risks, and next action.
-2. Read `docs/CODEX_RULES.md` before implementation — scope control, invariants, commit discipline, required tests, task routing table.
+0. Read `STATE.json` first  -  compact project oracle (version, active phase, notes).
+1. Read `docs/AI_HANDOFF.md`  -  current product snapshot, invariants, data flow, known risks, and next action.
+2. Read `docs/CODEX_RULES.md` before implementation  -  scope control, invariants, commit discipline, required tests, task routing table.
 
 See `docs/PHASE_LOG.md` for active phase checkpoint context. See `docs/FUTURE_PLANS.md` for the prioritized work backlog.
 

@@ -6,20 +6,20 @@
 X.Y.Z-[state]
 ```
 
-- **X** Ã¢â‚¬â€ Major: architectural shift (new persistence layer, framework upgrade, full system replacement)
-- **Y** Ã¢â‚¬â€ Minor: significant feature or phase completion
-- **Z** Ã¢â‚¬â€ Patch: bug fix, doc correction, minor tweak
+- **X** - Major: architectural shift (new persistence layer, framework upgrade, full system replacement)
+- **Y** - Minor: significant feature or phase completion
+- **Z** - Patch: bug fix, doc correction, minor tweak
 - **State**: `alpha` (implemented, not validated) | `stable` (fully validated, committed to master)
 
 ## Five Versioning Locations
 
 Every version bump must update **all five** in the same commit:
 
-1. `STATE.json` Ã¢â‚¬â€ `version` + `state` fields (machine-readable oracle; read first every session)
-2. `docs/VERSIONING.md` Ã¢â‚¬â€ version history table + current state (this file)
-3. `docs/AI_HANDOFF.md` Ã¢â‚¬â€ version comment at top
-4. `package.json` Ã¢â‚¬â€ `version` field
-5. `docs/WORKFLOW.md` Ã¢â‚¬â€ version comment at top
+1. `STATE.json` - `version` + `state` fields (machine-readable oracle; read first every session)
+2. `docs/VERSIONING.md` - version history table + current state (this file)
+3. `docs/AI_HANDOFF.md` - version comment at top
+4. `package.json` - `version` field
+5. `docs/WORKFLOW.md` - version comment at top
 
 Use `.\scripts\promote.ps1` to promote `-alpha` -> `-stable` across all five locations automatically.
 
@@ -27,7 +27,7 @@ Use `.\scripts\promote.ps1` to promote `-alpha` -> `-stable` across all five loc
 
 **Bug Fix Rule**: Any bug discovered after a stable release always opens a `Z+1` patch. Never modify a stable release in place. The implementation prompt must bump all five locations to `X.Y.(Z+1)-alpha`.
 
-**Version Ordering Rule**: Versions must be monotonically increasing and reflect actual implementation order, not planned order. If a phase is built out of sequence, assign the next available `Y.Z` after the last stable release Ã¢â‚¬â€ never fill gaps or retrofit.
+**Version Ordering Rule**: Versions must be monotonically increasing and reflect actual implementation order, not planned order. If a phase is built out of sequence, assign the next available `Y.Z` after the last stable release - never fill gaps or retrofit.
 
 **Alpha Rule**: A version stays `-alpha` until `npm run test:ci` passes clean. Do not promote to stable until the full validation suite is green.
 
@@ -35,8 +35,8 @@ Use `.\scripts\promote.ps1` to promote `-alpha` -> `-stable` across all five loc
 
 ## Current State
 
-- **Current version:** 1.0.5-alpha
-- **Current phase:** 1.0.5 - New Chathead Opener
+- **Current version:** 1.0.6-alpha
+- **Current phase:** 1.0.6 - Mojibake Resolution and Scan
 - **Next phase:** 1.1.0 - Graphify Integration
 
 ---
@@ -56,7 +56,7 @@ Tidy was bootstrapped as a Next.js 16 / React 19 / TypeScript strict productivit
 - **Features**: Lists, items (with completion + ordering), custom views, tag system (ALL/ANY match modes), view reordering
 - **Docs**: `docs/ai/` system with 14 feature reference docs (deprecated in v1.0.0; content consolidated into `docs/AI_HANDOFF.md` and `docs/CODEX_RULES.md`)
 
-### Phase 1: Dexie Foundation (pre-1.0.0) Ã¢â‚¬â€ COMPLETE
+### Phase 1: Dexie Foundation (pre-1.0.0) - COMPLETE
 
 Branch merged to master. Added local-first persistence layer:
 
@@ -67,7 +67,7 @@ Branch merged to master. Added local-first persistence layer:
 
 Phase log: `docs/PHASE_LOG.md` (Phase 1 section)
 
-### Phase 2: Outbox Sync Queue (pre-1.0.0) Ã¢â‚¬â€ COMPLETE
+### Phase 2: Outbox Sync Queue (pre-1.0.0) - COMPLETE
 
 Branch ready for merge review at time of versioning introduction. Added durable write queue infrastructure:
 
@@ -78,7 +78,7 @@ Branch ready for merge review at time of versioning introduction. Added durable 
 
 Phase log: `docs/PHASE_LOG.md` (Phase 2 section)
 
-### Phase 3: View Filter Hardening (pre-1.0.0) Ã¢â‚¬â€ IN PROGRESS
+### Phase 3: View Filter Hardening (pre-1.0.0) - IN PROGRESS
 
 Active branch: `checkpoint/fix-cross-view-list-moves`. Fixing projection consistency for custom views (ANY-mode list visibility, cross-view list moves, tag relation consistency):
 
@@ -87,7 +87,7 @@ Active branch: `checkpoint/fix-cross-view-list-moves`. Fixing projection consist
 | 1: fix-view-list-projection | `checkpoint/fix-view-list-projection` | Done |
 | 2: fix-tag-relation-consistency | `checkpoint/fix-tag-relation-consistency` | Done |
 | 3: fix-cross-view-list-moves | `checkpoint/fix-cross-view-list-moves` | Active |
-| 4Ã¢â‚¬â€œ6 | TBD | Planned |
+| 4-6 | TBD | Planned |
 
 Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
@@ -97,6 +97,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.0.6 | alpha | 2026-05-28 | Mojibake Resolution and Scan | fix-mojibake.ps1 created; AI_HANDOFF.md, VERSIONING.md, WORKFLOW.md repaired; mojibake scan step added to validate.ps1. |
 | 1.0.5 | stable | 2026-05-28 | New Chathead Opener | docs/NEW_CHATHEAD_OPENER.md created with START/END copy-paste format; WORKFLOW.md session checkpoint updated to reference opener file; AGENTS.md command vocabulary extended with handoff command. |
 | 1.0.4 | stable | 2026-05-28 | Validate Script Output Compression | validate.ps1 rewritten to suppress output on pass, surface on fail, add e2e step, fix -Encoding UTF8 on STATE.json read. WORKFLOW.md Section 2 template updated to use validate.ps1. |
 | 1.0.3 | stable | 2026-05-28 | Promote Encoding Fix and Source-of-Truth Hardening | promote.ps1 Get-Content calls fixed with -Encoding UTF8; AGENTS.md repo source-of-truth rule added; FUTURE_PLANS v1.0.2 marked Done. |
@@ -114,7 +115,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 | 1.0.1 | AGENTS.md Hardening | LF-only AGENTS.md rewrite, indented command examples, streamlined startup protocol, and Claude Code command vocabulary. |
 | **1.0.2** | Commit Automation and Prompt Format Hardening | Single-file commit helper and structured Codex prompt/post-validation workflow. **(current)** |
 | 1.1.0 | Graphify Integration | Install graphify, generate codebase-graph.json, add graph navigation discipline to AGENTS.md |
-| 1.2.0 | Phase 3 Completion | Finish View Filter Hardening checkpoints 4Ã¢â‚¬â€œ6 |
+| 1.2.0 | Phase 3 Completion | Finish View Filter Hardening checkpoints 4-6 |
 | 2.0.0 | Phase 4: Operation Coalescing | Outbox coalescing + replay client wiring |
 | 2.1.0 | Phase 5: Rollback Safety | Dexie-backed rollback for optimistic write failures |
 | 3.0.0 | Phase 6: Scale Prep | Performance + query optimization |

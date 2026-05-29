@@ -1,14 +1,15 @@
-<!-- Current Version: 1.0.4 -->
+<!-- Current Version: 1.0.5-alpha -->
 # AI Handoff
-**Current Version**: 1.0.4-alpha - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.0.4 - Validate Script Output Compression
+**Current Version**: 1.0.5-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.0.5 - New Chathead Opener
 **Next**: 1.1.0 - Graphify Integration
 ---
 ## What Was Last Done
-**Phase 1.0.4** opened validation output compression:
-- Rewrote `scripts/validate.ps1` to capture each validation step and print raw output only on failure
-- Added the default e2e validation step and preserved skip flags for ChromaDB and e2e
-- Updated the workflow validation template and bumped all versioning locations to 1.0.4-alpha
+**Phase 1.0.5** opened new chathead handoff support:
+- Created `docs/NEW_CHATHEAD_OPENER.md` with START/END copy-paste instructions for new Claude Code sessions
+- Updated the workflow session checkpoint guidance to refresh the opener after writing session logs
+- Added the session checkpoint and handoff command vocabulary entry in AGENTS.md
+- Bumped all versioning locations to 1.0.5-alpha
 **Pre-versioning phases** (documented fully in `docs/PHASE_LOG.md`):
 - **Phase 1: Dexie Foundation** â€” done, merged to master
 - **Phase 2: Outbox Sync Queue** â€” done, ready for merge review

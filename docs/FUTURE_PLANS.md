@@ -13,27 +13,27 @@ Each item includes priority, status, files, acceptance criteria, and validation 
 - `Open`: not started
 - `In progress`: currently being implemented in an active branch
 - `Blocked`: cannot proceed without an external decision/dependency
-- `Done`: completed — include PR/commit note before eventual archival
+- `Done`: completed  -  include PR/commit note before eventual archival
 - `Superseded`: no longer applicable because another change made it obsolete
 
 ---
 
 ## Upcoming Patches
 
-### v1.0.2 — Commit Automation and Prompt Format Hardening
+### v1.0.2  -  Commit Automation and Prompt Format Hardening
 - **Priority:** Workflow / developer experience
-- **Status:** Done — committed to master 2026-05-28
+- **Status:** Done  -  committed to master 2026-05-28
 - **Problem:** After validation passes, Claude Code gives 20+ individual git commit commands to run by hand. The fix is a single-file commit helper and hardened prompt format.
 - **Scope:**
-  - `scripts/commit.ps1` — parameter-driven commit helper;
+  - `scripts/commit.ps1`  -  parameter-driven commit helper;
     replaces raw git add + git commit in all post-validation blocks
-  - `docs/WORKFLOW.md` — rewrite Codex prompt format section to structured
+  - `docs/WORKFLOW.md`  -  rewrite Codex prompt format section to structured
     format (READ THESE FILES FIRST, CURRENT PROJECT STATE, IMPLEMENTATION
     REQUIREMENTS, SAFETY CONSTRAINTS, STOP AND SUMMARIZE); update
     post-validation section to use commit.ps1 call sequences
-  - `docs/CODEX_RULES.md` — update commit discipline to reference commit.ps1
-  - `AGENTS.md` — update commit discipline to reference commit.ps1
-  - `.gitignore` — no local commit manifest entry
+  - `docs/CODEX_RULES.md`  -  update commit discipline to reference commit.ps1
+  - `AGENTS.md`  -  update commit discipline to reference commit.ps1
+  - `.gitignore`  -  no local commit manifest entry
 - **Acceptance criteria:**
   - commit.ps1 stages and commits one or more files, prints hash on success,
     errors with clear message on failure

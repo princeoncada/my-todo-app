@@ -33,18 +33,20 @@ new place - that is how drift starts.
 | Fact | Owner | Where it also appears | Kept in sync by |
 |------|-------|-----------------------|-----------------|
 | Version + state string | `STATE.json` (`version`, `state`) | VERSIONING (current + history), AI_HANDOFF (comment + prose), package.json, WORKFLOW (comment) | Sync: `promote.ps1` + Gate: `validate.ps1` |
-| Phase identity (number + title) | `STATE.json` (`phase`, `phaseTitle`) | VERSIONING, AI_HANDOFF, PHASE_LOG | Manual today - GAP (FUTURE_PLANS NEXT-9) |
-| Next phase (roadmap) | `STATE.json` (`nextPhase`) | VERSIONING (Next phase + Planned Phases), AI_HANDOFF | Manual today - GAP (FUTURE_PLANS NEXT-9) |
-| Next backlog item | `docs/FUTURE_PLANS.md` (first Open) | reported at startup | Point: read fresh each session |
-| Roadmap <-> backlog | VERSIONING Planned Phases <-> FUTURE_PLANS | each other | Manual - update both on any renumber |
+| Phase identity (number + title) | `STATE.json` (`phase`, `phaseTitle`) | VERSIONING, AI_HANDOFF, PHASE_LOG | Manual today - GAP (planned 1.0.11) |
+| Next phase (roadmap) | `STATE.json` (`nextPhase`) | VERSIONING (Next phase line), AI_HANDOFF, FUTURE_PLANS | Manual today - GAP (planned 1.0.11) |
+| Next backlog item | `docs/FUTURE_PLANS.md` (first Planned) | reported at startup | Point: read fresh each session |
+| Roadmap (version-sequenced) | `docs/FUTURE_PLANS.md` (Planned) | VERSIONING holds history only; startup reads it | Point: FUTURE_PLANS is the single roadmap owner |
 | Session state snapshot | `STATE.json` + `docs/FUTURE_PLANS.md` | the chathead opener | Point: opener tells the AI to read them; it must NOT embed a snapshot |
 | Project rules / entrypoint | `AGENTS.md` | `CLAUDE.md` (imports it via `@AGENTS.md`) | Point: CLAUDE.md must stay a one-line import and never restate rules |
 
 Rules:
 - Adding a new copy of an owned fact is drift. Point to the owner instead.
 - `CLAUDE.md` is a thin `@AGENTS.md` import - never add rule text directly to it.
-- On any phase renumber, update VERSIONING Planned Phases, FUTURE_PLANS, and
-  PHASE_LOG target-version references together - they are not auto-synced.
+- The roadmap lives only in `docs/FUTURE_PLANS.md` (Planned). Do not keep a second
+  roadmap table in VERSIONING.md.
+- On any phase renumber, update FUTURE_PLANS (Planned) and PHASE_LOG target-version
+  references together - they are not auto-synced.
 - The chathead opener instructs reading `STATE.json` + `docs/FUTURE_PLANS.md`; it
   must never embed a "current state" or "next work" snapshot.
 
@@ -54,14 +56,16 @@ Rules:
 
 **Version Ordering Rule**: Versions must be monotonically increasing and reflect actual implementation order, not planned order. If a phase is built out of sequence, assign the next available `Y.Z` after the last stable release - never fill gaps or retrofit.
 
+**Planned Renumber Rule**: Planned (not-yet-built) versions in `docs/FUTURE_PLANS.md` may be renumbered to stay monotonic. Inserting a new minor or major pushes the later planned numbers back (e.g. inserting 1.2.0 pushed Phase 3 Completion 1.2.0 -> 1.3.0). Patches (Z) may ship under the current minor before the next X/Y. Renumber only planned items - never a released version.
+
 **Alpha Rule**: A version stays `-alpha` until `npm run test:ci` passes clean. Do not promote to stable until the full validation suite is green.
 
 ---
 
 ## Current State
 
-- **Current version:** 1.0.9
-- **Current phase:** 1.0.9 - Promote Self-Verify and CLAUDE.md Continuity
+- **Current version:** 1.0.10-alpha
+- **Current phase:** 1.0.10 - Roadmap Consolidation
 - **Next phase:** 1.1.0 - Graphify Integration
 
 ---
@@ -122,6 +126,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.0.10 | alpha | 2026-05-29 | Roadmap Consolidation | FUTURE_PLANS.md rewritten as the single version-sequenced roadmap; Planned Phases table removed from VERSIONING.md; Planned Renumber Rule added; all former NOW/NEXT/LATER items assigned target versions. |
 | 1.0.9 | stable | 2026-05-29 | Promote Self-Verify and CLAUDE.md Continuity | promote.ps1 self-verifies the five versioning locations and fixes its commit echo; WORKFLOW.md drops the redundant post-promote validation; Doc Continuity Model now covers CLAUDE.md. |
 | 1.0.8 | stable | 2026-05-29 | Doc Continuity Model | Doc Continuity Model added to VERSIONING.md; opener state snapshot removed and AGENTS.md/WORKFLOW.md updated to point at STATE.json + FUTURE_PLANS; stale PHASE_LOG target-version fixed (1.2.0 -> 1.3.0). |
 | 1.0.7 | stable | 2026-05-29 | Anti-Drift Baseline | Version-consistency gate added to validate.ps1; Drift Guardrails + Startup Report disambiguation in AGENTS.md; 1.1.0/1.2.0 roadmap entries added; stale version markers removed. |
@@ -137,19 +142,6 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 ## Planned Phases
 
-| Version | Phase | Description |
-|---------|-------|-------------|
-| 1.0.0 | AI Workflow Foundation | STATE.json, versioning, workflow docs, ChromaDB doc query scripts, automation scripts. |
-| 1.0.1 | AGENTS.md Hardening | LF-only AGENTS.md rewrite, indented command examples, streamlined startup protocol, and Claude Code command vocabulary. |
-| 1.0.2 | Commit Automation and Prompt Format Hardening | Single-file commit helper and structured Codex prompt/post-validation workflow. |
-| 1.0.7 | Anti-Drift Baseline | Version-consistency gate, Drift Guardrails, Startup Report disambiguation, roadmap grooming |
-| 1.0.8 | Doc Continuity Model | Per-fact owner map (Point/Sync/Gate) in VERSIONING.md; opener state snapshot removed; PHASE_LOG renumber fix |
-| 1.0.9 | Promote Self-Verify and CLAUDE.md Continuity | promote.ps1 self-verifies output; drop redundant post-promote validation; CLAUDE.md added to continuity model |
-| 1.1.0 | Graphify Integration | Port hfk-system graphify wiring (generate-codebase-graph scripts, .graphifyignore, CODEBASE_GRAPH.md), generate codebase-graph.json, route orientation through the graph in AGENTS.md |
-| 1.2.0 | ChromaDB Bootstrap | Operationalize ChromaDB: reconcile query/ingest scripts, npm run chroma, create + ingest chroma-data, validate.ps1 auto-start + ingest |
-| 1.3.0 | Phase 3 Completion | Finish View Filter Hardening checkpoints 4-6 |
-| 2.0.0 | Phase 4: Operation Coalescing | Outbox coalescing + replay client wiring |
-| 2.1.0 | Phase 5: Rollback Safety | Dexie-backed rollback for optimistic write failures |
-| 3.0.0 | Phase 6: Scale Prep | Performance + query optimization |
-| 3.1.0 | Phase 7: Security Hardening | Ownership checks, auth gap closure |
-| 3.2.0 | Phase 8: Observability | Logging, error tracking, monitoring |
+The forward roadmap lives in `docs/FUTURE_PLANS.md` (the `Planned` section) - the
+single version-sequenced owner. This file keeps history + rules only. Do not
+maintain a second roadmap table here.

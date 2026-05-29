@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.0.10 -->
+<!-- Current Version: 1.0.11-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start alongside `STATE.json`. It is the authoritative protocol for all implementation phases.
 
@@ -186,6 +186,11 @@ in a single message:
 ---
 
 ## Session Checkpoint (Pausing Mid-Phase)
+
+Checkpoint proactively (see Session Continuity in AGENTS.md): Claude Code offers a
+session log - without being asked - when context may compact, after a promotion,
+before a large or risky operation, or when the user signals stopping. The user
+decides whether to write it.
 
 When a session ends before a phase is complete, Claude Code provides a Codex prompt (plain text, no 2-section format) to write a session log:
 

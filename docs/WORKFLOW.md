@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.0.3 -->
+<!-- Current Version: 1.0.4-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start alongside `STATE.json`. It is the authoritative protocol for all implementation phases.
 
@@ -147,7 +147,7 @@ A plain text code block containing all of the following blocks in this exact ord
 A PowerShell code block. Structure:
 
     # Baseline
-    npm run test:ci
+    .\scripts\validate.ps1
 
     # Phase-specific spot checks
     [Select-String and Test-Path checks for this phase's invariants]

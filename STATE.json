@@ -1,11 +1,11 @@
 {
-    "version":  "1.0.6-alpha",
-    "state":  "alpha",
+    "version":  "1.0.6",
+    "state":  "stable",
     "phase":  "1.0.6",
     "phaseTitle":  "Mojibake Resolution and Scan",
     "nextPhase":  "1.1.0 - Graphify Integration",
     "seriesComplete":  false,
-    "lastUpdated":  "2026-05-28",
+    "lastUpdated":  "2026-05-29",
     "preVersioningBaseline":  {
                                   "phasesComplete":  [
                                                          "Phase 1: Dexie Foundation (merged to master)",

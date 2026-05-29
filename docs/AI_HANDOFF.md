@@ -1,10 +1,15 @@
-<!-- Current Version: 1.0.8 -->
+<!-- Current Version: 1.0.9-alpha -->
 # AI Handoff
-**Current Version**: 1.0.8 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.0.8 - Doc Continuity Model
+**Current Version**: 1.0.9-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.0.9 - Promote Self-Verify and CLAUDE.md Continuity
 **Next**: 1.1.0 - Graphify Integration
 ---
 ## What Was Last Done
+**Phase 1.0.9** opened promote self-verify and CLAUDE.md continuity:
+- `scripts/promote.ps1` now self-verifies all five versioning locations and exits non-zero on mismatch
+- `scripts/promote.ps1` "next steps" echo now uses commit.ps1 (one file per commit), not raw git add
+- `docs/WORKFLOW.md` Post-Validation no longer re-runs full validation after promote
+- Doc Continuity Model now accounts for `CLAUDE.md` (thin `@AGENTS.md` import; never restates rules)
 **Phase 1.0.8** opened the doc continuity model:
 - Added the Doc Continuity Model to `docs/VERSIONING.md` (per-fact owner + Point/Sync/Gate rule)
 - Removed the state snapshot from `docs/NEW_CHATHEAD_OPENER.md`; it now points to STATE.json + FUTURE_PLANS

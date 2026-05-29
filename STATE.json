@@ -1,6 +1,6 @@
 {
-    "version":  "1.0.10-alpha",
-    "state":  "alpha",
+    "version":  "1.0.10",
+    "state":  "stable",
     "phase":  "1.0.10",
     "phaseTitle":  "Roadmap Consolidation",
     "nextPhase":  "1.1.0 - Graphify Integration",

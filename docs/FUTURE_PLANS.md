@@ -169,6 +169,17 @@ cross-referenced so backlog and roadmap stay in sync.
 
 ## NEXT
 
+### NEXT-9: Connect phase identity and next-work across docs
+- **Priority:** P2 / continuity (anti-drift)
+- **Status:** Open
+- **Files:** `scripts/promote.ps1`, `scripts/validate.ps1`, `STATE.json`, `docs/VERSIONING.md`, `docs/AI_HANDOFF.md`, `docs/PHASE_LOG.md`
+- **Problem:** Per the Doc Continuity Model (docs/VERSIONING.md), version+state is synced and gated, but phase identity (number+title) and next-phase are hand-copied across STATE.json, VERSIONING, AI_HANDOFF, and PHASE_LOG with no Sync or Gate. They drift on every phase change.
+- **Acceptance criteria:**
+  - Decide Point vs Sync per fact and record it in the Doc Continuity Model
+  - Phase identity and next-phase agree across all docs, enforced by a script or the validate gate
+  - No new hand-copied restatements introduced
+- **Validation notes:** Mirror the version-consistency gate pattern; consider a "phase open" helper that sets phase fields the way promote.ps1 sets the version.
+
 ### NEXT-1: Fix auth and landing-page copy polish
 - **Priority:** P2 / UX polish
 - **Status:** Open

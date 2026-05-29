@@ -1,4 +1,4 @@
-<!-- Current Version: 1.0.6-alpha -->
+<!-- Current Version: 1.0.6 -->
 # AI Handoff
 **Current Version**: 1.0.6-alpha - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.0.6 - Mojibake Resolution and Scan

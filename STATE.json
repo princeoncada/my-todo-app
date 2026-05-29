@@ -1,6 +1,6 @@
 {
-    "version":  "1.0.5-alpha",
-    "state":  "alpha",
+    "version":  "1.0.5",
+    "state":  "stable",
     "phase":  "1.0.5",
     "phaseTitle":  "New Chathead Opener",
     "nextPhase":  "1.1.0 - Graphify Integration",

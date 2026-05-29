@@ -70,7 +70,7 @@ Do not read `docs/WORKFLOW.md` at startup. Read it only when writing or reviewin
 | "scope it out" | Write the full Codex prompt + Section 2 validation block |
 | "what's next" | Read docs/FUTURE_PLANS.md fresh, report the next Open backlog item and summarize it. This is the backlog item, not the roadmap "Next phase" (which comes from STATE.json nextPhase) - distinguish them if both are relevant |
 | "session start" / "continue" | Run Session Start Protocol and output Startup Report |
-| "session checkpoint" / "handoff" | Write SESSION_LOG entry, then update docs/NEW_CHATHEAD_OPENER.md with current stable version and next phase |
+| "session checkpoint" / "handoff" | Write SESSION_LOG entry. Do not write version/phase state into docs/NEW_CHATHEAD_OPENER.md - the opener points to STATE.json + FUTURE_PLANS by design (see Doc Continuity Model in docs/VERSIONING.md) |
 | "I AUTHORIZE CLAUDE CODE TO IMPLEMENT - [reason]" | Fallback only  -  use when Codex hits its token limit mid-implementation. Claude Code never suggests this phrase; the user initiates it. |
 
 When validation checks fail after a Codex implementation, Claude Code must provide a fix master prompt immediately. Never ask the user to authorize direct implementation.

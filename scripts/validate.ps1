@@ -70,6 +70,25 @@ Run-Step "typecheck" @("npm", "run", "typecheck")
 # Lint
 Run-Step "lint" @("npm", "run", "lint")
 
+# Mojibake scan
+$mojiFiles = @(Get-ChildItem "docs/*.md" -File) + @(Get-Item "AGENTS.md")
+$mojiCount = 0
+$mojiLines = @()
+foreach ($f in $mojiFiles) {
+    $hits = Select-String -Path $f.FullName -Pattern "[^\x00-\x7F]"
+    if ($hits) {
+        $mojiCount += $hits.Count
+        $mojiLines += $hits | ForEach-Object { "  $($f.Name):$($_.LineNumber)" }
+    }
+}
+if ($mojiCount -gt 0) {
+    Write-Host "`n--- mojibake scan output ---" -ForegroundColor Red
+    $mojiLines | ForEach-Object { Write-Host $_ }
+    Add-Result "mojibake scan" $false "$mojiCount occurrence(s) - run .\scripts\fix-mojibake.ps1"
+} else {
+    Add-Result "mojibake scan" $true "clean"
+}
+
 # Unit tests
 Run-Step "unit tests" @("npm", "run", "test") "Tests\s+\d+ passed"
 

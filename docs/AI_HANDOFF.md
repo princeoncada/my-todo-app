@@ -1,10 +1,15 @@
-<!-- Current Version: 1.0.7 -->
+<!-- Current Version: 1.0.8-alpha -->
 # AI Handoff
-**Current Version**: 1.0.7 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.0.7 - Anti-Drift Baseline
+**Current Version**: 1.0.8-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.0.8 - Doc Continuity Model
 **Next**: 1.1.0 - Graphify Integration
 ---
 ## What Was Last Done
+**Phase 1.0.8** opened the doc continuity model:
+- Added the Doc Continuity Model to `docs/VERSIONING.md` (per-fact owner + Point/Sync/Gate rule)
+- Removed the state snapshot from `docs/NEW_CHATHEAD_OPENER.md`; it now points to STATE.json + FUTURE_PLANS
+- Updated `AGENTS.md` and `docs/WORKFLOW.md` so the handoff no longer writes state into the opener
+- Fixed a stale Phase 3 target-version reference in `docs/PHASE_LOG.md` (1.2.0 -> 1.3.0)
 **Phase 1.0.7** opened the anti-drift baseline:
 - Bumped all five versioning locations to 1.0.7-alpha and removed stale version markers
 - Added a version-consistency gate to `scripts/validate.ps1` (fails when the five locations disagree)

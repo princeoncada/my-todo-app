@@ -30,6 +30,7 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 - ~~1.0.7 - Anti-Drift Baseline~~ (stable 2026-05-29)
 - ~~1.0.8 - Doc Continuity Model~~ (stable 2026-05-29)
 - ~~1.0.9 - Promote Self-Verify and CLAUDE.md Continuity~~ (stable 2026-05-29)
+- ~~1.0.10 - Roadmap Consolidation~~ (stable 2026-05-29)
 
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
@@ -39,18 +40,18 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 
 ## In Progress
 
-- 1.0.10 - Roadmap Consolidation (current working alpha; this patch) - see Planned
+- 1.0.11 - Session Continuity and Bounded Initiative (current working alpha; this patch) - see Planned
 - 1.3.0 - Phase 3: View Filter Hardening (active branch `phase/view-filter-hardening`, checkpoint `fix-cross-view-list-moves`) - see Planned
 
 ---
 
 ## Planned
 
-### 1.0.10 - Roadmap Consolidation
+### 1.0.11 - Session Continuity and Bounded Initiative
 - **Status:** In progress (this patch)
-- **Scope:** Make FUTURE_PLANS.md the single version-sequenced roadmap; remove the duplicate Planned Phases table from VERSIONING.md; add the Planned Renumber Rule; assign target versions to all former backlog items.
+- **Scope:** Add Session Continuity (proactively offer a SESSION_LOG checkpoint before context loss) and Working Posture (strict rails + active initiative) sections to AGENTS.md; cross-reference proactive checkpointing in WORKFLOW.md; fix stale Open->Planned references.
 
-### 1.0.11 - Phase Identity Sync
+### 1.0.12 - Phase Identity Sync
 - **Status:** Open | Priority: continuity (anti-drift)
 - **Files:** scripts/promote.ps1, scripts/validate.ps1, STATE.json, docs/VERSIONING.md, docs/AI_HANDOFF.md, docs/PHASE_LOG.md
 - **Problem:** Phase identity (number+title) and next-phase are hand-copied across docs with no Sync or Gate (only version+state is connected).

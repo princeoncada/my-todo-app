@@ -22,15 +22,32 @@ Repo docs are the only source of truth. Never answer state queries,
 version questions, or "what's next" from session memory of docs.
 Always read STATE.json and docs/FUTURE_PLANS.md fresh.
 
+## Drift Guardrails
+
+These rules exist so lower-capability models cannot silently drift:
+
+- STATE.json is the single source of truth for version and state. If any
+  other doc disagrees with STATE.json, STOP and flag the conflict - never
+  guess which is correct and never reconcile silently.
+- "Next phase" (roadmap, from STATE.json nextPhase) and "Next backlog item"
+  (docs/FUTURE_PLANS.md first Open item) are different questions with
+  different answers. Report both, labeled distinctly. Never conflate them.
+- If ChromaDB is offline, say so explicitly and read files directly. Never
+  fabricate or paraphrase query results that were not actually returned.
+- Never state version, phase, or "what's next" from memory. Read the files
+  fresh every session.
+- scripts/validate.ps1 enforces version consistency across all five
+  versioning locations. A failing consistency gate blocks promotion.
+
 ## Startup Report Format
 
 Always output this exact structure at session start:
 
     Version: X.Y.Z-[state]
     Phase: [phaseTitle]
-    Next phase: [nextPhase]
+    Next phase (roadmap): [nextPhase from STATE.json]
+    Next backlog item: [title of first Open item in docs/FUTURE_PLANS.md]
     ChromaDB: [online | offline]
-    FUTURE_PLANS next: [title of first Open item]
     [one of:]
     Proceeding to Codex prompts for [scope].
     Waiting for your go-ahead.
@@ -51,7 +68,7 @@ Do not read `docs/WORKFLOW.md` at startup. Read it only when writing or reviewin
 | Phrase | What Claude Code does |
 |--------|----------------------|
 | "scope it out" | Write the full Codex prompt + Section 2 validation block |
-| "what's next" | Read docs/FUTURE_PLANS.md fresh, report next Open item and summarize it |
+| "what's next" | Read docs/FUTURE_PLANS.md fresh, report the next Open backlog item and summarize it. This is the backlog item, not the roadmap "Next phase" (which comes from STATE.json nextPhase) - distinguish them if both are relevant |
 | "session start" / "continue" | Run Session Start Protocol and output Startup Report |
 | "session checkpoint" / "handoff" | Write SESSION_LOG entry, then update docs/NEW_CHATHEAD_OPENER.md with current stable version and next phase |
 | "I AUTHORIZE CLAUDE CODE TO IMPLEMENT - [reason]" | Fallback only  -  use when Codex hits its token limit mid-implementation. Claude Code never suggests this phrase; the user initiates it. |

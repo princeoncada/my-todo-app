@@ -1,8 +1,8 @@
 {
-    "version":  "1.0.10",
-    "state":  "stable",
-    "phase":  "1.0.10",
-    "phaseTitle":  "Roadmap Consolidation",
+    "version":  "1.0.11-alpha",
+    "state":  "alpha",
+    "phase":  "1.0.11",
+    "phaseTitle":  "Session Continuity and Bounded Initiative",
     "nextPhase":  "1.1.0 - Graphify Integration",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-29",

@@ -1,10 +1,15 @@
-<!-- Current Version: 1.0.9 -->
+<!-- Current Version: 1.0.10-alpha -->
 # AI Handoff
-**Current Version**: 1.0.9 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.0.9 - Promote Self-Verify and CLAUDE.md Continuity
+**Current Version**: 1.0.10-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.0.10 - Roadmap Consolidation
 **Next**: 1.1.0 - Graphify Integration
 ---
 ## What Was Last Done
+**Phase 1.0.10** opened roadmap consolidation:
+- Rewrote `docs/FUTURE_PLANS.md` into a single version-sequenced plan (Completed / In Progress / Planned / Potential Directions)
+- Removed the duplicate Planned Phases table from `docs/VERSIONING.md`; it now holds history + rules only
+- Added the Planned Renumber Rule and updated the Doc Continuity Model to name FUTURE_PLANS as the single roadmap owner
+- Assigned target versions to all former NOW/NEXT/LATER backlog items
 **Phase 1.0.9** opened promote self-verify and CLAUDE.md continuity:
 - `scripts/promote.ps1` now self-verifies all five versioning locations and exits non-zero on mismatch
 - `scripts/promote.ps1` "next steps" echo now uses commit.ps1 (one file per commit), not raw git add

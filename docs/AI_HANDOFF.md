@@ -1,14 +1,14 @@
-<!-- Current Version: 1.0.3 -->
+<!-- Current Version: 1.0.4-alpha -->
 # AI Handoff
-**Current Version**: 1.0.3-alpha - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.0.3 - Promote Encoding Fix and Source-of-Truth Hardening
+**Current Version**: 1.0.4-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.0.4 - Validate Script Output Compression
 **Next**: 1.1.0 - Graphify Integration
 ---
 ## What Was Last Done
-**Phase 1.0.3** opened promote encoding and source-of-truth hardening:
-- Fixed `scripts/promote.ps1` STATE.json and Update-FileText reads to use UTF8
-- Added AGENTS.md guidance that repo docs are the only source of truth for state, version, and next-work answers
-- Marked the v1.0.2 future-plan patch Done and bumped all versioning locations to 1.0.3-alpha
+**Phase 1.0.4** opened validation output compression:
+- Rewrote `scripts/validate.ps1` to capture each validation step and print raw output only on failure
+- Added the default e2e validation step and preserved skip flags for ChromaDB and e2e
+- Updated the workflow validation template and bumped all versioning locations to 1.0.4-alpha
 **Pre-versioning phases** (documented fully in `docs/PHASE_LOG.md`):
 - **Phase 1: Dexie Foundation** â€” done, merged to master
 - **Phase 2: Outbox Sync Queue** â€” done, ready for merge review

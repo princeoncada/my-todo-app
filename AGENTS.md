@@ -54,6 +54,27 @@ These rules exist so lower-capability models cannot silently drift:
   `codebase-graph.json` for orientation; graph audit is validation/proof only.
   If graph audit fails, treat Graphify as untrusted until fixed.
 
+## Graph Routing Summary
+
+Normal startup still reads only `STATE.json`, `codebase-graph.json` when present,
+`docs/FUTURE_PLANS.md`, and ChromaDB only if available. Do not add graph audit,
+graph drills, or broader graph proof work to normal startup.
+
+For implementation scoping responses, include a concise Graph Routing Summary
+before the Codex prompt. Keep it short so it does not become another token
+burden. It must include:
+
+1. Task category
+2. Graph-selected files
+3. Why each file was selected
+4. Intentionally skipped files or broad docs
+5. Whether direct reads are still required before editing
+
+The graph is still an orientation map, not a source of truth. For
+implementation, directly relevant files must still be read before editing. If
+`codebase-graph.json` is missing, stale, invalid, or unhelpful, state that and
+fall back to direct file reads.
+
 ## Session Continuity
 
 Context can be compacted or lost in long sessions. To survive compaction or a

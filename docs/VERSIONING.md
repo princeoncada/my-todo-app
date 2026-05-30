@@ -33,10 +33,11 @@ new place - that is how drift starts.
 | Fact | Owner | Where it also appears | Kept in sync by |
 |------|-------|-----------------------|-----------------|
 | Version + state string | `STATE.json` (`version`, `state`) | VERSIONING (current + history), AI_HANDOFF (comment + prose), package.json, WORKFLOW (comment) | Sync: `promote.ps1` + Gate: `validate.ps1` |
-| Phase identity (number + title) | `STATE.json` (`phase`, `phaseTitle`) | VERSIONING, AI_HANDOFF, PHASE_LOG | Manual today - GAP (planned 1.0.11) |
-| Next phase (roadmap) | `STATE.json` (`nextPhase`) | VERSIONING (Next phase line), AI_HANDOFF, FUTURE_PLANS | Manual today - GAP (planned 1.0.11) |
+| Phase identity (number + title) | `STATE.json` (`phase`, `phaseTitle`) | VERSIONING (Current State), AI_HANDOFF (Current Phase), PHASE_LOG | Gate: `validate.ps1` checks current VERSIONING and AI_HANDOFF copies against STATE.json |
+| Next phase | `STATE.json` (`nextPhase`) | VERSIONING (Next phase line), AI_HANDOFF (Next line) | Gate: `validate.ps1` checks current VERSIONING and AI_HANDOFF copies against STATE.json |
 | Next backlog item | `docs/FUTURE_PLANS.md` (first Planned) | reported at startup | Point: read fresh each session |
 | Roadmap (version-sequenced) | `docs/FUTURE_PLANS.md` (Planned) | VERSIONING holds history only; startup reads it | Point: FUTURE_PLANS is the single roadmap owner |
+| Roadmap closeout | `docs/FUTURE_PLANS.md` (Completed / In Progress / Planned) | promotion workflow | Sync: `promote.ps1` closes the promoted roadmap item + Gate: `validate.ps1` catches stale phase/backlog drift |
 | Session state snapshot | `STATE.json` + `docs/FUTURE_PLANS.md` | the chathead opener | Point: opener tells the AI to read them; it must NOT embed a snapshot |
 | Project rules / entrypoint | `AGENTS.md` | `CLAUDE.md` (imports it via `@AGENTS.md`) | Point: CLAUDE.md must stay a one-line import and never restate rules |
 
@@ -45,6 +46,9 @@ Rules:
 - `CLAUDE.md` is a thin `@AGENTS.md` import - never add rule text directly to it.
 - The roadmap lives only in `docs/FUTURE_PLANS.md` (Planned). Do not keep a second
   roadmap table in VERSIONING.md.
+- FUTURE_PLANS remains the single owner of the forward roadmap. Promotion may
+  close the promoted roadmap item there, but FUTURE_PLANS is roadmap state, not
+  a sixth versioning location.
 - On any phase renumber, update FUTURE_PLANS (Planned) and PHASE_LOG target-version
   references together - they are not auto-synced.
 - The chathead opener instructs reading `STATE.json` + `docs/FUTURE_PLANS.md`; it
@@ -64,8 +68,8 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.0.11
-- **Current phase:** 1.0.11 - Session Continuity and Bounded Initiative
+- **Current version:** 1.0.12-alpha
+- **Current phase:** 1.0.12 - Phase Identity Sync
 - **Next phase:** 1.1.0 - Graphify Integration
 
 ---
@@ -126,6 +130,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.0.12 | alpha | 2026-05-29 | Phase Identity Sync | Adds phase identity and roadmap closeout guards; promote.ps1 closes the promoted roadmap item in FUTURE_PLANS.md; validate.ps1 catches stale phase/backlog drift. |
 | 1.0.11 | stable | 2026-05-29 | Session Continuity and Bounded Initiative | AGENTS.md gains Session Continuity (proactive SESSION_LOG checkpoint) and Working Posture (strict rails + active initiative) sections; WORKFLOW.md checkpoint cross-reference; stale Open->Planned references fixed. |
 | 1.0.10 | stable | 2026-05-29 | Roadmap Consolidation | FUTURE_PLANS.md rewritten as the single version-sequenced roadmap; Planned Phases table removed from VERSIONING.md; Planned Renumber Rule added; all former NOW/NEXT/LATER items assigned target versions. |
 | 1.0.9 | stable | 2026-05-29 | Promote Self-Verify and CLAUDE.md Continuity | promote.ps1 self-verifies the five versioning locations and fixes its commit echo; WORKFLOW.md drops the redundant post-promote validation; Doc Continuity Model now covers CLAUDE.md. |

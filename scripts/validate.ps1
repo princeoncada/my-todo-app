@@ -342,6 +342,21 @@ if ($graphErrors.Count -eq 0) {
     Add-Result "codebase graph" $false ($graphErrors -join "; ")
 }
 
+# Graph usage guard - docs must not instruct the live graphify CLI (tidy has no graphify-out)
+$graphUsageHits = @()
+$graphUsageDocs = @(Get-ChildItem "docs/*.md" -File) + @(Get-Item "AGENTS.md")
+foreach ($gud in $graphUsageDocs) {
+    $hit = Select-String -Path $gud.FullName -Pattern 'graphify\s+(query|path|explain)\s+\.'
+    if ($hit) {
+        $graphUsageHits += $hit | ForEach-Object { "$($gud.Name):$($_.LineNumber)" }
+    }
+}
+if ($graphUsageHits.Count -eq 0) {
+    Add-Result "graph usage" $true "no live-CLI instructions in docs"
+} else {
+    Add-Result "graph usage" $false ("docs instruct unavailable graphify CLI: " + ($graphUsageHits -join ", "))
+}
+
 # ChromaDB - auto-start if needed, then ingest docs (FAIL loudly if unreachable)
 if (-not $SkipChroma) {
     $chromaUri = "http://localhost:8000/api/v2/heartbeat"

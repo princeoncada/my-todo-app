@@ -1,6 +1,6 @@
-<!-- Current Version: 1.1.3-alpha -->
+<!-- Current Version: 1.1.3 -->
 # AI Handoff
-**Current Version**: 1.1.3-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.1.3 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.1.3 - Codex Validation Boundary Hardening
 **Next**: 1.2.0 - ChromaDB Bootstrap
 ---

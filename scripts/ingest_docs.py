@@ -27,6 +27,7 @@ DOC_PATHS = [
     "docs/VERSIONING.md",
     "docs/WORKFLOW.md",
     "docs/COMPACT_STRATEGY.md",
+    "docs/CODEBASE_GRAPH.md",
 ]
 
 
@@ -78,7 +79,9 @@ def main() -> None:
     except Exception:
         pass
 
-    collection = client.create_collection(COLLECTION_NAME)
+    collection = client.create_collection(
+        COLLECTION_NAME, metadata={"hnsw:space": "cosine"}
+    )
     total_chunks = 0
 
     for path in DOC_PATHS:
@@ -86,7 +89,7 @@ def main() -> None:
             print(f"  SKIP (not found): {path}")
             continue
 
-        with open(path, encoding="utf-8") as f:
+        with open(path, encoding="utf-8-sig") as f:
             text = f.read()
 
         chunks = split_on_h2(text, path)

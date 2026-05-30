@@ -45,6 +45,8 @@ These rules exist so lower-capability models cannot silently drift:
   fresh every session.
 - scripts/validate.ps1 enforces version consistency across all five
   versioning locations. A failing consistency gate blocks promotion.
+- If `codebase-graph.json` exists but its version does not match `STATE.json`,
+  report graph drift and refresh the graph before relying on it.
 - `codebase-graph.json` is an orientation map, not a source of truth. For
   implementation, still read `docs/AI_HANDOFF.md`, `docs/CODEX_RULES.md`, and
   directly relevant source files before editing.

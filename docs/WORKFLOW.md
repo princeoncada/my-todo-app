@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.0.12 -->
+<!-- Current Version: 1.0.13-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start alongside `STATE.json`. It is the authoritative protocol for all implementation phases.
 
@@ -85,72 +85,97 @@ Never re-scope a full phase for a fix when the current version is already alpha.
 Every Codex prompt uses a two-section format. Section headings are markdown
 headers sitting above their code block - not inside it.
 
+### Assistant Output Formatting Contract
+
+- Keep markdown section headings outside code blocks.
+- Section 1 - Master Prompt heading must stay outside the code block.
+- Section 2 - Validation heading must stay outside the code block.
+- The Codex prompt must be one text code block containing only the prompt intended for Codex.
+- The validation block must be one PowerShell code block containing only validation commands.
+- The alpha commit sequence must be one PowerShell code block containing all alpha commit commands, one command per line.
+- The stable promotion commit sequence must be one separate PowerShell code block containing all stable promotion commit commands, one command per line.
+- Never place `Section 1 - Master Prompt` or `Section 2 - Validation` inside
+  copyable code blocks.
+- Do not wrap both sections in one code block.
+- Do not combine Codex prompt text and PowerShell commands in the same code block.
+- The push command must be separate from commit command blocks.
+- Code blocks must be copy-paste runnable for their target tool.
+- Do not place explanatory prose, bullets, markdown headings, wrappers, or
+  comments inside copyable command blocks unless they are commands the user
+  should actually run.
+- Use `text` for Codex prompt blocks.
+- Use `powershell` for validation and command blocks.
+
 ### Section 1 - Master Prompt
 
-A plain text code block containing all of the following blocks in this exact order:
+A single `text` code block containing only the prompt intended for Codex. It
+contains all of the following blocks in this exact order:
 
-    You are implementing Phase X.Y.Z - [Name] for Tidy.
-    Current stable version: X.Y.Z-stable.
-    This implementation opens X.Y.Z-alpha.
+```text
+You are implementing Phase X.Y.Z - [Name] for Tidy.
+Current stable version: X.Y.Z-stable.
+This implementation opens X.Y.Z-alpha.
 
-    ---
+---
 
-    READ THESE FILES FIRST before writing any code:
+READ THESE FILES FIRST before writing any code:
 
-    - STATE.json
-    - docs/AI_HANDOFF.md
-    - docs/CODEX_RULES.md
-    - [2-3 source files directly relevant to this change]
-    - [if the phase creates or modifies scripts: list scripts/ to check for
-      existing implementations before scoping anything new]
+- STATE.json
+- docs/AI_HANDOFF.md
+- docs/CODEX_RULES.md
+- [2-3 source files directly relevant to this change]
+- [if the phase creates or modifies scripts: list scripts/ to check for
+  existing implementations before scoping anything new]
 
-    ---
+---
 
-    CURRENT PROJECT STATE:
+CURRENT PROJECT STATE:
 
-    Version: X.Y.Z-alpha
-    Series: [series label]
-    Last phase: [title] ([one-line result])
-    Next phase: [this prompt title]
+Version: X.Y.Z-alpha
+Series: [series label]
+Last phase: [title] ([one-line result])
+Next phase: [this prompt title]
 
-    ---
+---
 
-    IMPLEMENTATION REQUIREMENTS:
+IMPLEMENTATION REQUIREMENTS:
 
-    Every requirement is mandatory. Do not skip, defer, or partially implement.
+Every requirement is mandatory. Do not skip, defer, or partially implement.
 
-    [Numbered items. Label each CREATE or MODIFY.
-     MODIFY items include exact OLD TEXT and NEW TEXT pairs.
-     Do not alter any text outside the specified pairs.]
+[Numbered items. Label each CREATE or MODIFY.
+ MODIFY items include exact OLD TEXT and NEW TEXT pairs.
+ Do not alter any text outside the specified pairs.]
 
-    ---
+---
 
-    SAFETY CONSTRAINTS:
+SAFETY CONSTRAINTS:
 
-    - Do not commit, push, or create branches
-    - Do not run npm scripts, git commands, or validation scripts
-    - Do not modify app/generated/prisma
-    - Do not touch unrelated files
-    - [phase-specific constraints]
+- Do not commit, push, or create branches
+- Do not run npm scripts, git commands, or validation scripts
+- Do not modify app/generated/prisma
+- Do not touch unrelated files
+- [phase-specific constraints]
 
-    ---
+---
 
-    STOP AND SUMMARIZE:
+STOP AND SUMMARIZE:
 
-    After completing all changes, stop and provide:
-    1. Files created (path + one-sentence purpose)
-    2. Files modified (path + what changed)
-    3. Any assumptions made during implementation
+After completing all changes, stop and provide:
+1. Files created (path + one-sentence purpose)
+2. Files modified (path + what changed)
+3. Any assumptions made during implementation
+```
 
 ### Section 2 - Validation
 
-A PowerShell code block. Structure:
+A single `powershell` code block containing only PowerShell validation commands:
 
-    # Baseline
-    .\scripts\validate.ps1
+```powershell
+.\scripts\validate.ps1
+Select-String -Path "docs\WORKFLOW.md" -Pattern "Section 1 - Master Prompt"
+Test-Path "STATE.json"
+```
 
-    # Phase-specific spot checks
-    [Select-String and Test-Path checks for this phase's invariants]
 ---
 
 ## Post-Validation Workflow
@@ -159,13 +184,18 @@ After npm run test:ci passes, Claude Code provides all of the following
 in a single message:
 
 1. Validation summary - pass counts, any warnings
-2. commit.ps1 call sequence - one call per changed file, in commit order:
+2. Alpha commit sequence - The alpha commit sequence must be one PowerShell code block containing all alpha commit commands, one command per line.
 
-    .\scripts\commit.ps1 -Files "path/to/file" -Message "type(scope): message"
+```powershell
+.\scripts\commit.ps1 -Files "path/to/file" -Message "type(scope): message"
+```
 
-3. Promote block (run immediately after all commits complete):
+3. Promote block - the promote command may be its own `powershell` code block
+   run immediately after all alpha commits complete:
 
-    .\scripts\promote.ps1
+```powershell
+.\scripts\promote.ps1
+```
 
    promote.ps1 promotes the five versioning locations and also closes the
    promoted phase in `docs/FUTURE_PLANS.md` as roadmap state. FUTURE_PLANS is
@@ -177,18 +207,28 @@ in a single message:
    and roadmap state. If promote reports success, proceed directly to the
    promotion commits.
 
-4. Stable-promotion commit sequence - one call per changed promotion file:
+4. Stable-promotion commit sequence - The stable promotion commit sequence must be one separate PowerShell code block containing all stable promotion commit commands, one command per line.
 
-    .\scripts\commit.ps1 -Files "STATE.json" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
-    .\scripts\commit.ps1 -Files "docs/VERSIONING.md" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
-    .\scripts\commit.ps1 -Files "docs/AI_HANDOFF.md" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
-    .\scripts\commit.ps1 -Files "package.json" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
-    .\scripts\commit.ps1 -Files "docs/WORKFLOW.md" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
-    .\scripts\commit.ps1 -Files "docs/FUTURE_PLANS.md" -Message "chore(release): close X.Y.Z roadmap item"
+```powershell
+.\scripts\commit.ps1 -Files "STATE.json" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
+.\scripts\commit.ps1 -Files "docs/VERSIONING.md" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
+.\scripts\commit.ps1 -Files "docs/AI_HANDOFF.md" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
+.\scripts\commit.ps1 -Files "package.json" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
+.\scripts\commit.ps1 -Files "docs/WORKFLOW.md" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
+.\scripts\commit.ps1 -Files "docs/FUTURE_PLANS.md" -Message "chore(release): close X.Y.Z roadmap item"
+```
 
-5. Push block (user decides when to run):
+5. Push block - separate from commit command blocks; user decides when to run:
 
-    git push origin master
+```powershell
+git push origin master
+```
+
+Do not emit each commit command as its own separate code block. Use one-by-one
+blocks only when the user explicitly asks for them. Do not combine alpha commits
+and stable promotion commits in the same code block. Commit command blocks must
+be copy-paste runnable as-is in PowerShell.
+
 ---
 
 ## Session Checkpoint (Pausing Mid-Phase)

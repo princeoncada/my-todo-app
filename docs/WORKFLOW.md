@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.1.3 -->
+<!-- Current Version: 1.1.4-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -116,6 +116,23 @@ When scoping implementation prompts, include `codebase-graph.json` as an early
 read after `STATE.json` when it exists. The graph narrows file selection; it
 does not replace `docs/AI_HANDOFF.md`, `docs/CODEX_RULES.md`, or direct reads of
 affected source files.
+
+### Graph Routing Usage Contract
+
+When scoping implementation prompts, include a short Graph Routing Summary
+before Section 1 - Master Prompt. The Graph Routing Summary must stay outside code blocks and must not be included inside the Codex prompt block.
+
+The summary must explain how `codebase-graph.json` narrowed file selection, list
+selected files and why, list intentionally skipped broad docs/files, and state
+whether source files still need direct reads before editing. It must not require
+running graph audit during startup, must not require token benchmarking, and
+must not add graph drills to every loop.
+
+Graph Routing Summary:
+- Task category: workflow/docs patch
+- Graph-selected files: AGENTS.md, docs/WORKFLOW.md, docs/CODEX_RULES.md
+- Intentionally skipped: app source, tRPC routers, Prisma output
+- Direct reads still required: yes, read selected docs before editing
 
 Refresh the graph after graphable source, docs, or script changes:
 

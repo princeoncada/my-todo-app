@@ -1,10 +1,16 @@
-<!-- Current Version: 1.0.13 -->
+<!-- Current Version: 1.1.0-alpha -->
 # AI Handoff
-**Current Version**: 1.0.13 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.0.13 - Prompt and Commit Output Format Hardening
-**Next**: 1.1.0 - Graphify Integration
+**Current Version**: 1.1.0-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.1.0 - Graphify Integration
+**Next**: 1.2.0 - ChromaDB Bootstrap
 ---
 ## What Was Last Done
+**Phase 1.1.0** opens Graphify integration:
+- Adds Graphify/fallback codebase graph generation
+- Adds `codebase-graph.json` as a committed orientation artifact
+- Adds `docs/CODEBASE_GRAPH.md`
+- Updates startup workflow to read `STATE.json` plus `codebase-graph.json` early
+- Adds validation/freshness guardrails for the graph
 **Phase 1.0.13** opens copy-paste safety hardening:
 - Documents strict output formatting for Codex prompt and validation sections
 - Requires section headings outside code blocks
@@ -54,9 +60,9 @@
 ## Active Branch
 `master`
 ## What the Next Session Should Do
-1. Read `STATE.json` and `docs/FUTURE_PLANS.md`
-2. Query ChromaDB: `python scripts/query_docs.py "Prompt and Commit Output Format Hardening v1.0.13"`
-3. Finish or validate v1.0.13 - Prompt and Commit Output Format Hardening while this phase is alpha
+1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`
+2. Query ChromaDB: `python scripts/query_docs.py "Graphify Integration v1.1.0"`
+3. Finish or validate v1.1.0 - Graphify Integration while this phase is alpha
 ---
 
 ## Current Product Snapshot

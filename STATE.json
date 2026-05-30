@@ -1,19 +1,19 @@
 {
-    "version":  "1.0.11",
-    "state":  "stable",
-    "phase":  "1.0.11",
-    "phaseTitle":  "Session Continuity and Bounded Initiative",
-    "nextPhase":  "1.1.0 - Graphify Integration",
-    "seriesComplete":  false,
-    "lastUpdated":  "2026-05-29",
-    "preVersioningBaseline":  {
-                                  "phasesComplete":  [
-                                                         "Phase 1: Dexie Foundation (merged to master)",
-                                                         "Phase 2: Outbox Sync Queue (ready for merge)"
-                                                     ],
-                                  "inProgress":  [
-                                                     "Phase 3: View Filter Hardening - active on checkpoint/fix-cross-view-list-moves (checkpoint 3 of 6)"
-                                                 ],
-                                  "notes":  "All pre-versioning work documented in docs/VERSIONING.md under Pre-Versioning Baseline."
-                              }
+  "version": "1.0.12-alpha",
+  "state": "alpha",
+  "phase": "1.0.12",
+  "phaseTitle": "Phase Identity Sync",
+  "nextPhase": "1.1.0 - Graphify Integration",
+  "seriesComplete": false,
+  "lastUpdated": "2026-05-29",
+  "preVersioningBaseline": {
+    "phasesComplete": [
+      "Phase 1: Dexie Foundation (merged to master)",
+      "Phase 2: Outbox Sync Queue (ready for merge)"
+    ],
+    "inProgress": [
+      "Phase 3: View Filter Hardening - active on checkpoint/fix-cross-view-list-moves (checkpoint 3 of 6)"
+    ],
+    "notes": "All pre-versioning work documented in docs/VERSIONING.md under Pre-Versioning Baseline."
+  }
 }

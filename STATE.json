@@ -1,6 +1,6 @@
 {
-    "version":  "1.1.1-alpha",
-    "state":  "alpha",
+    "version":  "1.1.1",
+    "state":  "stable",
     "phase":  "1.1.1",
     "phaseTitle":  "Graph Stable Refresh Fix",
     "nextPhase":  "1.2.0 - ChromaDB Bootstrap",

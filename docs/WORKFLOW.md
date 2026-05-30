@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.1.1 -->
+<!-- Current Version: 1.1.2-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -122,6 +122,11 @@ npm run graph:codebase
 `scripts/validate.ps1` checks that the committed graph is present, versioned to
 `STATE.json`, excludes protected paths, and is fresh against fallback generator
 output.
+
+`npm run graph:audit` proves graph quality by checking required nodes,
+classifications, protected-path exclusions, and routing metadata. It runs
+through validation, not every startup. Do not add graph drill or audit docs to
+the normal read loop.
 
 ### Section 1 - Master Prompt
 

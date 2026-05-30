@@ -1,6 +1,6 @@
-<!-- Current Version: 1.1.0-alpha -->
+<!-- Current Version: 1.1.0 -->
 # AI Handoff
-**Current Version**: 1.1.0-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.1.0 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.1.0 - Graphify Integration
 **Next**: 1.2.0 - ChromaDB Bootstrap
 ---

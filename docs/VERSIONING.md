@@ -68,8 +68,8 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.1.3
-- **Current phase:** 1.1.3 - Codex Validation Boundary Hardening
+- **Current version:** 1.1.4-alpha
+- **Current phase:** 1.1.4 - Graph Routing Usage Contract
 - **Next phase:** 1.2.0 - ChromaDB Bootstrap
 
 ---
@@ -130,6 +130,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.1.4 | alpha | 2026-05-29 | Graph Routing Usage Contract | Requires visible graph-routed file selection in implementation scoping without adding startup-loop overhead or token benchmarking. |
 | 1.1.3 | stable | 2026-05-29 | Codex Validation Boundary Hardening | Clarifies validation is user/controller-run, forbids Codex self-validation claims, and removes contradictory Required Tests wording. |
 | 1.1.2 | stable | 2026-05-29 | Graph Audit Harness | Adds a graph audit harness that proves required nodes, classifications, protected-path exclusions, and routing metadata without adding startup-loop overhead. |
 | 1.1.1 | stable | 2026-05-29 | Graph Stable Refresh Fix | Fixes stable promotion graph freshness by regenerating and verifying codebase-graph.json during promote.ps1. |

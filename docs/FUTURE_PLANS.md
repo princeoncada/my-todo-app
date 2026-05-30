@@ -55,6 +55,7 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 
 ## In Progress
 
+- 1.2.0 - ChromaDB Bootstrap (current working alpha; this patch) - see Planned
 - 1.3.0 - Phase 3: View Filter Hardening (active branch `phase/view-filter-hardening`, checkpoint `fix-cross-view-list-moves`) - see Planned
 
 ---
@@ -62,7 +63,7 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## Planned
 
 ### 1.2.0 - ChromaDB Bootstrap
-- **Status:** Open | Priority: workflow / startup reliability
+- **Status:** In progress | Priority: workflow / startup reliability
 - **Problem:** Startup calls query_docs.py but ChromaDB was never bootstrapped (chroma-data absent); the query silently fails.
 - **Scope:** reconcile query_docs.py + ingest_docs.py vs hfk-system (collection tidy_docs); confirm chroma npm script + chromadb in requirements.txt; create + ingest chroma-data; port validate.ps1 auto-start + ingest block; wire the AGENTS.md offline guardrail.
 - **Acceptance:** npm run chroma serves :8000; query returns a real tidy-doc chunk; validate auto-starts + ingests or FAILs loudly; startup reports online/offline honestly.

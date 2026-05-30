@@ -1,10 +1,16 @@
-<!-- Current Version: 1.1.1 -->
+<!-- Current Version: 1.1.2-alpha -->
 # AI Handoff
-**Current Version**: 1.1.1 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.1.1 - Graph Stable Refresh Fix
+**Current Version**: 1.1.2-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.1.2 - Graph Audit Harness
 **Next**: 1.2.0 - ChromaDB Bootstrap
 ---
 ## What Was Last Done
+**Phase 1.1.2** opens graph audit proof:
+- Adds a graph audit harness
+- Proves required graph nodes and classifications
+- Proves protected paths are excluded
+- Proves routing metadata exists
+- Wires the audit into validation only, not startup
 **Phase 1.1.1** opens a graph stable refresh fix:
 - Fixes `codebase-graph.json` staying on alpha after stable promotion
 - Regenerates the graph during `promote.ps1`
@@ -66,8 +72,8 @@
 `master`
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`
-2. Query ChromaDB: `python scripts/query_docs.py "Graph Stable Refresh Fix v1.1.1"`
-3. Finish or validate v1.1.1 - Graph Stable Refresh Fix while this phase is alpha
+2. Query ChromaDB: `python scripts/query_docs.py "Graph Audit Harness v1.1.2"`
+3. Finish or validate v1.1.2 - Graph Audit Harness while this phase is alpha
 ---
 
 ## Current Product Snapshot

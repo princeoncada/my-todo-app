@@ -49,6 +49,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.2.0 - ChromaDB Bootstrap~~ (stable 2026-05-30)
 
+- ~~1.2.1 - Graph Navigation Doc Consistency~~ (stable 2026-05-30)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -57,18 +59,11 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 
 ## In Progress
 
-- 1.2.1 - Graph Navigation Doc Consistency (current working alpha; this patch) - see Planned
 - 1.3.0 - Phase 3: View Filter Hardening (active branch `phase/view-filter-hardening`, checkpoint `fix-cross-view-list-moves`) - see Planned
 
 ---
 
 ## Planned
-
-### 1.2.1 - Graph Navigation Doc Consistency
-- **Status:** In progress | Priority: graph utilization hardening
-- **Problem:** docs/COMPACT_STRATEGY.md instructed the live graphify CLI (graphify query/explain, graphify-out/GRAPH_REPORT.md) which errors in tidy (only codebase-graph.json is committed), risking the AI falling back to scanning instead of using the graph.
-- **Scope:** rewrite the COMPACT_STRATEGY.md graphify section to the static codebase-graph.json path; add a validate.ps1 guard that fails if any doc instructs the unavailable live graphify CLI.
-- **Acceptance:** no doc instructs graphify query/path/explain; validate "graph usage" check passes; COMPACT_STRATEGY.md agrees with AGENTS.md and CODEBASE_GRAPH.md.
 
 ### 1.3.0 - Phase 3 Completion: View Filter Hardening
 - **Status:** In progress | Priority: projection correctness

@@ -1,8 +1,8 @@
 # Agent Workflow
 
-<!-- Current Version: 1.0.13 -->
+<!-- Current Version: 1.1.0-alpha -->
 
-This file governs how Claude Code and Codex operate together in Tidy. Read it at session start alongside `STATE.json`. It is the authoritative protocol for all implementation phases.
+This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
 ---
 
@@ -30,12 +30,14 @@ Run these steps at the start of every Claude Code session before asking for dire
 
 1. `git pull origin master` - sync latest
 2. **Read `STATE.json`** - report: version, state, phase, phaseTitle, nextPhase, any in-progress branch, pre-versioning notes
-3. **Query ChromaDB** (when running on `localhost:8000`):
+3. **Read `codebase-graph.json` if present** - use it only as an orientation map to choose the smallest direct-read source/doc set. If it is missing, stale, or invalid, state that and fall back to direct file reads.
+4. **Read `docs/FUTURE_PLANS.md` fresh** - report the first Planned backlog item separately from STATE.json `nextPhase`.
+5. **Query ChromaDB** (when running on `localhost:8000`):
    ```bash
    python scripts/query_docs.py "<your question about the current task>"
    ```
    One query per topic. Trust the first result. Only open the full doc file if the query returns zero relevant content. State why if falling back: "Query returned zero results for X, falling back because..."
-4. **Report findings**. Wait for explicit user direction before scoping or implementing.
+6. **Report findings**. Wait for explicit user direction before scoping or implementing.
 
 See `docs/COMPACT_STRATEGY.md` for token budget targets and the full context-minimization protocol.
 
@@ -58,7 +60,7 @@ Even when authorized, Claude Code never commits, pushes, creates branches, or ru
 ## Standard Phase Cycle
 
 ```
-QUERY (ChromaDB) -> READ (STATE.json + minimal docs) -> CONFIRM (user direction)
+QUERY (ChromaDB) -> READ (STATE.json + codebase graph + minimal docs) -> CONFIRM (user direction)
   -> PLAN -> CLARIFY -> PROMPT (write Codex prompt)
   -> BUILD (Codex implements) -> TEST (user runs npm run test:ci)
   -> ANALYZE (pass/fail) -> FIX (if needed)
@@ -105,6 +107,21 @@ headers sitting above their code block - not inside it.
   should actually run.
 - Use `text` for Codex prompt blocks.
 - Use `powershell` for validation and command blocks.
+
+When scoping implementation prompts, include `codebase-graph.json` as an early
+read after `STATE.json` when it exists. The graph narrows file selection; it
+does not replace `docs/AI_HANDOFF.md`, `docs/CODEX_RULES.md`, or direct reads of
+affected source files.
+
+Refresh the graph after graphable source, docs, or script changes:
+
+```powershell
+npm run graph:codebase
+```
+
+`scripts/validate.ps1` checks that the committed graph is present, versioned to
+`STATE.json`, excludes protected paths, and is fresh against fallback generator
+output.
 
 ### Section 1 - Master Prompt
 

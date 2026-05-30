@@ -68,7 +68,7 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.2.1-alpha
+- **Current version:** 1.2.1
 - **Current phase:** 1.2.1 - Graph Navigation Doc Consistency
 - **Next phase:** 1.3.0 - Phase 3 Completion: View Filter Hardening
 
@@ -130,7 +130,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
-| 1.2.1 | alpha | 2026-05-30 | Graph Navigation Doc Consistency | COMPACT_STRATEGY.md graphify section rewritten to the static codebase-graph.json path (removed broken graphify-out/live-CLI steps); validate.ps1 graph-usage guard fails if any doc instructs the unavailable live graphify CLI. |
+| 1.2.1 | stable | 2026-05-30 | Graph Navigation Doc Consistency | COMPACT_STRATEGY.md graphify section rewritten to the static codebase-graph.json path (removed broken graphify-out/live-CLI steps); validate.ps1 graph-usage guard fails if any doc instructs the unavailable live graphify CLI. |
 | 1.2.0 | stable | 2026-05-30 | ChromaDB Bootstrap | ingest_docs.py BOM-safe + cosine + indexes CODEBASE_GRAPH.md; validate.ps1 auto-starts ChromaDB and ingests or FAILs loudly; chroma-data bootstrapped so query_docs.py returns real chunks. |
 | 1.1.4 | stable | 2026-05-29 | Graph Routing Usage Contract | Requires visible graph-routed file selection in implementation scoping without adding startup-loop overhead or token benchmarking. |
 | 1.1.3 | stable | 2026-05-29 | Codex Validation Boundary Hardening | Clarifies validation is user/controller-run, forbids Codex self-validation claims, and removes contradictory Required Tests wording. |

@@ -50,6 +50,9 @@ These rules exist so lower-capability models cannot silently drift:
 - `codebase-graph.json` is an orientation map, not a source of truth. For
   implementation, still read `docs/AI_HANDOFF.md`, `docs/CODEX_RULES.md`, and
   directly relevant source files before editing.
+- Do not run graph audit during normal startup. Startup reads `STATE.json` and
+  `codebase-graph.json` for orientation; graph audit is validation/proof only.
+  If graph audit fails, treat Graphify as untrusted until fixed.
 
 ## Session Continuity
 

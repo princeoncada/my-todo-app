@@ -1,6 +1,6 @@
-<!-- Current Version: 1.1.4-alpha -->
+<!-- Current Version: 1.1.4 -->
 # AI Handoff
-**Current Version**: 1.1.4-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.1.4 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.1.4 - Graph Routing Usage Contract
 **Next**: 1.2.0 - ChromaDB Bootstrap
 ---

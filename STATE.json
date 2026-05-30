@@ -1,8 +1,8 @@
 {
-    "version":  "1.1.1",
-    "state":  "stable",
-    "phase":  "1.1.1",
-    "phaseTitle":  "Graph Stable Refresh Fix",
+    "version":  "1.1.2-alpha",
+    "state":  "alpha",
+    "phase":  "1.1.2",
+    "phaseTitle":  "Graph Audit Harness",
     "nextPhase":  "1.2.0 - ChromaDB Bootstrap",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-29",

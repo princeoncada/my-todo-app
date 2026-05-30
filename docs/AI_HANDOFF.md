@@ -1,10 +1,15 @@
-<!-- Current Version: 1.1.0 -->
+<!-- Current Version: 1.1.1-alpha -->
 # AI Handoff
-**Current Version**: 1.1.0 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.1.0 - Graphify Integration
+**Current Version**: 1.1.1-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.1.1 - Graph Stable Refresh Fix
 **Next**: 1.2.0 - ChromaDB Bootstrap
 ---
 ## What Was Last Done
+**Phase 1.1.1** opens a graph stable refresh fix:
+- Fixes `codebase-graph.json` staying on alpha after stable promotion
+- Regenerates the graph during `promote.ps1`
+- Adds promote self-verification for graph version/schema
+- Keeps Graphify CLI optional and fallback mode valid
 **Phase 1.1.0** opens Graphify integration:
 - Adds Graphify/fallback codebase graph generation
 - Adds `codebase-graph.json` as a committed orientation artifact
@@ -61,8 +66,8 @@
 `master`
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`
-2. Query ChromaDB: `python scripts/query_docs.py "Graphify Integration v1.1.0"`
-3. Finish or validate v1.1.0 - Graphify Integration while this phase is alpha
+2. Query ChromaDB: `python scripts/query_docs.py "Graph Stable Refresh Fix v1.1.1"`
+3. Finish or validate v1.1.1 - Graph Stable Refresh Fix while this phase is alpha
 ---
 
 ## Current Product Snapshot

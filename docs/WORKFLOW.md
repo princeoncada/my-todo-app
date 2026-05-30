@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.1.0 -->
+<!-- Current Version: 1.1.1-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -214,15 +214,18 @@ in a single message:
 .\scripts\promote.ps1
 ```
 
-   promote.ps1 promotes the five versioning locations and also closes the
-   promoted phase in `docs/FUTURE_PLANS.md` as roadmap state. FUTURE_PLANS is
-   not a sixth versioning location. The script self-verifies that all five
-   versioning locations carry the new stable version and that roadmap closeout
-   succeeded. If promote.ps1 reports roadmap closeout failure, stop and do not
-   commit the promotion. Do NOT re-run the full validation suite after promote
-   unless the user chooses to - the code did not change, only version strings
-   and roadmap state. If promote reports success, proceed directly to the
-   promotion commits.
+   promote.ps1 promotes the five versioning locations, closes the promoted
+   phase in `docs/FUTURE_PLANS.md` as roadmap state, and refreshes
+   `codebase-graph.json` when graph tooling exists. FUTURE_PLANS is not a
+   sixth versioning location, and `codebase-graph.json` is a generated graph
+   artifact, not a sixth versioning location. The script self-verifies that all
+   five versioning locations carry the new stable version, roadmap closeout
+   succeeded, and the graph artifact matches the stable version/schema. If
+   promote.ps1 reports roadmap closeout or graph refresh failure, stop and do
+   not commit the promotion. Do NOT re-run the full validation suite after
+   promote unless the user chooses to - app code did not change, only version
+   strings, roadmap state, and generated graph metadata. If promote reports
+   success, proceed directly to the promotion commits.
 
 4. Stable-promotion commit sequence - The stable promotion commit sequence must be one separate PowerShell code block containing all stable promotion commit commands, one command per line.
 
@@ -233,7 +236,10 @@ in a single message:
 .\scripts\commit.ps1 -Files "package.json" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
 .\scripts\commit.ps1 -Files "docs/WORKFLOW.md" -Message "chore(release): promote X.Y.Z-alpha to X.Y.Z-stable"
 .\scripts\commit.ps1 -Files "docs/FUTURE_PLANS.md" -Message "chore(release): close X.Y.Z roadmap item"
+.\scripts\commit.ps1 -Files "codebase-graph.json" -Message "chore(graph): refresh graph for X.Y.Z-stable"
 ```
+
+Include the `codebase-graph.json` commit only when `promote.ps1` changes it.
 
 5. Push block - separate from commit command blocks; user decides when to run:
 
@@ -297,3 +303,5 @@ See `docs/VERSIONING.md` for the five versioning locations and the full bump rul
 
 `.\scripts\promote.ps1` handles all five versioning locations automatically and
 also closes the promoted roadmap item in `docs/FUTURE_PLANS.md` when present.
+It refreshes `codebase-graph.json` when graph tooling exists; the graph is a
+generated artifact, not a sixth versioning location.

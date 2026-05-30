@@ -1,9 +1,10 @@
 # promote.ps1 - Tidy version promotion script
 #
 # Strips -alpha from the current STATE.json version, marks all five
-# versioning locations as stable, and closes the promoted roadmap item in
-# docs/FUTURE_PLANS.md. FUTURE_PLANS.md is roadmap state, not a sixth
-# versioning location.
+# versioning locations as stable, closes the promoted roadmap item in
+# docs/FUTURE_PLANS.md, and refreshes codebase-graph.json when graph tooling
+# exists. FUTURE_PLANS.md is roadmap state, not a sixth versioning location.
+# codebase-graph.json is a generated artifact, not a sixth versioning location.
 #
 # Usage:
 #   .\scripts\promote.ps1                     # auto-detects version from STATE.json
@@ -18,6 +19,9 @@
 #
 # Roadmap closeout:
 #   docs/FUTURE_PLANS.md
+#
+# Generated artifacts:
+#   codebase-graph.json
 
 param(
     [string]$Version = ""
@@ -51,6 +55,7 @@ if ($stableVer -eq $alphaVer) {
 Write-Host "Promoting $alphaVer -> $stableVer" -ForegroundColor Cyan
 $today = Get-Date -Format "yyyy-MM-dd"
 $futurePlansChanged = $false
+$graphChanged = $false
 
 # UTF-8 without BOM encoder (BOM breaks JSON parsers for package.json / STATE.json)
 $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
@@ -200,6 +205,60 @@ if ($futurePlansUpdated -ne $futurePlansBefore) {
     Write-Host "  Roadmap already closed: $futurePlansPath" -ForegroundColor Yellow
 }
 
+# Generated graph refresh: not a versioning location, but embedded version must
+# match the promoted STATE.json version.
+$graphPath = "codebase-graph.json"
+$graphWrapperPath = "scripts/generate-codebase-graph.ps1"
+$graphGeneratorPath = "scripts/generate_codebase_graph.py"
+$graphToolingExists = (Test-Path $graphWrapperPath) -and (Test-Path $graphGeneratorPath)
+$graphBefore = $null
+
+if (Test-Path $graphPath) {
+    $graphBefore = Get-Content $graphPath -Raw -Encoding UTF8
+}
+
+if ($graphToolingExists) {
+    $graphOutput = & powershell -ExecutionPolicy Bypass -File $graphWrapperPath -FallbackOnly 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "`n--- codebase graph refresh output ---" -ForegroundColor Red
+        $graphOutput | ForEach-Object { Write-Host $_ }
+        Write-Error "codebase graph refresh failed during promotion"
+        exit 1
+    }
+
+    if (-not (Test-Path $graphPath)) {
+        Write-Error "$graphPath missing after graph refresh"
+        exit 1
+    }
+
+    try {
+        $postPromoteGraph = Get-Content $graphPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    } catch {
+        Write-Error "$graphPath could not be parsed after graph refresh: $($_.Exception.Message)"
+        exit 1
+    }
+
+    if ($postPromoteGraph.schemaVersion -ne "tidy-codebase-graph/v1") {
+        Write-Error "$graphPath schemaVersion '$($postPromoteGraph.schemaVersion)' does not match tidy-codebase-graph/v1"
+        exit 1
+    }
+    if ($postPromoteGraph.version -ne $stableVer) {
+        Write-Error "$graphPath version '$($postPromoteGraph.version)' does not match promoted version '$stableVer'"
+        exit 1
+    }
+
+    $graphAfter = Get-Content $graphPath -Raw -Encoding UTF8
+    $graphChanged = $graphBefore -ne $graphAfter
+    if ($graphChanged) {
+        Write-Host "  Updated: $graphPath (graph refresh)" -ForegroundColor Green
+    } else {
+        Write-Host "  Graph already fresh: $graphPath" -ForegroundColor Yellow
+    }
+} elseif (Test-Path $graphPath) {
+    Write-Error "Graph artifact exists but graph tooling is missing. Expected $graphWrapperPath and $graphGeneratorPath."
+    exit 1
+}
+
 # Self-verify: every versioning location must now carry the stable version
 $verifyErrors = @()
 $postState = Get-Content "STATE.json" -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -218,15 +277,30 @@ $postFuturePlans = Get-Content "docs/FUTURE_PLANS.md" -Raw -Encoding UTF8
 if (-not (Test-CompletedPhase $postFuturePlans $completedBullet)) { $verifyErrors += "FUTURE_PLANS.md completed closeout" }
 if (Test-InProgressPhase $postFuturePlans $stableVer $phaseTitle) { $verifyErrors += "FUTURE_PLANS.md still in progress" }
 if (Test-PlannedHeading $postFuturePlans $stableVer $phaseTitle) { $verifyErrors += "FUTURE_PLANS.md still planned" }
+if (Test-Path "codebase-graph.json") {
+    try {
+        $postGraph = Get-Content "codebase-graph.json" -Raw -Encoding UTF8 | ConvertFrom-Json
+        if ($postGraph.schemaVersion -ne "tidy-codebase-graph/v1") {
+            $verifyErrors += "codebase-graph.json schemaVersion=$($postGraph.schemaVersion)"
+        }
+        if ($postGraph.version -ne $stableVer) {
+            $verifyErrors += "codebase-graph.json=$($postGraph.version)"
+        }
+    } catch {
+        $verifyErrors += "codebase-graph.json parse error"
+    }
+} else {
+    $verifyErrors += "codebase-graph.json missing"
+}
 if ($verifyErrors.Count -gt 0) {
     Write-Error ("Promote self-verify FAILED - locations inconsistent: " + ($verifyErrors -join ", "))
     exit 1
 }
-Write-Host "  Self-verify: all five locations at $stableVer and roadmap closeout complete" -ForegroundColor Green
+Write-Host "  Self-verify: all five locations at $stableVer, roadmap closeout complete, graph artifact verified" -ForegroundColor Green
 
 # Done
 Write-Host ""
-Write-Host "Promotion complete: $alphaVer -> $stableVer" -ForegroundColor Green
+Write-Host "Promotion complete: $alphaVer -> $stableVer (graph refreshed)" -ForegroundColor Green
 Write-Host ""
 Write-Host "Next steps (one commit per file, per commit discipline):"
 Write-Host "  .\scripts\commit.ps1 -Files `"STATE.json`"         -Message `"chore(release): promote $alphaVer to $stableVer-stable`""
@@ -236,5 +310,8 @@ Write-Host "  .\scripts\commit.ps1 -Files `"package.json`"       -Message `"chor
 Write-Host "  .\scripts\commit.ps1 -Files `"docs/WORKFLOW.md`"   -Message `"chore(release): promote $alphaVer to $stableVer-stable`""
 if ($futurePlansChanged) {
     Write-Host "  .\scripts\commit.ps1 -Files `"docs/FUTURE_PLANS.md`" -Message `"chore(release): close $stableVer roadmap item`""
+}
+if ($graphChanged) {
+    Write-Host "  .\scripts\commit.ps1 -Files `"codebase-graph.json`" -Message `"chore(graph): refresh graph for $stableVer-stable`""
 }
 Write-Host "  git push origin master"

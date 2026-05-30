@@ -1,10 +1,14 @@
-<!-- Current Version: 1.2.0 -->
+<!-- Current Version: 1.2.1-alpha -->
 # AI Handoff
-**Current Version**: 1.2.0 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.2.0 - ChromaDB Bootstrap
+**Current Version**: 1.2.1-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.2.1 - Graph Navigation Doc Consistency
 **Next**: 1.3.0 - Phase 3 Completion: View Filter Hardening
 ---
 ## What Was Last Done
+**Phase 1.2.1** opens graph navigation doc consistency:
+- Rewrote docs/COMPACT_STRATEGY.md graphify section to the static codebase-graph.json path (removed broken graphify-out/live-CLI steps)
+- Added a validate.ps1 "graph usage" guard that FAILs if any doc instructs the unavailable live graphify CLI
+- Aligns COMPACT_STRATEGY.md with AGENTS.md and CODEBASE_GRAPH.md so the graph is utilized via the committed artifact only
 **Phase 1.2.0** opens ChromaDB bootstrap:
 - ingest_docs.py reads docs BOM-safe (utf-8-sig), uses cosine space, and indexes CODEBASE_GRAPH.md
 - validate.ps1 auto-starts ChromaDB on :8000, ingests docs, and FAILs loudly if unreachable

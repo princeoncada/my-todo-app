@@ -41,6 +41,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.1.1 - Graph Stable Refresh Fix~~ (stable 2026-05-29)
 
+- ~~1.1.2 - Graph Audit Harness~~ (stable 2026-05-29)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -49,20 +51,11 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 
 ## In Progress
 
-- 1.1.2 - Graph Audit Harness (current working alpha; this patch) - see Planned
 - 1.3.0 - Phase 3: View Filter Hardening (active branch `phase/view-filter-hardening`, checkpoint `fix-cross-view-list-moves`) - see Planned
 
 ---
 
 ## Planned
-
-### 1.1.2 - Graph Audit Harness
-- **Status:** In progress (this patch)
-- **Priority:** workflow / graph validation
-- **Files:** STATE.json, package.json, codebase-graph.json, scripts/audit-codebase-graph.ps1, scripts/audit_codebase_graph.py, scripts/validate.ps1, docs/CODEBASE_GRAPH.md, AGENTS.md, docs/WORKFLOW.md, docs/CODEX_RULES.md, docs/FUTURE_PLANS.md, docs/VERSIONING.md, docs/AI_HANDOFF.md
-- **Problem:** Graphify is generated and freshness-validated, but the workflow does not yet prove that codebase-graph.json contains enough important nodes, classifications, exclusions, and routing metadata to be useful for agent orientation.
-- **Scope:** Add a graph audit harness and wire it into validation only; document that the audit is not part of the normal startup loop; keep Graphify as an orientation aid, not source of truth.
-- **Acceptance:** `npm run graph:audit` passes; `validate.ps1` runs the audit; required workflow, app, router, cache, script, and Prisma nodes are present and classified; protected paths are excluded; graph has routing metadata; no additional startup-loop reading is introduced.
 
 ### 1.2.0 - ChromaDB Bootstrap
 - **Status:** Open | Priority: workflow / startup reliability

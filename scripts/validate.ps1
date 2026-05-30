@@ -215,6 +215,8 @@ $graphErrors = @()
 $requiredGraphFiles = @(
     "scripts/generate-codebase-graph.ps1",
     "scripts/generate_codebase_graph.py",
+    "scripts/audit-codebase-graph.ps1",
+    "scripts/audit_codebase_graph.py",
     ".graphifyignore",
     "docs/CODEBASE_GRAPH.md",
     "codebase-graph.json"
@@ -231,6 +233,9 @@ if (Test-Path "package.json") {
         $pkg = Get-Content "package.json" -Raw -Encoding UTF8 | ConvertFrom-Json
         if (-not $pkg.scripts.'graph:codebase') {
             $graphErrors += "package.json missing graph:codebase script"
+        }
+        if (-not $pkg.scripts.'graph:audit') {
+            $graphErrors += "package.json missing graph:audit script"
         }
     } catch {
         $graphErrors += "package.json could not be parsed"
@@ -320,6 +325,15 @@ if (
         }
         Remove-Item $tempGraph -ErrorAction SilentlyContinue
     }
+}
+
+if (Test-Path "scripts/audit-codebase-graph.ps1") {
+    $auditOutput = & powershell -ExecutionPolicy Bypass -File "scripts/audit-codebase-graph.ps1" 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        $graphErrors += "codebase graph audit failed: $($auditOutput -join ' ')"
+    }
+} else {
+    $graphErrors += "scripts/audit-codebase-graph.ps1 missing"
 }
 
 if ($graphErrors.Count -eq 0) {

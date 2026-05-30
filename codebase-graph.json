@@ -1,0 +1,4303 @@
+{
+  "schemaVersion": "tidy-codebase-graph/v1",
+  "version": "1.1.0-alpha",
+  "generatedAt": "2026-05-29",
+  "generator": "scripts/generate_codebase_graph.py fallback scanner",
+  "graphify": {
+    "preferredCli": "graphify",
+    "package": "graphifyy",
+    "fallbackUsed": true
+  },
+  "protectedPathsExcluded": [
+    "app/generated/prisma",
+    "node_modules",
+    ".next",
+    ".git",
+    "graphify-out",
+    "chroma-data",
+    "coverage",
+    "test-results",
+    "playwright-report",
+    "docs/SESSION_LOG"
+  ],
+  "readFirst": [
+    "STATE.json",
+    "codebase-graph.json",
+    "docs/CODEX_RULES.md",
+    "docs/VERSIONING.md",
+    "docs/AI_HANDOFF.md",
+    "docs/FUTURE_PLANS.md",
+    "docs/PHASE_LOG.md",
+    "docs/WORKFLOW.md"
+  ],
+  "nodes": [
+    {
+      "path": ".claude/settings.local.json",
+      "kind": "file",
+      "extension": ".json",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": ".vscode/settings.json",
+      "kind": "file",
+      "extension": ".json",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "AGENTS.md",
+      "kind": "root_doc",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "ai-docs/testing-workflow.md",
+      "kind": "file",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "app/api/auth/confirm/route.ts",
+      "kind": "api_route",
+      "extension": ".ts",
+      "symbols": [
+        "GET"
+      ],
+      "imports": [
+        "@/lib/supabase/auth-confirm",
+        "next/server"
+      ]
+    },
+    {
+      "path": "app/api/trpc/[trpc]/route.ts",
+      "kind": "api_route",
+      "extension": ".ts",
+      "symbols": [
+        "handler"
+      ],
+      "imports": [
+        "@trpc/server/adapters/fetch",
+        "@/trpc/init",
+        "@/trpc/routers/_app"
+      ]
+    },
+    {
+      "path": "app/auth/confirm/route.ts",
+      "kind": "api_route",
+      "extension": ".ts",
+      "symbols": [
+        "GET"
+      ],
+      "imports": [
+        "@/lib/supabase/auth-confirm",
+        "next/server"
+      ]
+    },
+    {
+      "path": "app/dashboard/page.tsx",
+      "kind": "page_route",
+      "extension": ".tsx",
+      "symbols": [
+        "Page"
+      ],
+      "imports": [
+        "@/components/Dashboard"
+      ]
+    },
+    {
+      "path": "app/forgot-password/page.tsx",
+      "kind": "page_route",
+      "extension": ".tsx",
+      "symbols": [
+        "supabase",
+        "formSchema",
+        "Page",
+        "form",
+        "onSubmit"
+      ],
+      "imports": [
+        "@/components/MaxWidthWrapper",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/field",
+        "@/components/ui/input",
+        "@/lib/supabase/client",
+        "@/lib/utils",
+        "@hookform/resolvers/zod",
+        "lucide-react",
+        "next/link",
+        "react",
+        "react-hook-form",
+        "sonner",
+        "zod"
+      ]
+    },
+    {
+      "path": "app/layout.tsx",
+      "kind": "file",
+      "extension": ".tsx",
+      "symbols": [
+        "RootLayout",
+        "appName",
+        "appDescription",
+        "siteUrl",
+        "geistSans",
+        "geistMono"
+      ],
+      "imports": [
+        "@/components/ui/sonner",
+        "@/trpc/client",
+        "next",
+        "next/font/google",
+        "./globals.css"
+      ]
+    },
+    {
+      "path": "app/login/page.tsx",
+      "kind": "page_route",
+      "extension": ".tsx",
+      "symbols": [
+        "Page"
+      ],
+      "imports": [
+        "@/components/auth/Login"
+      ]
+    },
+    {
+      "path": "app/page.tsx",
+      "kind": "page_route",
+      "extension": ".tsx",
+      "symbols": [
+        "Home"
+      ],
+      "imports": [
+        "@/components/MaxWidthWrapper",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "next/link"
+      ]
+    },
+    {
+      "path": "app/register/page.tsx",
+      "kind": "page_route",
+      "extension": ".tsx",
+      "symbols": [
+        "Page"
+      ],
+      "imports": [
+        "@/components/auth/Register",
+        "react"
+      ]
+    },
+    {
+      "path": "app/reset-password/page.tsx",
+      "kind": "page_route",
+      "extension": ".tsx",
+      "symbols": [
+        "Page"
+      ],
+      "imports": [
+        "@/components/auth/ResetPassword",
+        "react"
+      ]
+    },
+    {
+      "path": "CLAUDE.md",
+      "kind": "root_doc",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "components.json",
+      "kind": "file",
+      "extension": ".json",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "components/auth/Login.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "supabase",
+        "formSchema",
+        "Login",
+        "form",
+        "onSubmit"
+      ],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/field",
+        "@/components/ui/input",
+        "next/link",
+        "zod",
+        "react-hook-form",
+        "@hookform/resolvers/zod",
+        "@/lib/supabase/client",
+        "sonner",
+        "next/navigation",
+        "react",
+        "@/components/MaxWidthWrapper",
+        "lucide-react"
+      ]
+    },
+    {
+      "path": "components/auth/Register.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "supabase",
+        "formSchema",
+        "Register",
+        "form",
+        "onSubmit"
+      ],
+      "imports": [
+        "@/components/MaxWidthWrapper",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/field",
+        "@/components/ui/input",
+        "@/lib/supabase/client",
+        "@/lib/utils",
+        "@hookform/resolvers/zod",
+        "lucide-react",
+        "next/link",
+        "react",
+        "react-hook-form",
+        "sonner",
+        "zod"
+      ]
+    },
+    {
+      "path": "components/auth/ResetPassword.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "supabase",
+        "formSchema",
+        "ResetPassword",
+        "form",
+        "onSubmit"
+      ],
+      "imports": [
+        "@/components/MaxWidthWrapper",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/field",
+        "@/components/ui/input",
+        "@/lib/supabase/client",
+        "@hookform/resolvers/zod",
+        "lucide-react",
+        "next/link",
+        "next/navigation",
+        "react",
+        "react-hook-form",
+        "sonner",
+        "zod"
+      ]
+    },
+    {
+      "path": "components/AuthSync.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "AuthSync",
+        "supabase",
+        "queryClient"
+      ],
+      "imports": [
+        "@/lib/supabase/client",
+        "@tanstack/react-query",
+        "react"
+      ]
+    },
+    {
+      "path": "components/Dashboard.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "handleLogout",
+        "supabase",
+        "Dashboard",
+        "queryClient",
+        "router"
+      ],
+      "imports": [
+        "@/components/MaxWidthWrapper",
+        "@/lib/supabase/client",
+        "lucide-react",
+        "next/navigation",
+        "react",
+        "./list/ListAdder",
+        "./list/ListsContainer",
+        "./ui/separator",
+        "./UserAccountNav",
+        "@tanstack/react-query",
+        "./views/ViewsSidebarPreview"
+      ]
+    },
+    {
+      "path": "components/list/ListAdder.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "ListAdder",
+        "trpc",
+        "queryClient",
+        "viewsQueryKey",
+        "currentViewQueryKey",
+        "allListsView",
+        "allListsQueryKey",
+        "selectedView",
+        "selectedViewId",
+        "selectedViewQueryKey",
+        "dashboardKeys",
+        "previousAllLists",
+        "previousCurrentView",
+        "previousSelectedView",
+        "activeView",
+        "selectedViewTags",
+        "optimisticListTags",
+        "insertOptimisticList",
+        "insertIntoSelectedView",
+        "replaceOptimisticList"
+      ],
+      "imports": [
+        "@/trpc/client",
+        "../ui/button",
+        "../ui/dialog",
+        "../ui/input",
+        "../ui/label",
+        "../ui/separator",
+        "react",
+        "@tanstack/react-query",
+        "./types",
+        "lucide-react",
+        "@/lib/dashboard-cache",
+        "../ui/skeleton"
+      ]
+    },
+    {
+      "path": "components/list/ListComponent.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "listIsOptimistic",
+        "itemIsAlreadyInCache",
+        "removeItemFromCache",
+        "waitForSavedList",
+        "handleViewListItemAdder",
+        "handleDeleteList",
+        "currentList",
+        "ListComponent",
+        "listIsOnlyInBrowser",
+        "timeout",
+        "trpc",
+        "queryClient",
+        "queryKey",
+        "previousAllLists",
+        "previousCurrentView",
+        "previousSelectedView",
+        "deleteListMutation",
+        "deleteList",
+        "deletedList",
+        "alreadyRestored"
+      ],
+      "imports": [
+        "@/lib/utils",
+        "@/lib/dashboard-cache",
+        "@/lib/optimistic-debug",
+        "@/hooks/useOptimisticSync",
+        "@/trpc/client",
+        "@dnd-kit/react",
+        "@dnd-kit/react/sortable",
+        "@tanstack/react-query",
+        "lucide-react",
+        "motion/react",
+        "react",
+        "../ui/button",
+        "../ui/card",
+        "../ui/checkbox",
+        "../ui/scroll-area",
+        "../ui/separator",
+        "../ui/textarea",
+        "./ListInlineEdit",
+        "./ListMenu",
+        "./ListTagPicker",
+        "./types"
+      ]
+    },
+    {
+      "path": "components/list/ListEmpty.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "ListEmpty"
+      ],
+      "imports": [
+        "react",
+        "../ui/empty",
+        "lucide-react",
+        "./ListAdder"
+      ]
+    },
+    {
+      "path": "components/list/ListInlineEdit.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "ListInlineEdit",
+        "inputRef",
+        "startEditing",
+        "handleSave",
+        "trimmed",
+        "handleCancel",
+        "handleKeyDown",
+        "ListInlineEditProps"
+      ],
+      "imports": [
+        "react",
+        "../ui/textarea"
+      ]
+    },
+    {
+      "path": "components/list/ListItemComponent.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "ListItemComponent",
+        "itemIsOnlyInBrowser",
+        "timeout",
+        "trpc",
+        "queryClient",
+        "previousAllLists",
+        "previousCurrentView",
+        "previousSelectedView",
+        "deleteItemMutation",
+        "deleteItem",
+        "parentList",
+        "deletedItem",
+        "deletedItemIndex",
+        "alreadyRestored",
+        "restoredItems",
+        "ListItemComponentProps"
+      ],
+      "imports": [
+        "@/trpc/client",
+        "@dnd-kit/react/sortable",
+        "@tanstack/react-query",
+        "lucide-react",
+        "react",
+        "./ListInlineEdit",
+        "../ui/button",
+        "../ui/checkbox",
+        "./types",
+        "@/lib/utils",
+        "@/lib/dashboard-cache",
+        "@/lib/optimistic-debug",
+        "@/hooks/useOptimisticSync"
+      ]
+    },
+    {
+      "path": "components/list/ListMenu.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "ListMenu",
+        "ListMenuProps"
+      ],
+      "imports": [
+        "../ui/dropdown-menu",
+        "../ui/button",
+        "lucide-react"
+      ]
+    },
+    {
+      "path": "components/list/ListsContainer.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "isStillOptimistic",
+        "reorderListsForDrag",
+        "reorderItemsForDrag",
+        "sourceIndex",
+        "targetIndex",
+        "nextLists",
+        "sourceListIndex",
+        "sourceItemIndex",
+        "targetItemId",
+        "targetListId",
+        "ListsContainer",
+        "trpc",
+        "queryClient",
+        "viewsQueryKey",
+        "currentViewQueryKey",
+        "allListsView",
+        "selectedView",
+        "selectedViewId",
+        "allListsQueryKey",
+        "selectedViewQueryKey"
+      ],
+      "imports": [
+        "@/lib/dashboard-cache",
+        "@/lib/optimistic-debug",
+        "@/hooks/useOptimisticSync",
+        "@/trpc/client",
+        "@dnd-kit/react",
+        "@tanstack/react-query",
+        "react",
+        "./ListComponent",
+        "./ListItemComponent",
+        "./ListSkeleton",
+        "./types",
+        "./ListEmpty"
+      ]
+    },
+    {
+      "path": "components/list/ListSkeleton.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "ListSkeleton"
+      ],
+      "imports": [
+        "../ui/card",
+        "../ui/separator",
+        "../ui/skeleton"
+      ]
+    },
+    {
+      "path": "components/list/ListTag.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "ListBadge"
+      ],
+      "imports": [
+        "../ui/badge"
+      ]
+    },
+    {
+      "path": "components/list/ListTagPicker.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "listIsStillOptimistic",
+        "ListTagPicker",
+        "list",
+        "trpc",
+        "queryClient",
+        "tagsQueryKey",
+        "queryKey",
+        "pendingTagOperationsRef",
+        "tagFlushTimeoutRef",
+        "tagSaveChainRef",
+        "tagOptimisticVersionRef",
+        "tagRollbackSnapshotRef",
+        "selectedTagIds",
+        "selectedTags",
+        "filteredTags",
+        "exactTagExists",
+        "setTagInListsCache",
+        "updateTag",
+        "addTagToListCache",
+        "removeTagFromListCache"
+      ],
+      "imports": [
+        "react",
+        "@tanstack/react-query",
+        "lucide-react",
+        "@/components/ui/badge",
+        "@/components/ui/button",
+        "@/components/ui/command",
+        "@/components/ui/dropdown-menu",
+        "@/components/ui/scroll-area",
+        "@/lib/utils",
+        "@/trpc/client",
+        "@/lib/trpc",
+        "./types",
+        "@/lib/dashboard-cache",
+        "@/lib/optimistic-debug"
+      ]
+    },
+    {
+      "path": "components/list/types.ts",
+      "kind": "component",
+      "extension": ".ts",
+      "symbols": [
+        "CurrentView",
+        "AllListsView",
+        "Lists",
+        "List",
+        "ListItems",
+        "ListItem",
+        "OptimisticList",
+        "OptimisticListItem"
+      ],
+      "imports": [
+        "@/lib/trpc"
+      ]
+    },
+    {
+      "path": "components/MaxWidthWrapper.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "MaxWidthWrapper"
+      ],
+      "imports": [
+        "react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "components/ui/avatar.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Avatar",
+        "AvatarImage",
+        "AvatarFallback",
+        "AvatarBadge",
+        "AvatarGroup",
+        "AvatarGroupCount"
+      ],
+      "imports": [
+        "react",
+        "radix-ui",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "components/ui/badge.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Badge",
+        "badgeVariants",
+        "Comp",
+        "VariantProps"
+      ],
+      "imports": [
+        "react",
+        "class-variance-authority",
+        "radix-ui",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "components/ui/button.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Button",
+        "buttonVariants",
+        "Comp",
+        "VariantProps"
+      ],
+      "imports": [
+        "react",
+        "class-variance-authority",
+        "radix-ui",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "components/ui/card.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Card",
+        "CardHeader",
+        "CardTitle",
+        "CardDescription",
+        "CardAction",
+        "CardContent",
+        "CardFooter"
+      ],
+      "imports": [
+        "react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "components/ui/checkbox.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Checkbox"
+      ],
+      "imports": [
+        "react",
+        "radix-ui",
+        "@/lib/utils",
+        "lucide-react"
+      ]
+    },
+    {
+      "path": "components/ui/command.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Command",
+        "CommandDialog",
+        "CommandInput",
+        "CommandList",
+        "CommandEmpty",
+        "CommandGroup",
+        "CommandSeparator",
+        "CommandItem",
+        "CommandShortcut"
+      ],
+      "imports": [
+        "react",
+        "cmdk",
+        "@/lib/utils",
+        "@/components/ui/dialog",
+        "@/components/ui/input-group",
+        "lucide-react"
+      ]
+    },
+    {
+      "path": "components/ui/dialog.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Dialog",
+        "DialogTrigger",
+        "DialogPortal",
+        "DialogClose",
+        "DialogOverlay",
+        "DialogContent",
+        "DialogHeader",
+        "DialogFooter",
+        "DialogTitle",
+        "DialogDescription"
+      ],
+      "imports": [
+        "react",
+        "radix-ui",
+        "@/lib/utils",
+        "@/components/ui/button",
+        "lucide-react"
+      ]
+    },
+    {
+      "path": "components/ui/dropdown-menu.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "DropdownMenu",
+        "DropdownMenuPortal",
+        "DropdownMenuTrigger",
+        "DropdownMenuContent",
+        "DropdownMenuGroup",
+        "DropdownMenuItem",
+        "DropdownMenuCheckboxItem",
+        "DropdownMenuRadioGroup",
+        "DropdownMenuRadioItem",
+        "DropdownMenuLabel",
+        "DropdownMenuSeparator",
+        "DropdownMenuShortcut",
+        "DropdownMenuSub",
+        "DropdownMenuSubTrigger",
+        "DropdownMenuSubContent"
+      ],
+      "imports": [
+        "react",
+        "radix-ui",
+        "@/lib/utils",
+        "lucide-react"
+      ]
+    },
+    {
+      "path": "components/ui/empty.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Empty",
+        "EmptyHeader",
+        "EmptyMedia",
+        "EmptyTitle",
+        "EmptyDescription",
+        "EmptyContent",
+        "emptyMediaVariants",
+        "VariantProps"
+      ],
+      "imports": [
+        "class-variance-authority",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "components/ui/field.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "FieldSet",
+        "FieldLegend",
+        "FieldGroup",
+        "Field",
+        "FieldContent",
+        "FieldLabel",
+        "FieldTitle",
+        "FieldDescription",
+        "FieldSeparator",
+        "FieldError",
+        "fieldVariants",
+        "content",
+        "uniqueErrors",
+        "VariantProps"
+      ],
+      "imports": [
+        "react",
+        "class-variance-authority",
+        "@/lib/utils",
+        "@/components/ui/label",
+        "@/components/ui/separator"
+      ]
+    },
+    {
+      "path": "components/ui/input-group.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "InputGroup",
+        "InputGroupAddon",
+        "InputGroupButton",
+        "InputGroupText",
+        "InputGroupInput",
+        "InputGroupTextarea",
+        "inputGroupAddonVariants",
+        "inputGroupButtonVariants",
+        "VariantProps"
+      ],
+      "imports": [
+        "react",
+        "class-variance-authority",
+        "@/lib/utils",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/textarea"
+      ]
+    },
+    {
+      "path": "components/ui/input-otp.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "InputOTP",
+        "InputOTPGroup",
+        "InputOTPSlot",
+        "InputOTPSeparator",
+        "inputOTPContext"
+      ],
+      "imports": [
+        "react",
+        "input-otp",
+        "@/lib/utils",
+        "lucide-react"
+      ]
+    },
+    {
+      "path": "components/ui/input.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Input"
+      ],
+      "imports": [
+        "react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "components/ui/label.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Label"
+      ],
+      "imports": [
+        "react",
+        "radix-ui",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "components/ui/scroll-area.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "ScrollArea",
+        "ScrollBar"
+      ],
+      "imports": [
+        "react",
+        "radix-ui",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "components/ui/separator.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Separator"
+      ],
+      "imports": [
+        "react",
+        "radix-ui",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "components/ui/skeleton.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Skeleton"
+      ],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "components/ui/sonner.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Toaster",
+        "ToasterProps"
+      ],
+      "imports": [
+        "next-themes",
+        "sonner",
+        "lucide-react"
+      ]
+    },
+    {
+      "path": "components/ui/textarea.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "Textarea"
+      ],
+      "imports": [
+        "react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "components/UserAccountNav.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "UserAccountNav",
+        "trpc",
+        "user",
+        "name"
+      ],
+      "imports": [
+        "@/trpc/client",
+        "@tanstack/react-query",
+        "lucide-react",
+        "./ui/avatar",
+        "./ui/button",
+        "./ui/dropdown-menu"
+      ]
+    },
+    {
+      "path": "components/UserDetails.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "handleSignOut",
+        "supabase",
+        "UserDetails",
+        "trpc",
+        "user"
+      ],
+      "imports": [
+        "@/lib/supabase/client",
+        "@/trpc/client",
+        "@tanstack/react-query",
+        "lucide-react",
+        "next/navigation",
+        "react",
+        "./ui/button",
+        "./ui/card",
+        "./ui/skeleton"
+      ]
+    },
+    {
+      "path": "components/views/ViewsSidebarPreview.tsx",
+      "kind": "component",
+      "extension": ".tsx",
+      "symbols": [
+        "isOptimisticView",
+        "buildOptimisticView",
+        "moveCustomView",
+        "SortableViewRowComponent",
+        "ViewsSidebarSkeleton",
+        "ViewDialog",
+        "ViewsSidebarPreview",
+        "selectView",
+        "createView",
+        "updateView",
+        "deleteView",
+        "openCreateView",
+        "openEditView",
+        "closeDialog",
+        "selectedTags",
+        "sourceIndex",
+        "targetIndex",
+        "nextViews",
+        "SortableViewRow",
+        "view"
+      ],
+      "imports": [
+        "@dnd-kit/react",
+        "@dnd-kit/react/sortable",
+        "@tanstack/react-query",
+        "lucide-react",
+        "react",
+        "sonner",
+        "@/components/ui/badge",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/checkbox",
+        "@/components/ui/dialog",
+        "@/components/ui/dropdown-menu",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/scroll-area",
+        "@/components/ui/separator",
+        "@/components/ui/skeleton",
+        "@/hooks/useOptimisticSync",
+        "@/lib/dashboard-cache",
+        "@/lib/optimistic-debug",
+        "@/lib/trpc",
+        "@/lib/utils",
+        "@/trpc/client"
+      ]
+    },
+    {
+      "path": "docs/AI_HANDOFF.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/CODEBASE_GRAPH.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/CODEX_RULES.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/COMPACT_STRATEGY.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/DECISIONS.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/00-ai-entrypoint.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/01-product-current-state.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/02-repo-map.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [
+        "for",
+        "merging"
+      ],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/03-data-model.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/04-auth-and-api.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/05-dashboard-state-cache.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/06-optimistic-sync.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/07-drag-and-drop.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/08-views-tags-system.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/09-ui-components.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/10-mobile-and-pwa-readiness.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/11-known-issues.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/12-implementation-rules.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/13-testing-and-validation.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/14-production-readiness.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/15-decision-log.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/16-local-first-product-roadmap.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/app-reverse-engineering.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/backlog.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [
+        "are"
+      ],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/codex-prompt-template.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/optimistic-updates.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/phase-1-dexie-foundation.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [
+        "guards"
+      ],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/phase-2-outbox-sync-queue.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [
+        "guards"
+      ],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/phase-3-view-filter-hardening.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/task-routing-guide.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/testing-validation.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/deprecated/testing.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/FUTURE_PLANS.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/NEW_CHATHEAD_OPENER.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/PHASE_LOG.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [
+        "guards"
+      ],
+      "imports": []
+    },
+    {
+      "path": "docs/VERSIONING.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/WORKFLOW.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "eslint.config.mjs",
+      "kind": "file",
+      "extension": ".mjs",
+      "symbols": [
+        "eslintConfig"
+      ],
+      "imports": [
+        "eslint/config",
+        "eslint-config-next/core-web-vitals",
+        "eslint-config-next/typescript"
+      ]
+    },
+    {
+      "path": "hooks/use-local-db-health-check.ts",
+      "kind": "hook",
+      "extension": ".ts",
+      "symbols": [
+        "useLocalDbHealthCheck"
+      ],
+      "imports": [
+        "@/lib/local-db/metadata-repository",
+        "react"
+      ]
+    },
+    {
+      "path": "hooks/useOptimisticSync.ts",
+      "kind": "hook",
+      "extension": ".ts",
+      "symbols": [
+        "useOptimisticSync",
+        "describeError",
+        "isCancelledError",
+        "cancelScope",
+        "enqueue",
+        "replacePending",
+        "OptimisticScope",
+        "EnqueueOptions",
+        "QueueEntry",
+        "OptimisticTask",
+        "OptimisticSyncApi"
+      ],
+      "imports": [
+        "react"
+      ]
+    },
+    {
+      "path": "hooks/useUser.ts",
+      "kind": "hook",
+      "extension": ".ts",
+      "symbols": [
+        "useUser",
+        "supabase",
+        "query"
+      ],
+      "imports": [
+        "@/lib/supabase/client",
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "path": "lib/dashboard-cache.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "queryKeysEqual",
+        "getAllListsSnapshot",
+        "listMatchesView",
+        "projectView",
+        "selectedViewFromCache",
+        "applyViewSelectionToViews",
+        "applyViewSelection",
+        "updateListInDashboardCaches",
+        "removeListFromDashboardCaches",
+        "invalidateViewPayloadQueries",
+        "applyTagChangeToCaches",
+        "reconcileSavedListTags",
+        "reconcileAffectedViewLists",
+        "rollbackScope",
+        "setDashboardQueryDataOnce",
+        "updateListInViewSnapshot",
+        "keyHash",
+        "requiredTagIds",
+        "listTagIds",
+        "viewListOrders"
+      ],
+      "imports": [
+        "@tanstack/react-query",
+        "@/lib/trpc"
+      ]
+    },
+    {
+      "path": "lib/db.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "db",
+        "adapter"
+      ],
+      "imports": [
+        "@/app/generated/prisma/client",
+        "@prisma/adapter-pg"
+      ]
+    },
+    {
+      "path": "lib/helper.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "useMutationQueue",
+        "enqueue",
+        "queueRef",
+        "pendingCountRef"
+      ],
+      "imports": [
+        "react"
+      ]
+    },
+    {
+      "path": "lib/local-db/local-db-diagnostics.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "getLocalDbStoreNames",
+        "getLocalDbSchemaSummary",
+        "assertLocalDbAvailable",
+        "readLocalDbHealthForDiagnostics",
+        "unavailableSchemaSummary",
+        "EXPECTED_LOCAL_DB_STORE_NAMES",
+        "storeNames",
+        "missingExpectedStores",
+        "LocalDbStoreName",
+        "LocalDbDiagnosticsDatabase",
+        "LocalDbSchemaSummary",
+        "LocalDbHealthSnapshot"
+      ],
+      "imports": [
+        "./metadata-repository",
+        "./tidy-db"
+      ]
+    },
+    {
+      "path": "lib/local-db/local-repositories.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "createLocalTimestamp",
+        "createLocalEntityBase",
+        "markEntityPending",
+        "markEntitySynced",
+        "markEntityFailed",
+        "createOutboxOperation",
+        "getLocalDbOrThrow",
+        "putLocalView",
+        "putLocalList",
+        "putLocalListItem",
+        "putOutboxOperation",
+        "createdAt",
+        "operationId",
+        "TidyLocalDatabase",
+        "CreateLocalEntityBaseArgs",
+        "CreateOutboxOperationArgs"
+      ],
+      "imports": [
+        "./tidy-db",
+        "./local-schema",
+        "./outbox-schema"
+      ]
+    },
+    {
+      "path": "lib/local-db/local-schema.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "LocalSyncStatus",
+        "LocalViewType",
+        "LocalViewMatchMode",
+        "LocalTagColor",
+        "LocalEntityBase",
+        "LocalView",
+        "LocalList",
+        "LocalListItem",
+        "LocalTag",
+        "LocalViewTag",
+        "LocalListTag",
+        "LocalViewList",
+        "LocalDbMetadata"
+      ],
+      "imports": []
+    },
+    {
+      "path": "lib/local-db/metadata-repository.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "getLocalMetadata",
+        "setLocalMetadata",
+        "getLocalDbHealthSnapshot",
+        "initializeLocalDbHealthMetadata",
+        "unavailableSnapshot",
+        "LOCAL_DB_SCHEMA_VERSION",
+        "LOCAL_DB_METADATA_KEYS",
+        "metadata",
+        "initializedAt",
+        "LocalDbHealthSnapshot",
+        "LocalMetadataDatabase"
+      ],
+      "imports": [
+        "./local-repositories",
+        "./local-schema",
+        "./tidy-db"
+      ]
+    },
+    {
+      "path": "lib/local-db/outbox-coalescing.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "coalesceOutboxOperations",
+        "getEntityKey",
+        "isPendingOperation",
+        "isSupersededByDelete",
+        "isLatestOnlyOperation",
+        "isUnsyncedCreateDeletePair",
+        "shouldReplaceExistingOperation",
+        "discardedOperationIds",
+        "latestPendingIndexByEntity",
+        "entityKey",
+        "existingIndex",
+        "existingOperation",
+        "CoalescedOutboxOperations"
+      ],
+      "imports": [
+        "./outbox-schema"
+      ]
+    },
+    {
+      "path": "lib/local-db/outbox-repository.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "enqueueOutboxOperation",
+        "getOutboxOperationById",
+        "getPendingOutboxOperations",
+        "markOutboxOperationSyncing",
+        "markOutboxOperationSynced",
+        "markOutboxOperationFailed",
+        "markOutboxOperationDiscarded",
+        "incrementRetryCount",
+        "getOutboxRepositoryDb",
+        "updateOutboxOperation",
+        "db",
+        "operation",
+        "updatedOperation",
+        "operations",
+        "LocalOutboxRepositoryDatabase",
+        "LocalOutboxOperation",
+        "TimestampedUpdateArgs",
+        "FailedUpdateArgs",
+        "PendingQueryArgs"
+      ],
+      "imports": [
+        "./local-repositories",
+        "./outbox-schema",
+        "./tidy-db"
+      ]
+    },
+    {
+      "path": "lib/local-db/outbox-schema.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "isLocalOutboxEntityType",
+        "isLocalOutboxOperationType",
+        "isLocalJsonValue",
+        "isLocalOutboxOperation",
+        "includesOutboxValue",
+        "isPlainJsonObject",
+        "isNullableString",
+        "isNonNegativeInteger",
+        "LOCAL_OUTBOX_ENTITY_TYPES",
+        "LOCAL_OUTBOX_OPERATION_TYPES",
+        "prototype",
+        "operation",
+        "LocalJsonValue",
+        "LocalOutboxOperationStatus",
+        "LocalOutboxEntityType",
+        "LocalOutboxOperationType",
+        "LocalOutboxOperation"
+      ],
+      "imports": [
+        "./sync-status"
+      ]
+    },
+    {
+      "path": "lib/local-db/sync-replay-client.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "replayOutboxOperations",
+        "getErrorMessage",
+        "createDefaultSyncReplayRepository",
+        "summarizeReplayResults",
+        "pendingOperations",
+        "discardedOperation",
+        "syncingOperation",
+        "syncedOperation",
+        "errorMessage",
+        "SyncReplayTransportRequest",
+        "SyncReplayTransport",
+        "SyncReplayOperationResult",
+        "SyncReplayResult",
+        "SyncReplayRepository",
+        "ReplayOutboxOperationsArgs",
+        "LocalOutboxRepositoryDatabase"
+      ],
+      "imports": [
+        "./outbox-coalescing",
+        "./outbox-repository",
+        "./outbox-schema"
+      ]
+    },
+    {
+      "path": "lib/local-db/sync-status.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "isLocalSyncStatus",
+        "isOutboxOperationStatus",
+        "isTerminalLocalSyncStatus",
+        "isTerminalOutboxOperationStatus",
+        "isRetryableOutboxOperationStatus",
+        "includesStatus",
+        "LOCAL_SYNC_STATUSES",
+        "OUTBOX_OPERATION_STATUSES",
+        "TERMINAL_LOCAL_SYNC_STATUSES",
+        "TERMINAL_OUTBOX_OPERATION_STATUSES",
+        "RETRYABLE_OUTBOX_OPERATION_STATUSES"
+      ],
+      "imports": [
+        "./local-schema",
+        "./outbox-schema"
+      ]
+    },
+    {
+      "path": "lib/local-db/tidy-db.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "TIDY_LOCAL_DB_NAME",
+        "TidyLocalDatabase",
+        "Table",
+        "TidyLocalDb"
+      ],
+      "imports": [
+        "dexie",
+        "./local-schema",
+        "./outbox-schema"
+      ]
+    },
+    {
+      "path": "lib/optimistic-debug.tsx",
+      "kind": "library",
+      "extension": ".tsx",
+      "symbols": [
+        "measureOptimisticEvent",
+        "measureCacheWrite",
+        "measureRequest",
+        "useRenderMeasure",
+        "OptimisticProfiler",
+        "payloadSize",
+        "isDev",
+        "rendersRef",
+        "ProfilerOnRenderCallback",
+        "ReactNode",
+        "MeasureDetails"
+      ],
+      "imports": [
+        "react"
+      ]
+    },
+    {
+      "path": "lib/supabase/auth-confirm.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "handleAuthConfirmRequest",
+        "getSafeNext",
+        "next",
+        "code",
+        "token_hash",
+        "type",
+        "supabase"
+      ],
+      "imports": [
+        "@/lib/supabase/server",
+        "@supabase/supabase-js",
+        "next/server"
+      ]
+    },
+    {
+      "path": "lib/supabase/client.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "createClient"
+      ],
+      "imports": [
+        "@supabase/ssr"
+      ]
+    },
+    {
+      "path": "lib/supabase/proxy.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "updateSession",
+        "supabase",
+        "user",
+        "url",
+        "myNewResponse",
+        "NextRequest"
+      ],
+      "imports": [
+        "@supabase/ssr",
+        "next/server"
+      ]
+    },
+    {
+      "path": "lib/supabase/server.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "createClient",
+        "cookieStore"
+      ],
+      "imports": [
+        "@supabase/ssr",
+        "next/headers"
+      ]
+    },
+    {
+      "path": "lib/sync/sync-endpoint-contract.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "validateSyncEndpointRequest",
+        "isRecord",
+        "getPayloadByteSize",
+        "isAllowedEntityOperation",
+        "validateOperationPayload",
+        "SYNC_ENDPOINT_MAX_PAYLOAD_BYTES",
+        "ENTITY_OPERATION_MATRIX",
+        "hasTarget",
+        "orderedIds",
+        "candidate",
+        "operation",
+        "idempotencyKey",
+        "maxPayloadBytes",
+        "payloadByteSize",
+        "SyncEndpointRequest",
+        "SyncEndpointValidationContext",
+        "SyncEndpointValidationResult",
+        "LocalJsonValue",
+        "LocalOutboxEntityType",
+        "LocalOutboxOperation"
+      ],
+      "imports": [
+        "@/lib/local-db/outbox-schema"
+      ]
+    },
+    {
+      "path": "lib/sync/sync-status-surface.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "createSyncStatusSurface",
+        "createEmptyCounts",
+        "getVisibleCount",
+        "getSurfaceCopy",
+        "counts",
+        "copy",
+        "totalCount",
+        "SyncStatusSurfaceState",
+        "SyncStatusSurfaceCounts",
+        "SyncStatusSurface"
+      ],
+      "imports": [
+        "@/lib/local-db/outbox-schema"
+      ]
+    },
+    {
+      "path": "lib/trpc.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "RouterOutputs",
+        "RouterInputs"
+      ],
+      "imports": [
+        "@/trpc/routers/_app",
+        "@trpc/server"
+      ]
+    },
+    {
+      "path": "lib/utils.ts",
+      "kind": "library",
+      "extension": ".ts",
+      "symbols": [
+        "cn",
+        "absoluteUrl",
+        "ClassValue"
+      ],
+      "imports": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "path": "next-env.d.ts",
+      "kind": "file",
+      "extension": ".ts",
+      "symbols": [],
+      "imports": [
+        "./.next/dev/types/routes.d.ts"
+      ]
+    },
+    {
+      "path": "next.config.ts",
+      "kind": "file",
+      "extension": ".ts",
+      "symbols": [],
+      "imports": [
+        "next"
+      ]
+    },
+    {
+      "path": "package-lock.json",
+      "kind": "file",
+      "extension": ".json",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "package.json",
+      "kind": "root_doc",
+      "extension": ".json",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "playwright.config.ts",
+      "kind": "file",
+      "extension": ".ts",
+      "symbols": [
+        "port",
+        "baseURL",
+        "authFile"
+      ],
+      "imports": [
+        "@playwright/test"
+      ]
+    },
+    {
+      "path": "postcss.config.mjs",
+      "kind": "file",
+      "extension": ".mjs",
+      "symbols": [
+        "config"
+      ],
+      "imports": []
+    },
+    {
+      "path": "prisma.config.ts",
+      "kind": "file",
+      "extension": ".ts",
+      "symbols": [],
+      "imports": [
+        "dotenv/config",
+        "prisma/config"
+      ]
+    },
+    {
+      "path": "prisma/schema.prisma",
+      "kind": "prisma",
+      "extension": ".prisma",
+      "symbols": [
+        "ViewType"
+      ],
+      "imports": []
+    },
+    {
+      "path": "proxy.ts",
+      "kind": "file",
+      "extension": ".ts",
+      "symbols": [
+        "proxy",
+        "config",
+        "NextRequest"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/supabase/proxy"
+      ]
+    },
+    {
+      "path": "README.md",
+      "kind": "root_doc",
+      "extension": ".md",
+      "symbols": [
+        "safety"
+      ],
+      "imports": []
+    },
+    {
+      "path": "scripts/commit.ps1",
+      "kind": "script",
+      "extension": ".ps1",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/fix-mojibake.ps1",
+      "kind": "script",
+      "extension": ".ps1",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/generate-codebase-graph.ps1",
+      "kind": "script",
+      "extension": ".ps1",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/generate_codebase_graph.py",
+      "kind": "script",
+      "extension": ".py",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/ingest_docs.py",
+      "kind": "script",
+      "extension": ".py",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/promote.ps1",
+      "kind": "script",
+      "extension": ".ps1",
+      "symbols": [
+        "Update",
+        "Get",
+        "Test"
+      ],
+      "imports": []
+    },
+    {
+      "path": "scripts/query_docs.py",
+      "kind": "script",
+      "extension": ".py",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/validate.ps1",
+      "kind": "script",
+      "extension": ".ps1",
+      "symbols": [
+        "Add",
+        "Run",
+        "Get",
+        "Test",
+        "Normalize"
+      ],
+      "imports": []
+    },
+    {
+      "path": "STATE.json",
+      "kind": "root_doc",
+      "extension": ".json",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "tests/e2e/auth.setup.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "authFile",
+        "email",
+        "password"
+      ],
+      "imports": [
+        "@playwright/test",
+        "node:fs",
+        "node:path",
+        "dotenv"
+      ]
+    },
+    {
+      "path": "tests/e2e/check-auth-state.mjs",
+      "kind": "test",
+      "extension": ".mjs",
+      "symbols": [
+        "authFile"
+      ],
+      "imports": [
+        "node:fs"
+      ]
+    },
+    {
+      "path": "tests/e2e/dashboard-public.spec.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [],
+      "imports": [
+        "@playwright/test"
+      ]
+    },
+    {
+      "path": "tests/e2e/drag-drop.spec.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "first",
+        "second",
+        "firstCard",
+        "secondCard",
+        "sourceList",
+        "targetList",
+        "itemName",
+        "item",
+        "targetCard"
+      ],
+      "imports": [
+        "@playwright/test",
+        "./utils/app",
+        "./utils/assertions",
+        "./utils/drag",
+        "./utils/seed",
+        "./utils/test-ids"
+      ]
+    },
+    {
+      "path": "tests/e2e/list-items.spec.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "listName",
+        "itemName",
+        "items",
+        "renamedItem"
+      ],
+      "imports": [
+        "@playwright/test",
+        "./utils/app",
+        "./utils/assertions",
+        "./utils/seed"
+      ]
+    },
+    {
+      "path": "tests/e2e/lists.spec.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "name",
+        "originalName",
+        "renamedName",
+        "names"
+      ],
+      "imports": [
+        "@playwright/test",
+        "./utils/app",
+        "./utils/assertions",
+        "./utils/seed"
+      ]
+    },
+    {
+      "path": "tests/e2e/regression.spec.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "names",
+        "listName",
+        "itemNames"
+      ],
+      "imports": [
+        "@playwright/test",
+        "./utils/app",
+        "./utils/assertions",
+        "./utils/seed"
+      ]
+    },
+    {
+      "path": "tests/e2e/smoke.spec.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "ignoredConsoleErrors",
+        "text",
+        "isIgnored"
+      ],
+      "imports": [
+        "@playwright/test"
+      ]
+    },
+    {
+      "path": "tests/e2e/utils/app.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "createList",
+        "renameList",
+        "deleteList",
+        "createItem",
+        "renameItem",
+        "deleteItem",
+        "createTag",
+        "createView",
+        "card",
+        "item",
+        "Page"
+      ],
+      "imports": [
+        "@playwright/test",
+        "./test-ids",
+        "./assertions"
+      ]
+    },
+    {
+      "path": "tests/e2e/utils/assertions.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "expectListVisible",
+        "expectListNotVisible",
+        "expectItemVisible",
+        "expectItemNotVisible",
+        "reloadAndExpectPersisted",
+        "reloadAndExpectMissing",
+        "expectNoDuplicateText",
+        "getVisibleListNames",
+        "expectListOrder",
+        "expectItemInList",
+        "expectItemNotInList",
+        "names",
+        "indexes",
+        "card",
+        "Page"
+      ],
+      "imports": [
+        "@playwright/test"
+      ]
+    },
+    {
+      "path": "tests/e2e/utils/drag.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "dragByMouse",
+        "center",
+        "box",
+        "from",
+        "to",
+        "Locator",
+        "Page"
+      ],
+      "imports": [
+        "@playwright/test"
+      ]
+    },
+    {
+      "path": "tests/e2e/utils/seed.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "uniqueTestName",
+        "gotoDashboard",
+        "collectConsoleErrors",
+        "expectNoConsoleErrors",
+        "cleanupNamedList",
+        "authStoragePath",
+        "runId",
+        "suffix",
+        "card",
+        "Page"
+      ],
+      "imports": [
+        "@playwright/test"
+      ]
+    },
+    {
+      "path": "tests/e2e/utils/test-ids.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "testIds",
+        "TestId"
+      ],
+      "imports": []
+    },
+    {
+      "path": "tests/e2e/views.spec.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "listName",
+        "tagName",
+        "viewName",
+        "matchingList",
+        "hiddenList"
+      ],
+      "imports": [
+        "@playwright/test",
+        "./utils/app",
+        "./utils/seed"
+      ]
+    },
+    {
+      "path": "tests/setup.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [],
+      "imports": [
+        "@testing-library/jest-dom/vitest"
+      ]
+    },
+    {
+      "path": "tests/unit/dashboard-cache.test.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "tag",
+        "list",
+        "view",
+        "customView",
+        "allListsView",
+        "snapshot",
+        "defaultView"
+      ],
+      "imports": [
+        "vitest",
+        "@/lib/dashboard-cache"
+      ]
+    },
+    {
+      "path": "tests/unit/local-db-diagnostics.test.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "dbWithStores"
+      ],
+      "imports": [
+        "vitest",
+        "@/lib/local-db/local-db-diagnostics",
+        "@/lib/local-db/metadata-repository"
+      ]
+    },
+    {
+      "path": "tests/unit/local-db-metadata.test.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "createMetadataDb",
+        "store",
+        "db"
+      ],
+      "imports": [
+        "vitest",
+        "@/lib/local-db/metadata-repository",
+        "@/lib/local-db/local-schema"
+      ]
+    },
+    {
+      "path": "tests/unit/local-repositories.test.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "baseEntity",
+        "entity",
+        "pending",
+        "operation"
+      ],
+      "imports": [
+        "vitest",
+        "@/lib/local-db/local-repositories",
+        "@/lib/local-db/local-schema"
+      ]
+    },
+    {
+      "path": "tests/unit/outbox-coalescing.test.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "createOperation",
+        "operationIds",
+        "result",
+        "first",
+        "second",
+        "input"
+      ],
+      "imports": [
+        "vitest",
+        "@/lib/local-db/outbox-coalescing",
+        "@/lib/local-db/outbox-schema"
+      ]
+    },
+    {
+      "path": "tests/unit/outbox-repository.test.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "createOperation",
+        "createFakeOutboxDb",
+        "operations",
+        "operation",
+        "invalidOperation",
+        "LocalOutboxRepositoryDatabase"
+      ],
+      "imports": [
+        "vitest",
+        "@/lib/local-db/outbox-repository",
+        "@/lib/local-db/outbox-schema"
+      ]
+    },
+    {
+      "path": "tests/unit/outbox-schema.test.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "validOperation",
+        "LocalOutboxOperation"
+      ],
+      "imports": [
+        "vitest",
+        "@/lib/local-db/outbox-schema"
+      ]
+    },
+    {
+      "path": "tests/unit/sync-endpoint-contract.test.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "createOperation",
+        "createRequest",
+        "result",
+        "is"
+      ],
+      "imports": [
+        "vitest",
+        "@/lib/sync/sync-endpoint-contract",
+        "@/lib/local-db/outbox-schema"
+      ]
+    },
+    {
+      "path": "tests/unit/sync-replay-client.test.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "createOperation",
+        "createReplayRepository",
+        "operation",
+        "repository",
+        "transport",
+        "first",
+        "second",
+        "result",
+        "firstRename",
+        "finalRename",
+        "failingOperation",
+        "succeedingOperation",
+        "create",
+        "remove",
+        "SyncReplayRepository"
+      ],
+      "imports": [
+        "vitest",
+        "@/lib/local-db/sync-replay-client",
+        "@/lib/local-db/outbox-schema"
+      ]
+    },
+    {
+      "path": "tests/unit/sync-status-surface.test.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "operation"
+      ],
+      "imports": [
+        "vitest",
+        "@/lib/sync/sync-status-surface",
+        "@/lib/local-db/outbox-schema"
+      ]
+    },
+    {
+      "path": "tests/unit/sync-status.test.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [],
+      "imports": [
+        "vitest",
+        "@/lib/local-db/sync-status"
+      ]
+    },
+    {
+      "path": "trpc/client.tsx",
+      "kind": "trpc",
+      "extension": ".tsx",
+      "symbols": [
+        "TRPCReactProvider",
+        "getQueryClient",
+        "getUrl",
+        "queryClient"
+      ],
+      "imports": [
+        "@tanstack/react-query",
+        "@trpc/client",
+        "@trpc/tanstack-react-query",
+        "react",
+        "./query-client",
+        "./routers/_app",
+        "superjson",
+        "@/lib/utils",
+        "@/components/AuthSync",
+        "@/hooks/use-local-db-health-check"
+      ]
+    },
+    {
+      "path": "trpc/init.ts",
+      "kind": "trpc",
+      "extension": ".ts",
+      "symbols": [
+        "createTRPCContext",
+        "createTRPCRouter",
+        "createCallerFactory",
+        "baseProcedure",
+        "protectedProcedure",
+        "supabase",
+        "t",
+        "isAuth",
+        "user"
+      ],
+      "imports": [
+        "@/lib/supabase/server",
+        "@trpc/server",
+        "superjson"
+      ]
+    },
+    {
+      "path": "trpc/query-client.ts",
+      "kind": "trpc",
+      "extension": ".ts",
+      "symbols": [
+        "makeQueryClient"
+      ],
+      "imports": [
+        "@tanstack/react-query",
+        "superjson"
+      ]
+    },
+    {
+      "path": "trpc/routers/_app.ts",
+      "kind": "trpc_router",
+      "extension": ".ts",
+      "symbols": [
+        "appRouter",
+        "definition",
+        "AppRouter"
+      ],
+      "imports": [
+        "../init",
+        "./userRouter",
+        "./listRouter",
+        "./listItemRouter",
+        "./testRouter",
+        "./tagRouter",
+        "./viewRouter"
+      ]
+    },
+    {
+      "path": "trpc/routers/listItemRouter.ts",
+      "kind": "trpc_router",
+      "extension": ".ts",
+      "symbols": [
+        "listItemRouter",
+        "listItems",
+        "parentList",
+        "topItem",
+        "renamedListItem",
+        "result",
+        "listItem",
+        "itemIds",
+        "ownedItems"
+      ],
+      "imports": [
+        "zod",
+        "../init",
+        "@trpc/server",
+        "@/lib/db",
+        "@/app/generated/prisma/client"
+      ]
+    },
+    {
+      "path": "trpc/routers/listRouter.ts",
+      "kind": "trpc_router",
+      "extension": ".ts",
+      "symbols": [
+        "listRouter",
+        "existingList",
+        "allListsView",
+        "selectedDefaultView",
+        "selectedViewId",
+        "selectedView",
+        "topAllViewList",
+        "viewTagIds",
+        "matchingCustomViews",
+        "createdList",
+        "customViewIds",
+        "lists",
+        "renamedList"
+      ],
+      "imports": [
+        "@/lib/db",
+        "../init",
+        "zod",
+        "@trpc/server",
+        "@/app/generated/prisma/client",
+        "./viewHelpers"
+      ]
+    },
+    {
+      "path": "trpc/routers/tagRouter.ts",
+      "kind": "trpc_router",
+      "extension": ".ts",
+      "symbols": [
+        "tagColorSchema",
+        "tagRouter",
+        "listTagChangeSchema",
+        "updatedTags",
+        "result",
+        "affectedViews",
+        "listTag",
+        "compactedOperations",
+        "listTags",
+        "tagIds",
+        "addTagIds",
+        "adds",
+        "removes"
+      ],
+      "imports": [
+        "zod",
+        "@trpc/server",
+        "@/lib/db",
+        "../init",
+        "./viewHelpers"
+      ]
+    },
+    {
+      "path": "trpc/routers/testRouter.ts",
+      "kind": "trpc_router",
+      "extension": ".ts",
+      "symbols": [
+        "testRouter"
+      ],
+      "imports": [
+        "zod",
+        "../init"
+      ]
+    },
+    {
+      "path": "trpc/routers/userRouter.ts",
+      "kind": "trpc_router",
+      "extension": ".ts",
+      "symbols": [
+        "userRouter"
+      ],
+      "imports": [
+        "../init"
+      ]
+    },
+    {
+      "path": "trpc/routers/viewHelpers.ts",
+      "kind": "trpc_router",
+      "extension": ".ts",
+      "symbols": [
+        "ensureAllListsView",
+        "ensureDefaultView",
+        "setSelectedView",
+        "backfillAllListsView",
+        "recomputeCustomView",
+        "recomputeCustomViewsForUser",
+        "recomputeCustomViewsForTags",
+        "ALL_LISTS_NAME",
+        "hasDefaultView",
+        "topView",
+        "allListsView",
+        "defaultView",
+        "view",
+        "existingListIds",
+        "missingLists",
+        "bottomViewList",
+        "startOrder",
+        "tagIds",
+        "allViewLists",
+        "allListOrders"
+      ],
+      "imports": [
+        "@/app/generated/prisma/client",
+        "@/lib/db"
+      ]
+    },
+    {
+      "path": "trpc/routers/viewRouter.ts",
+      "kind": "trpc_router",
+      "extension": ".ts",
+      "symbols": [
+        "isPrismaKnownError",
+        "viewRouter",
+        "viewTagIdsInput",
+        "view",
+        "viewLists",
+        "selectedDefaultView",
+        "selectedView",
+        "uniqueTagIds",
+        "ownedTags",
+        "topView",
+        "renamedViews",
+        "allListsView",
+        "viewIds",
+        "ownedViews",
+        "listIds",
+        "ownedViewLists"
+      ],
+      "imports": [
+        "@/app/generated/prisma/client",
+        "@/lib/db",
+        "@trpc/server",
+        "zod",
+        "../init",
+        "./viewHelpers"
+      ]
+    },
+    {
+      "path": "trpc/server.tsx",
+      "kind": "trpc",
+      "extension": ".tsx",
+      "symbols": [
+        "HydrateClient",
+        "prefetch",
+        "getQueryClient",
+        "trpc",
+        "queryClient"
+      ],
+      "imports": [
+        "server-only",
+        "@trpc/tanstack-react-query",
+        "next/headers",
+        "react",
+        "./init",
+        "./query-client",
+        "./routers/_app",
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "path": "tsconfig.json",
+      "kind": "file",
+      "extension": ".json",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "vitest.config.ts",
+      "kind": "file",
+      "extension": ".ts",
+      "symbols": [],
+      "imports": [
+        "node:path",
+        "vitest/config"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "app/api/auth/confirm/route.ts",
+      "to": "lib/supabase/auth-confirm.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/auth-confirm"
+    },
+    {
+      "from": "app/api/trpc/[trpc]/route.ts",
+      "to": "trpc/init.ts",
+      "type": "imports",
+      "import": "@/trpc/init"
+    },
+    {
+      "from": "app/api/trpc/[trpc]/route.ts",
+      "to": "trpc/routers/_app.ts",
+      "type": "imports",
+      "import": "@/trpc/routers/_app"
+    },
+    {
+      "from": "app/auth/confirm/route.ts",
+      "to": "lib/supabase/auth-confirm.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/auth-confirm"
+    },
+    {
+      "from": "app/dashboard/page.tsx",
+      "to": "components/Dashboard.tsx",
+      "type": "imports",
+      "import": "@/components/Dashboard"
+    },
+    {
+      "from": "app/forgot-password/page.tsx",
+      "to": "components/MaxWidthWrapper.tsx",
+      "type": "imports",
+      "import": "@/components/MaxWidthWrapper"
+    },
+    {
+      "from": "app/forgot-password/page.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "@/components/ui/button"
+    },
+    {
+      "from": "app/forgot-password/page.tsx",
+      "to": "components/ui/card.tsx",
+      "type": "imports",
+      "import": "@/components/ui/card"
+    },
+    {
+      "from": "app/forgot-password/page.tsx",
+      "to": "components/ui/field.tsx",
+      "type": "imports",
+      "import": "@/components/ui/field"
+    },
+    {
+      "from": "app/forgot-password/page.tsx",
+      "to": "components/ui/input.tsx",
+      "type": "imports",
+      "import": "@/components/ui/input"
+    },
+    {
+      "from": "app/forgot-password/page.tsx",
+      "to": "lib/supabase/client.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/client"
+    },
+    {
+      "from": "app/forgot-password/page.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "app/globals.css",
+      "type": "imports",
+      "import": "./globals.css"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "components/ui/sonner.tsx",
+      "type": "imports",
+      "import": "@/components/ui/sonner"
+    },
+    {
+      "from": "app/layout.tsx",
+      "to": "trpc/client.tsx",
+      "type": "imports",
+      "import": "@/trpc/client"
+    },
+    {
+      "from": "app/login/page.tsx",
+      "to": "components/auth/Login.tsx",
+      "type": "imports",
+      "import": "@/components/auth/Login"
+    },
+    {
+      "from": "app/page.tsx",
+      "to": "components/MaxWidthWrapper.tsx",
+      "type": "imports",
+      "import": "@/components/MaxWidthWrapper"
+    },
+    {
+      "from": "app/page.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "@/components/ui/button"
+    },
+    {
+      "from": "app/page.tsx",
+      "to": "components/ui/card.tsx",
+      "type": "imports",
+      "import": "@/components/ui/card"
+    },
+    {
+      "from": "app/register/page.tsx",
+      "to": "components/auth/Register.tsx",
+      "type": "imports",
+      "import": "@/components/auth/Register"
+    },
+    {
+      "from": "app/reset-password/page.tsx",
+      "to": "components/auth/ResetPassword.tsx",
+      "type": "imports",
+      "import": "@/components/auth/ResetPassword"
+    },
+    {
+      "from": "components/auth/Login.tsx",
+      "to": "components/MaxWidthWrapper.tsx",
+      "type": "imports",
+      "import": "@/components/MaxWidthWrapper"
+    },
+    {
+      "from": "components/auth/Login.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "@/components/ui/button"
+    },
+    {
+      "from": "components/auth/Login.tsx",
+      "to": "components/ui/card.tsx",
+      "type": "imports",
+      "import": "@/components/ui/card"
+    },
+    {
+      "from": "components/auth/Login.tsx",
+      "to": "components/ui/field.tsx",
+      "type": "imports",
+      "import": "@/components/ui/field"
+    },
+    {
+      "from": "components/auth/Login.tsx",
+      "to": "components/ui/input.tsx",
+      "type": "imports",
+      "import": "@/components/ui/input"
+    },
+    {
+      "from": "components/auth/Login.tsx",
+      "to": "lib/supabase/client.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/client"
+    },
+    {
+      "from": "components/auth/Register.tsx",
+      "to": "components/MaxWidthWrapper.tsx",
+      "type": "imports",
+      "import": "@/components/MaxWidthWrapper"
+    },
+    {
+      "from": "components/auth/Register.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "@/components/ui/button"
+    },
+    {
+      "from": "components/auth/Register.tsx",
+      "to": "components/ui/card.tsx",
+      "type": "imports",
+      "import": "@/components/ui/card"
+    },
+    {
+      "from": "components/auth/Register.tsx",
+      "to": "components/ui/field.tsx",
+      "type": "imports",
+      "import": "@/components/ui/field"
+    },
+    {
+      "from": "components/auth/Register.tsx",
+      "to": "components/ui/input.tsx",
+      "type": "imports",
+      "import": "@/components/ui/input"
+    },
+    {
+      "from": "components/auth/Register.tsx",
+      "to": "lib/supabase/client.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/client"
+    },
+    {
+      "from": "components/auth/Register.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/auth/ResetPassword.tsx",
+      "to": "components/MaxWidthWrapper.tsx",
+      "type": "imports",
+      "import": "@/components/MaxWidthWrapper"
+    },
+    {
+      "from": "components/auth/ResetPassword.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "@/components/ui/button"
+    },
+    {
+      "from": "components/auth/ResetPassword.tsx",
+      "to": "components/ui/card.tsx",
+      "type": "imports",
+      "import": "@/components/ui/card"
+    },
+    {
+      "from": "components/auth/ResetPassword.tsx",
+      "to": "components/ui/field.tsx",
+      "type": "imports",
+      "import": "@/components/ui/field"
+    },
+    {
+      "from": "components/auth/ResetPassword.tsx",
+      "to": "components/ui/input.tsx",
+      "type": "imports",
+      "import": "@/components/ui/input"
+    },
+    {
+      "from": "components/auth/ResetPassword.tsx",
+      "to": "lib/supabase/client.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/client"
+    },
+    {
+      "from": "components/AuthSync.tsx",
+      "to": "lib/supabase/client.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/client"
+    },
+    {
+      "from": "components/Dashboard.tsx",
+      "to": "components/list/ListAdder.tsx",
+      "type": "imports",
+      "import": "./list/ListAdder"
+    },
+    {
+      "from": "components/Dashboard.tsx",
+      "to": "components/list/ListsContainer.tsx",
+      "type": "imports",
+      "import": "./list/ListsContainer"
+    },
+    {
+      "from": "components/Dashboard.tsx",
+      "to": "components/MaxWidthWrapper.tsx",
+      "type": "imports",
+      "import": "@/components/MaxWidthWrapper"
+    },
+    {
+      "from": "components/Dashboard.tsx",
+      "to": "components/ui/separator.tsx",
+      "type": "imports",
+      "import": "./ui/separator"
+    },
+    {
+      "from": "components/Dashboard.tsx",
+      "to": "components/UserAccountNav.tsx",
+      "type": "imports",
+      "import": "./UserAccountNav"
+    },
+    {
+      "from": "components/Dashboard.tsx",
+      "to": "components/views/ViewsSidebarPreview.tsx",
+      "type": "imports",
+      "import": "./views/ViewsSidebarPreview"
+    },
+    {
+      "from": "components/Dashboard.tsx",
+      "to": "lib/supabase/client.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/client"
+    },
+    {
+      "from": "components/list/ListAdder.tsx",
+      "to": "components/list/types.ts",
+      "type": "imports",
+      "import": "./types"
+    },
+    {
+      "from": "components/list/ListAdder.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "../ui/button"
+    },
+    {
+      "from": "components/list/ListAdder.tsx",
+      "to": "components/ui/dialog.tsx",
+      "type": "imports",
+      "import": "../ui/dialog"
+    },
+    {
+      "from": "components/list/ListAdder.tsx",
+      "to": "components/ui/input.tsx",
+      "type": "imports",
+      "import": "../ui/input"
+    },
+    {
+      "from": "components/list/ListAdder.tsx",
+      "to": "components/ui/label.tsx",
+      "type": "imports",
+      "import": "../ui/label"
+    },
+    {
+      "from": "components/list/ListAdder.tsx",
+      "to": "components/ui/separator.tsx",
+      "type": "imports",
+      "import": "../ui/separator"
+    },
+    {
+      "from": "components/list/ListAdder.tsx",
+      "to": "components/ui/skeleton.tsx",
+      "type": "imports",
+      "import": "../ui/skeleton"
+    },
+    {
+      "from": "components/list/ListAdder.tsx",
+      "to": "lib/dashboard-cache.ts",
+      "type": "imports",
+      "import": "@/lib/dashboard-cache"
+    },
+    {
+      "from": "components/list/ListAdder.tsx",
+      "to": "trpc/client.tsx",
+      "type": "imports",
+      "import": "@/trpc/client"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "components/list/ListInlineEdit.tsx",
+      "type": "imports",
+      "import": "./ListInlineEdit"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "components/list/ListMenu.tsx",
+      "type": "imports",
+      "import": "./ListMenu"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "components/list/ListTagPicker.tsx",
+      "type": "imports",
+      "import": "./ListTagPicker"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "components/list/types.ts",
+      "type": "imports",
+      "import": "./types"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "../ui/button"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "components/ui/card.tsx",
+      "type": "imports",
+      "import": "../ui/card"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "components/ui/checkbox.tsx",
+      "type": "imports",
+      "import": "../ui/checkbox"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "components/ui/scroll-area.tsx",
+      "type": "imports",
+      "import": "../ui/scroll-area"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "components/ui/separator.tsx",
+      "type": "imports",
+      "import": "../ui/separator"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "components/ui/textarea.tsx",
+      "type": "imports",
+      "import": "../ui/textarea"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "hooks/useOptimisticSync.ts",
+      "type": "imports",
+      "import": "@/hooks/useOptimisticSync"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "lib/dashboard-cache.ts",
+      "type": "imports",
+      "import": "@/lib/dashboard-cache"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "lib/optimistic-debug.tsx",
+      "type": "imports",
+      "import": "@/lib/optimistic-debug"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/list/ListComponent.tsx",
+      "to": "trpc/client.tsx",
+      "type": "imports",
+      "import": "@/trpc/client"
+    },
+    {
+      "from": "components/list/ListEmpty.tsx",
+      "to": "components/list/ListAdder.tsx",
+      "type": "imports",
+      "import": "./ListAdder"
+    },
+    {
+      "from": "components/list/ListEmpty.tsx",
+      "to": "components/ui/empty.tsx",
+      "type": "imports",
+      "import": "../ui/empty"
+    },
+    {
+      "from": "components/list/ListInlineEdit.tsx",
+      "to": "components/ui/textarea.tsx",
+      "type": "imports",
+      "import": "../ui/textarea"
+    },
+    {
+      "from": "components/list/ListItemComponent.tsx",
+      "to": "components/list/ListInlineEdit.tsx",
+      "type": "imports",
+      "import": "./ListInlineEdit"
+    },
+    {
+      "from": "components/list/ListItemComponent.tsx",
+      "to": "components/list/types.ts",
+      "type": "imports",
+      "import": "./types"
+    },
+    {
+      "from": "components/list/ListItemComponent.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "../ui/button"
+    },
+    {
+      "from": "components/list/ListItemComponent.tsx",
+      "to": "components/ui/checkbox.tsx",
+      "type": "imports",
+      "import": "../ui/checkbox"
+    },
+    {
+      "from": "components/list/ListItemComponent.tsx",
+      "to": "hooks/useOptimisticSync.ts",
+      "type": "imports",
+      "import": "@/hooks/useOptimisticSync"
+    },
+    {
+      "from": "components/list/ListItemComponent.tsx",
+      "to": "lib/dashboard-cache.ts",
+      "type": "imports",
+      "import": "@/lib/dashboard-cache"
+    },
+    {
+      "from": "components/list/ListItemComponent.tsx",
+      "to": "lib/optimistic-debug.tsx",
+      "type": "imports",
+      "import": "@/lib/optimistic-debug"
+    },
+    {
+      "from": "components/list/ListItemComponent.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/list/ListItemComponent.tsx",
+      "to": "trpc/client.tsx",
+      "type": "imports",
+      "import": "@/trpc/client"
+    },
+    {
+      "from": "components/list/ListMenu.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "../ui/button"
+    },
+    {
+      "from": "components/list/ListMenu.tsx",
+      "to": "components/ui/dropdown-menu.tsx",
+      "type": "imports",
+      "import": "../ui/dropdown-menu"
+    },
+    {
+      "from": "components/list/ListsContainer.tsx",
+      "to": "components/list/ListComponent.tsx",
+      "type": "imports",
+      "import": "./ListComponent"
+    },
+    {
+      "from": "components/list/ListsContainer.tsx",
+      "to": "components/list/ListEmpty.tsx",
+      "type": "imports",
+      "import": "./ListEmpty"
+    },
+    {
+      "from": "components/list/ListsContainer.tsx",
+      "to": "components/list/ListItemComponent.tsx",
+      "type": "imports",
+      "import": "./ListItemComponent"
+    },
+    {
+      "from": "components/list/ListsContainer.tsx",
+      "to": "components/list/ListSkeleton.tsx",
+      "type": "imports",
+      "import": "./ListSkeleton"
+    },
+    {
+      "from": "components/list/ListsContainer.tsx",
+      "to": "components/list/types.ts",
+      "type": "imports",
+      "import": "./types"
+    },
+    {
+      "from": "components/list/ListsContainer.tsx",
+      "to": "hooks/useOptimisticSync.ts",
+      "type": "imports",
+      "import": "@/hooks/useOptimisticSync"
+    },
+    {
+      "from": "components/list/ListsContainer.tsx",
+      "to": "lib/dashboard-cache.ts",
+      "type": "imports",
+      "import": "@/lib/dashboard-cache"
+    },
+    {
+      "from": "components/list/ListsContainer.tsx",
+      "to": "lib/optimistic-debug.tsx",
+      "type": "imports",
+      "import": "@/lib/optimistic-debug"
+    },
+    {
+      "from": "components/list/ListsContainer.tsx",
+      "to": "trpc/client.tsx",
+      "type": "imports",
+      "import": "@/trpc/client"
+    },
+    {
+      "from": "components/list/ListSkeleton.tsx",
+      "to": "components/ui/card.tsx",
+      "type": "imports",
+      "import": "../ui/card"
+    },
+    {
+      "from": "components/list/ListSkeleton.tsx",
+      "to": "components/ui/separator.tsx",
+      "type": "imports",
+      "import": "../ui/separator"
+    },
+    {
+      "from": "components/list/ListSkeleton.tsx",
+      "to": "components/ui/skeleton.tsx",
+      "type": "imports",
+      "import": "../ui/skeleton"
+    },
+    {
+      "from": "components/list/ListTag.tsx",
+      "to": "components/ui/badge.tsx",
+      "type": "imports",
+      "import": "../ui/badge"
+    },
+    {
+      "from": "components/list/ListTagPicker.tsx",
+      "to": "components/list/types.ts",
+      "type": "imports",
+      "import": "./types"
+    },
+    {
+      "from": "components/list/ListTagPicker.tsx",
+      "to": "components/ui/badge.tsx",
+      "type": "imports",
+      "import": "@/components/ui/badge"
+    },
+    {
+      "from": "components/list/ListTagPicker.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "@/components/ui/button"
+    },
+    {
+      "from": "components/list/ListTagPicker.tsx",
+      "to": "components/ui/command.tsx",
+      "type": "imports",
+      "import": "@/components/ui/command"
+    },
+    {
+      "from": "components/list/ListTagPicker.tsx",
+      "to": "components/ui/dropdown-menu.tsx",
+      "type": "imports",
+      "import": "@/components/ui/dropdown-menu"
+    },
+    {
+      "from": "components/list/ListTagPicker.tsx",
+      "to": "components/ui/scroll-area.tsx",
+      "type": "imports",
+      "import": "@/components/ui/scroll-area"
+    },
+    {
+      "from": "components/list/ListTagPicker.tsx",
+      "to": "lib/dashboard-cache.ts",
+      "type": "imports",
+      "import": "@/lib/dashboard-cache"
+    },
+    {
+      "from": "components/list/ListTagPicker.tsx",
+      "to": "lib/optimistic-debug.tsx",
+      "type": "imports",
+      "import": "@/lib/optimistic-debug"
+    },
+    {
+      "from": "components/list/ListTagPicker.tsx",
+      "to": "lib/trpc.ts",
+      "type": "imports",
+      "import": "@/lib/trpc"
+    },
+    {
+      "from": "components/list/ListTagPicker.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/list/ListTagPicker.tsx",
+      "to": "trpc/client.tsx",
+      "type": "imports",
+      "import": "@/trpc/client"
+    },
+    {
+      "from": "components/list/types.ts",
+      "to": "lib/trpc.ts",
+      "type": "imports",
+      "import": "@/lib/trpc"
+    },
+    {
+      "from": "components/MaxWidthWrapper.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/avatar.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/badge.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/button.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/card.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/checkbox.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/command.tsx",
+      "to": "components/ui/dialog.tsx",
+      "type": "imports",
+      "import": "@/components/ui/dialog"
+    },
+    {
+      "from": "components/ui/command.tsx",
+      "to": "components/ui/input-group.tsx",
+      "type": "imports",
+      "import": "@/components/ui/input-group"
+    },
+    {
+      "from": "components/ui/command.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/dialog.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "@/components/ui/button"
+    },
+    {
+      "from": "components/ui/dialog.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/dropdown-menu.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/empty.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/field.tsx",
+      "to": "components/ui/label.tsx",
+      "type": "imports",
+      "import": "@/components/ui/label"
+    },
+    {
+      "from": "components/ui/field.tsx",
+      "to": "components/ui/separator.tsx",
+      "type": "imports",
+      "import": "@/components/ui/separator"
+    },
+    {
+      "from": "components/ui/field.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/input-group.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "@/components/ui/button"
+    },
+    {
+      "from": "components/ui/input-group.tsx",
+      "to": "components/ui/input.tsx",
+      "type": "imports",
+      "import": "@/components/ui/input"
+    },
+    {
+      "from": "components/ui/input-group.tsx",
+      "to": "components/ui/textarea.tsx",
+      "type": "imports",
+      "import": "@/components/ui/textarea"
+    },
+    {
+      "from": "components/ui/input-group.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/input-otp.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/input.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/label.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/scroll-area.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/separator.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/skeleton.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/ui/textarea.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/UserAccountNav.tsx",
+      "to": "components/ui/avatar.tsx",
+      "type": "imports",
+      "import": "./ui/avatar"
+    },
+    {
+      "from": "components/UserAccountNav.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "./ui/button"
+    },
+    {
+      "from": "components/UserAccountNav.tsx",
+      "to": "components/ui/dropdown-menu.tsx",
+      "type": "imports",
+      "import": "./ui/dropdown-menu"
+    },
+    {
+      "from": "components/UserAccountNav.tsx",
+      "to": "trpc/client.tsx",
+      "type": "imports",
+      "import": "@/trpc/client"
+    },
+    {
+      "from": "components/UserDetails.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "./ui/button"
+    },
+    {
+      "from": "components/UserDetails.tsx",
+      "to": "components/ui/card.tsx",
+      "type": "imports",
+      "import": "./ui/card"
+    },
+    {
+      "from": "components/UserDetails.tsx",
+      "to": "components/ui/skeleton.tsx",
+      "type": "imports",
+      "import": "./ui/skeleton"
+    },
+    {
+      "from": "components/UserDetails.tsx",
+      "to": "lib/supabase/client.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/client"
+    },
+    {
+      "from": "components/UserDetails.tsx",
+      "to": "trpc/client.tsx",
+      "type": "imports",
+      "import": "@/trpc/client"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "components/ui/badge.tsx",
+      "type": "imports",
+      "import": "@/components/ui/badge"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "components/ui/button.tsx",
+      "type": "imports",
+      "import": "@/components/ui/button"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "components/ui/card.tsx",
+      "type": "imports",
+      "import": "@/components/ui/card"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "components/ui/checkbox.tsx",
+      "type": "imports",
+      "import": "@/components/ui/checkbox"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "components/ui/dialog.tsx",
+      "type": "imports",
+      "import": "@/components/ui/dialog"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "components/ui/dropdown-menu.tsx",
+      "type": "imports",
+      "import": "@/components/ui/dropdown-menu"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "components/ui/input.tsx",
+      "type": "imports",
+      "import": "@/components/ui/input"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "components/ui/label.tsx",
+      "type": "imports",
+      "import": "@/components/ui/label"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "components/ui/scroll-area.tsx",
+      "type": "imports",
+      "import": "@/components/ui/scroll-area"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "components/ui/separator.tsx",
+      "type": "imports",
+      "import": "@/components/ui/separator"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "components/ui/skeleton.tsx",
+      "type": "imports",
+      "import": "@/components/ui/skeleton"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "hooks/useOptimisticSync.ts",
+      "type": "imports",
+      "import": "@/hooks/useOptimisticSync"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "lib/dashboard-cache.ts",
+      "type": "imports",
+      "import": "@/lib/dashboard-cache"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "lib/optimistic-debug.tsx",
+      "type": "imports",
+      "import": "@/lib/optimistic-debug"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "lib/trpc.ts",
+      "type": "imports",
+      "import": "@/lib/trpc"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "components/views/ViewsSidebarPreview.tsx",
+      "to": "trpc/client.tsx",
+      "type": "imports",
+      "import": "@/trpc/client"
+    },
+    {
+      "from": "hooks/use-local-db-health-check.ts",
+      "to": "lib/local-db/metadata-repository.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/metadata-repository"
+    },
+    {
+      "from": "hooks/useUser.ts",
+      "to": "lib/supabase/client.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/client"
+    },
+    {
+      "from": "lib/dashboard-cache.ts",
+      "to": "lib/trpc.ts",
+      "type": "imports",
+      "import": "@/lib/trpc"
+    },
+    {
+      "from": "lib/local-db/local-db-diagnostics.ts",
+      "to": "lib/local-db/metadata-repository.ts",
+      "type": "imports",
+      "import": "./metadata-repository"
+    },
+    {
+      "from": "lib/local-db/local-db-diagnostics.ts",
+      "to": "lib/local-db/tidy-db.ts",
+      "type": "imports",
+      "import": "./tidy-db"
+    },
+    {
+      "from": "lib/local-db/local-repositories.ts",
+      "to": "lib/local-db/local-schema.ts",
+      "type": "imports",
+      "import": "./local-schema"
+    },
+    {
+      "from": "lib/local-db/local-repositories.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "./outbox-schema"
+    },
+    {
+      "from": "lib/local-db/local-repositories.ts",
+      "to": "lib/local-db/tidy-db.ts",
+      "type": "imports",
+      "import": "./tidy-db"
+    },
+    {
+      "from": "lib/local-db/metadata-repository.ts",
+      "to": "lib/local-db/local-repositories.ts",
+      "type": "imports",
+      "import": "./local-repositories"
+    },
+    {
+      "from": "lib/local-db/metadata-repository.ts",
+      "to": "lib/local-db/local-schema.ts",
+      "type": "imports",
+      "import": "./local-schema"
+    },
+    {
+      "from": "lib/local-db/metadata-repository.ts",
+      "to": "lib/local-db/tidy-db.ts",
+      "type": "imports",
+      "import": "./tidy-db"
+    },
+    {
+      "from": "lib/local-db/outbox-coalescing.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "./outbox-schema"
+    },
+    {
+      "from": "lib/local-db/outbox-repository.ts",
+      "to": "lib/local-db/local-repositories.ts",
+      "type": "imports",
+      "import": "./local-repositories"
+    },
+    {
+      "from": "lib/local-db/outbox-repository.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "./outbox-schema"
+    },
+    {
+      "from": "lib/local-db/outbox-repository.ts",
+      "to": "lib/local-db/tidy-db.ts",
+      "type": "imports",
+      "import": "./tidy-db"
+    },
+    {
+      "from": "lib/local-db/outbox-schema.ts",
+      "to": "lib/local-db/sync-status.ts",
+      "type": "imports",
+      "import": "./sync-status"
+    },
+    {
+      "from": "lib/local-db/sync-replay-client.ts",
+      "to": "lib/local-db/outbox-coalescing.ts",
+      "type": "imports",
+      "import": "./outbox-coalescing"
+    },
+    {
+      "from": "lib/local-db/sync-replay-client.ts",
+      "to": "lib/local-db/outbox-repository.ts",
+      "type": "imports",
+      "import": "./outbox-repository"
+    },
+    {
+      "from": "lib/local-db/sync-replay-client.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "./outbox-schema"
+    },
+    {
+      "from": "lib/local-db/sync-status.ts",
+      "to": "lib/local-db/local-schema.ts",
+      "type": "imports",
+      "import": "./local-schema"
+    },
+    {
+      "from": "lib/local-db/sync-status.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "./outbox-schema"
+    },
+    {
+      "from": "lib/local-db/tidy-db.ts",
+      "to": "lib/local-db/local-schema.ts",
+      "type": "imports",
+      "import": "./local-schema"
+    },
+    {
+      "from": "lib/local-db/tidy-db.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "./outbox-schema"
+    },
+    {
+      "from": "lib/supabase/auth-confirm.ts",
+      "to": "lib/supabase/server.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/server"
+    },
+    {
+      "from": "lib/sync/sync-endpoint-contract.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/outbox-schema"
+    },
+    {
+      "from": "lib/sync/sync-status-surface.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/outbox-schema"
+    },
+    {
+      "from": "lib/trpc.ts",
+      "to": "trpc/routers/_app.ts",
+      "type": "imports",
+      "import": "@/trpc/routers/_app"
+    },
+    {
+      "from": "proxy.ts",
+      "to": "lib/supabase/proxy.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/proxy"
+    },
+    {
+      "from": "tests/e2e/drag-drop.spec.ts",
+      "to": "tests/e2e/utils/app.ts",
+      "type": "imports",
+      "import": "./utils/app"
+    },
+    {
+      "from": "tests/e2e/drag-drop.spec.ts",
+      "to": "tests/e2e/utils/assertions.ts",
+      "type": "imports",
+      "import": "./utils/assertions"
+    },
+    {
+      "from": "tests/e2e/drag-drop.spec.ts",
+      "to": "tests/e2e/utils/drag.ts",
+      "type": "imports",
+      "import": "./utils/drag"
+    },
+    {
+      "from": "tests/e2e/drag-drop.spec.ts",
+      "to": "tests/e2e/utils/seed.ts",
+      "type": "imports",
+      "import": "./utils/seed"
+    },
+    {
+      "from": "tests/e2e/drag-drop.spec.ts",
+      "to": "tests/e2e/utils/test-ids.ts",
+      "type": "imports",
+      "import": "./utils/test-ids"
+    },
+    {
+      "from": "tests/e2e/list-items.spec.ts",
+      "to": "tests/e2e/utils/app.ts",
+      "type": "imports",
+      "import": "./utils/app"
+    },
+    {
+      "from": "tests/e2e/list-items.spec.ts",
+      "to": "tests/e2e/utils/assertions.ts",
+      "type": "imports",
+      "import": "./utils/assertions"
+    },
+    {
+      "from": "tests/e2e/list-items.spec.ts",
+      "to": "tests/e2e/utils/seed.ts",
+      "type": "imports",
+      "import": "./utils/seed"
+    },
+    {
+      "from": "tests/e2e/lists.spec.ts",
+      "to": "tests/e2e/utils/app.ts",
+      "type": "imports",
+      "import": "./utils/app"
+    },
+    {
+      "from": "tests/e2e/lists.spec.ts",
+      "to": "tests/e2e/utils/assertions.ts",
+      "type": "imports",
+      "import": "./utils/assertions"
+    },
+    {
+      "from": "tests/e2e/lists.spec.ts",
+      "to": "tests/e2e/utils/seed.ts",
+      "type": "imports",
+      "import": "./utils/seed"
+    },
+    {
+      "from": "tests/e2e/regression.spec.ts",
+      "to": "tests/e2e/utils/app.ts",
+      "type": "imports",
+      "import": "./utils/app"
+    },
+    {
+      "from": "tests/e2e/regression.spec.ts",
+      "to": "tests/e2e/utils/assertions.ts",
+      "type": "imports",
+      "import": "./utils/assertions"
+    },
+    {
+      "from": "tests/e2e/regression.spec.ts",
+      "to": "tests/e2e/utils/seed.ts",
+      "type": "imports",
+      "import": "./utils/seed"
+    },
+    {
+      "from": "tests/e2e/utils/app.ts",
+      "to": "tests/e2e/utils/assertions.ts",
+      "type": "imports",
+      "import": "./assertions"
+    },
+    {
+      "from": "tests/e2e/utils/app.ts",
+      "to": "tests/e2e/utils/test-ids.ts",
+      "type": "imports",
+      "import": "./test-ids"
+    },
+    {
+      "from": "tests/e2e/views.spec.ts",
+      "to": "tests/e2e/utils/app.ts",
+      "type": "imports",
+      "import": "./utils/app"
+    },
+    {
+      "from": "tests/e2e/views.spec.ts",
+      "to": "tests/e2e/utils/seed.ts",
+      "type": "imports",
+      "import": "./utils/seed"
+    },
+    {
+      "from": "tests/unit/dashboard-cache.test.ts",
+      "to": "lib/dashboard-cache.ts",
+      "type": "imports",
+      "import": "@/lib/dashboard-cache"
+    },
+    {
+      "from": "tests/unit/local-db-diagnostics.test.ts",
+      "to": "lib/local-db/local-db-diagnostics.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/local-db-diagnostics"
+    },
+    {
+      "from": "tests/unit/local-db-diagnostics.test.ts",
+      "to": "lib/local-db/metadata-repository.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/metadata-repository"
+    },
+    {
+      "from": "tests/unit/local-db-metadata.test.ts",
+      "to": "lib/local-db/local-schema.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/local-schema"
+    },
+    {
+      "from": "tests/unit/local-db-metadata.test.ts",
+      "to": "lib/local-db/metadata-repository.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/metadata-repository"
+    },
+    {
+      "from": "tests/unit/local-repositories.test.ts",
+      "to": "lib/local-db/local-repositories.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/local-repositories"
+    },
+    {
+      "from": "tests/unit/local-repositories.test.ts",
+      "to": "lib/local-db/local-schema.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/local-schema"
+    },
+    {
+      "from": "tests/unit/outbox-coalescing.test.ts",
+      "to": "lib/local-db/outbox-coalescing.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/outbox-coalescing"
+    },
+    {
+      "from": "tests/unit/outbox-coalescing.test.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/outbox-schema"
+    },
+    {
+      "from": "tests/unit/outbox-repository.test.ts",
+      "to": "lib/local-db/outbox-repository.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/outbox-repository"
+    },
+    {
+      "from": "tests/unit/outbox-repository.test.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/outbox-schema"
+    },
+    {
+      "from": "tests/unit/outbox-schema.test.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/outbox-schema"
+    },
+    {
+      "from": "tests/unit/sync-endpoint-contract.test.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/outbox-schema"
+    },
+    {
+      "from": "tests/unit/sync-endpoint-contract.test.ts",
+      "to": "lib/sync/sync-endpoint-contract.ts",
+      "type": "imports",
+      "import": "@/lib/sync/sync-endpoint-contract"
+    },
+    {
+      "from": "tests/unit/sync-replay-client.test.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/outbox-schema"
+    },
+    {
+      "from": "tests/unit/sync-replay-client.test.ts",
+      "to": "lib/local-db/sync-replay-client.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/sync-replay-client"
+    },
+    {
+      "from": "tests/unit/sync-status-surface.test.ts",
+      "to": "lib/local-db/outbox-schema.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/outbox-schema"
+    },
+    {
+      "from": "tests/unit/sync-status-surface.test.ts",
+      "to": "lib/sync/sync-status-surface.ts",
+      "type": "imports",
+      "import": "@/lib/sync/sync-status-surface"
+    },
+    {
+      "from": "tests/unit/sync-status.test.ts",
+      "to": "lib/local-db/sync-status.ts",
+      "type": "imports",
+      "import": "@/lib/local-db/sync-status"
+    },
+    {
+      "from": "trpc/client.tsx",
+      "to": "components/AuthSync.tsx",
+      "type": "imports",
+      "import": "@/components/AuthSync"
+    },
+    {
+      "from": "trpc/client.tsx",
+      "to": "hooks/use-local-db-health-check.ts",
+      "type": "imports",
+      "import": "@/hooks/use-local-db-health-check"
+    },
+    {
+      "from": "trpc/client.tsx",
+      "to": "lib/utils.ts",
+      "type": "imports",
+      "import": "@/lib/utils"
+    },
+    {
+      "from": "trpc/client.tsx",
+      "to": "trpc/query-client.ts",
+      "type": "imports",
+      "import": "./query-client"
+    },
+    {
+      "from": "trpc/client.tsx",
+      "to": "trpc/routers/_app.ts",
+      "type": "imports",
+      "import": "./routers/_app"
+    },
+    {
+      "from": "trpc/init.ts",
+      "to": "lib/supabase/server.ts",
+      "type": "imports",
+      "import": "@/lib/supabase/server"
+    },
+    {
+      "from": "trpc/routers/_app.ts",
+      "to": "trpc/init.ts",
+      "type": "imports",
+      "import": "../init"
+    },
+    {
+      "from": "trpc/routers/_app.ts",
+      "to": "trpc/routers/listItemRouter.ts",
+      "type": "imports",
+      "import": "./listItemRouter"
+    },
+    {
+      "from": "trpc/routers/_app.ts",
+      "to": "trpc/routers/listRouter.ts",
+      "type": "imports",
+      "import": "./listRouter"
+    },
+    {
+      "from": "trpc/routers/_app.ts",
+      "to": "trpc/routers/tagRouter.ts",
+      "type": "imports",
+      "import": "./tagRouter"
+    },
+    {
+      "from": "trpc/routers/_app.ts",
+      "to": "trpc/routers/testRouter.ts",
+      "type": "imports",
+      "import": "./testRouter"
+    },
+    {
+      "from": "trpc/routers/_app.ts",
+      "to": "trpc/routers/userRouter.ts",
+      "type": "imports",
+      "import": "./userRouter"
+    },
+    {
+      "from": "trpc/routers/_app.ts",
+      "to": "trpc/routers/viewRouter.ts",
+      "type": "imports",
+      "import": "./viewRouter"
+    },
+    {
+      "from": "trpc/routers/listItemRouter.ts",
+      "to": "lib/db.ts",
+      "type": "imports",
+      "import": "@/lib/db"
+    },
+    {
+      "from": "trpc/routers/listItemRouter.ts",
+      "to": "trpc/init.ts",
+      "type": "imports",
+      "import": "../init"
+    },
+    {
+      "from": "trpc/routers/listRouter.ts",
+      "to": "lib/db.ts",
+      "type": "imports",
+      "import": "@/lib/db"
+    },
+    {
+      "from": "trpc/routers/listRouter.ts",
+      "to": "trpc/init.ts",
+      "type": "imports",
+      "import": "../init"
+    },
+    {
+      "from": "trpc/routers/listRouter.ts",
+      "to": "trpc/routers/viewHelpers.ts",
+      "type": "imports",
+      "import": "./viewHelpers"
+    },
+    {
+      "from": "trpc/routers/tagRouter.ts",
+      "to": "lib/db.ts",
+      "type": "imports",
+      "import": "@/lib/db"
+    },
+    {
+      "from": "trpc/routers/tagRouter.ts",
+      "to": "trpc/init.ts",
+      "type": "imports",
+      "import": "../init"
+    },
+    {
+      "from": "trpc/routers/tagRouter.ts",
+      "to": "trpc/routers/viewHelpers.ts",
+      "type": "imports",
+      "import": "./viewHelpers"
+    },
+    {
+      "from": "trpc/routers/testRouter.ts",
+      "to": "trpc/init.ts",
+      "type": "imports",
+      "import": "../init"
+    },
+    {
+      "from": "trpc/routers/userRouter.ts",
+      "to": "trpc/init.ts",
+      "type": "imports",
+      "import": "../init"
+    },
+    {
+      "from": "trpc/routers/viewHelpers.ts",
+      "to": "lib/db.ts",
+      "type": "imports",
+      "import": "@/lib/db"
+    },
+    {
+      "from": "trpc/routers/viewRouter.ts",
+      "to": "lib/db.ts",
+      "type": "imports",
+      "import": "@/lib/db"
+    },
+    {
+      "from": "trpc/routers/viewRouter.ts",
+      "to": "trpc/init.ts",
+      "type": "imports",
+      "import": "../init"
+    },
+    {
+      "from": "trpc/routers/viewRouter.ts",
+      "to": "trpc/routers/viewHelpers.ts",
+      "type": "imports",
+      "import": "./viewHelpers"
+    },
+    {
+      "from": "trpc/server.tsx",
+      "to": "trpc/init.ts",
+      "type": "imports",
+      "import": "./init"
+    },
+    {
+      "from": "trpc/server.tsx",
+      "to": "trpc/query-client.ts",
+      "type": "imports",
+      "import": "./query-client"
+    },
+    {
+      "from": "trpc/server.tsx",
+      "to": "trpc/routers/_app.ts",
+      "type": "imports",
+      "import": "./routers/_app"
+    }
+  ]
+}

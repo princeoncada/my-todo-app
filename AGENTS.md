@@ -32,6 +32,10 @@ These rules exist so lower-capability models cannot silently drift:
 - "Next phase" (roadmap, from STATE.json nextPhase) and "Next backlog item"
   (docs/FUTURE_PLANS.md first Planned item) are different questions with
   different answers. Report both, labeled distinctly. Never conflate them.
+- If STATE.json says state = stable, the same phase must not remain in
+  FUTURE_PLANS In Progress or as the first Planned item. If that mismatch
+  exists, STOP and flag roadmap drift before continuing. Next phase from
+  STATE.json and next backlog item from FUTURE_PLANS remain separate concepts.
 - If ChromaDB is offline, say so explicitly and read files directly. Never
   fabricate or paraphrase query results that were not actually returned.
 - Never state version, phase, or "what's next" from memory. Read the files

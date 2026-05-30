@@ -1,10 +1,14 @@
-<!-- Current Version: 1.1.4 -->
+<!-- Current Version: 1.2.0-alpha -->
 # AI Handoff
-**Current Version**: 1.1.4 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.1.4 - Graph Routing Usage Contract
-**Next**: 1.2.0 - ChromaDB Bootstrap
+**Current Version**: 1.2.0-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.2.0 - ChromaDB Bootstrap
+**Next**: 1.3.0 - Phase 3 Completion: View Filter Hardening
 ---
 ## What Was Last Done
+**Phase 1.2.0** opens ChromaDB bootstrap:
+- ingest_docs.py reads docs BOM-safe (utf-8-sig), uses cosine space, and indexes CODEBASE_GRAPH.md
+- validate.ps1 auto-starts ChromaDB on :8000, ingests docs, and FAILs loudly if unreachable
+- chroma-data is created and ingested on the first validate run; query_docs.py returns real tidy_docs chunks
 **Phase 1.1.4** opens graph routing usage hardening:
 - Requires Graph Routing Summary before implementation prompts
 - Makes graph-selected file choices visible

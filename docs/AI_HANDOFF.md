@@ -1,10 +1,15 @@
-<!-- Current Version: 1.0.11 -->
+<!-- Current Version: 1.0.12-alpha -->
 # AI Handoff
-**Current Version**: 1.0.11 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.0.11 - Session Continuity and Bounded Initiative
+**Current Version**: 1.0.12-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.0.12 - Phase Identity Sync
 **Next**: 1.1.0 - Graphify Integration
 ---
 ## What Was Last Done
+**Phase 1.0.12** opens phase identity and roadmap closeout sync:
+- Corrects stale 1.0.11 FUTURE_PLANS state
+- Updates the Doc Continuity Model for phase identity, next phase, and roadmap closeout
+- Extends `scripts/promote.ps1` to close FUTURE_PLANS during stable promotion
+- Extends `scripts/validate.ps1` to catch stale phase/backlog drift
 **Phase 1.0.11** opened session continuity and bounded initiative:
 - Added a Session Continuity section to `AGENTS.md` (proactively offer a SESSION_LOG checkpoint before context loss)
 - Added a Working Posture section to `AGENTS.md` (strict rails + active initiative)
@@ -44,8 +49,8 @@
 `master`
 ## What the Next Session Should Do
 1. Read `STATE.json` and `docs/FUTURE_PLANS.md`
-2. Query ChromaDB: `python scripts/query_docs.py "Graphify Integration v1.1.0"`
-3. Scope out v1.1.0 - Graphify Integration
+2. Query ChromaDB: `python scripts/query_docs.py "Phase Identity Sync v1.0.12 roadmap closeout"`
+3. Finish or validate v1.0.12 - Phase Identity Sync while this phase is alpha
 ---
 
 ## Current Product Snapshot

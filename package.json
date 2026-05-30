@@ -1,9 +1,10 @@
 {
   "name": "todo-app",
-  "version": "1.0.13",
+  "version": "1.1.0-alpha",
   "private": true,
   "scripts": {
     "chroma": "chroma run --path ./chroma-data",
+    "graph:codebase": "powershell -ExecutionPolicy Bypass -File scripts/generate-codebase-graph.ps1",
     "dev": "next dev",
     "build": "prisma generate && next build",
     "postinstall": "prisma generate",

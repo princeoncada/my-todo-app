@@ -342,13 +342,40 @@ if ($graphErrors.Count -eq 0) {
     Add-Result "codebase graph" $false ($graphErrors -join "; ")
 }
 
-# ChromaDB
+# ChromaDB - auto-start if needed, then ingest docs (FAIL loudly if unreachable)
 if (-not $SkipChroma) {
+    $chromaUri = "http://localhost:8000/api/v2/heartbeat"
+    $chromaReady = $false
     try {
-        $null = Invoke-WebRequest -Uri "http://localhost:8000/api/v2/heartbeat" -TimeoutSec 3 -UseBasicParsing -ErrorAction Stop
-        Add-Result "ChromaDB" $true "running"
+        $null = Invoke-WebRequest -Uri $chromaUri -TimeoutSec 3 -UseBasicParsing -ErrorAction Stop
+        $chromaReady = $true
     } catch {
-        Add-Result "ChromaDB" $true "not running, skipped"
+        $chromaCmd = Get-Command chroma -ErrorAction SilentlyContinue
+        if ($chromaCmd) {
+            $chromaDataPath = Join-Path (Split-Path -Parent $PSScriptRoot) "chroma-data"
+            Start-Process -FilePath $chromaCmd.Source -ArgumentList @("run", "--path", $chromaDataPath) -WindowStyle Hidden
+            $retries = 0
+            while (-not $chromaReady -and $retries -lt 15) {
+                Start-Sleep -Seconds 1
+                $retries++
+                try {
+                    $null = Invoke-WebRequest -Uri $chromaUri -TimeoutSec 2 -UseBasicParsing -ErrorAction Stop
+                    $chromaReady = $true
+                } catch { }
+            }
+        }
+    }
+
+    if (-not $chromaReady) {
+        Add-Result "ChromaDB" $false "unreachable on :8000 and could not auto-start (install chroma, or run with -SkipChroma)"
+    } else {
+        $ingestOut = & python "scripts/ingest_docs.py" 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            $ingestLine = @($ingestOut | Where-Object { $_ -match "Ingested\s+\d+\s+chunks" })[0]
+            Add-Result "ChromaDB" $true ($(if ($ingestLine) { ($ingestLine -replace '\s+', ' ').Trim() } else { "ingested" }))
+        } else {
+            Add-Result "ChromaDB" $false ("ingest failed: " + (($ingestOut | Out-String).Trim()))
+        }
     }
 }
 

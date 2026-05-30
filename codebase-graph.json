@@ -1,6 +1,6 @@
 {
   "schemaVersion": "tidy-codebase-graph/v1",
-  "version": "1.1.1",
+  "version": "1.1.2-alpha",
   "generatedAt": "2026-05-29",
   "generator": "scripts/generate_codebase_graph.py fallback scanner",
   "graphify": {
@@ -1969,6 +1969,22 @@
       "extension": ".md",
       "symbols": [
         "safety"
+      ],
+      "imports": []
+    },
+    {
+      "path": "scripts/audit-codebase-graph.ps1",
+      "kind": "script",
+      "extension": ".ps1",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/audit_codebase_graph.py",
+      "kind": "script",
+      "extension": ".py",
+      "symbols": [
+        "expected"
       ],
       "imports": []
     },

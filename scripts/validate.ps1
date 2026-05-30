@@ -85,6 +85,13 @@ function Get-FirstPlannedHeading {
     return ""
 }
 
+function Normalize-CodebaseGraph {
+    param([string]$Path)
+    $graph = Get-Content $Path -Raw -Encoding UTF8 | ConvertFrom-Json
+    $graph.generatedAt = "<normalized>"
+    return ($graph | ConvertTo-Json -Depth 100)
+}
+
 Write-Host "`n=== Tidy Validation === $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -ForegroundColor Cyan
 
 # STATE.json
@@ -201,6 +208,124 @@ if (Test-Path "STATE.json") {
     }
 } else {
     Add-Result "phase/roadmap consistency" $false "STATE.json missing"
+}
+
+# Codebase graph freshness and structure
+$graphErrors = @()
+$requiredGraphFiles = @(
+    "scripts/generate-codebase-graph.ps1",
+    "scripts/generate_codebase_graph.py",
+    ".graphifyignore",
+    "docs/CODEBASE_GRAPH.md",
+    "codebase-graph.json"
+)
+
+foreach ($requiredGraphFile in $requiredGraphFiles) {
+    if (-not (Test-Path $requiredGraphFile)) {
+        $graphErrors += "$requiredGraphFile missing"
+    }
+}
+
+if (Test-Path "package.json") {
+    try {
+        $pkg = Get-Content "package.json" -Raw -Encoding UTF8 | ConvertFrom-Json
+        if (-not $pkg.scripts.'graph:codebase') {
+            $graphErrors += "package.json missing graph:codebase script"
+        }
+    } catch {
+        $graphErrors += "package.json could not be parsed"
+    }
+} else {
+    $graphErrors += "package.json missing"
+}
+
+$graph = $null
+if (Test-Path "codebase-graph.json") {
+    try {
+        $graph = Get-Content "codebase-graph.json" -Raw -Encoding UTF8 | ConvertFrom-Json
+    } catch {
+        $graphErrors += "codebase-graph.json could not be parsed as JSON"
+    }
+}
+
+if ($graph) {
+    if ($graph.schemaVersion -ne "tidy-codebase-graph/v1") {
+        $graphErrors += "codebase-graph.json schemaVersion is '$($graph.schemaVersion)'"
+    }
+    if (Test-Path "STATE.json") {
+        try {
+            $graphState = Get-Content "STATE.json" -Raw -Encoding UTF8 | ConvertFrom-Json
+            if ($graph.version -ne $graphState.version) {
+                $graphErrors += "codebase-graph.json version '$($graph.version)' does not match STATE.json '$($graphState.version)'"
+            }
+        } catch {
+            $graphErrors += "STATE.json could not be parsed for graph version check"
+        }
+    }
+
+    $readFirst = @($graph.readFirst)
+    if ($readFirst -notcontains "STATE.json") {
+        $graphErrors += "codebase-graph.json readFirst missing STATE.json"
+    }
+    if ($readFirst -notcontains "codebase-graph.json") {
+        $graphErrors += "codebase-graph.json readFirst missing codebase-graph.json"
+    }
+
+    $protectedNodeRoots = @(
+        "app/generated/prisma",
+        "node_modules",
+        ".next",
+        "graphify-out",
+        "chroma-data"
+    )
+    $nodePaths = @($graph.nodes | ForEach-Object { $_.path })
+    foreach ($protectedNodeRoot in $protectedNodeRoots) {
+        $badNode = @($nodePaths | Where-Object { $_ -eq $protectedNodeRoot -or $_ -like "$protectedNodeRoot/*" })
+        if ($badNode.Count -gt 0) {
+            $graphErrors += "codebase-graph.json includes protected node path under $protectedNodeRoot"
+        }
+    }
+}
+
+if (
+    (Test-Path "scripts/generate-codebase-graph.ps1") -and
+    (Test-Path "scripts/generate_codebase_graph.py") -and
+    (Test-Path "codebase-graph.json")
+) {
+    $tempGraph = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "tidy-codebase-graph-$([System.Guid]::NewGuid()).json")
+    $oldGraphOutput = $env:TIDY_CODEBASE_GRAPH_OUTPUT
+    try {
+        $env:TIDY_CODEBASE_GRAPH_OUTPUT = $tempGraph
+        $generatorOutput = & powershell -ExecutionPolicy Bypass -File "scripts/generate-codebase-graph.ps1" -FallbackOnly 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            $graphErrors += "fallback graph generator failed: $($generatorOutput -join ' ')"
+        } elseif (-not (Test-Path $tempGraph)) {
+            $graphErrors += "fallback graph generator did not write temp output"
+        } else {
+            try {
+                $currentGraph = Normalize-CodebaseGraph "codebase-graph.json"
+                $freshGraph = Normalize-CodebaseGraph $tempGraph
+                if ($currentGraph -ne $freshGraph) {
+                    $graphErrors += "codebase-graph.json is stale; run npm run graph:codebase"
+                }
+            } catch {
+                $graphErrors += "could not compare graph freshness: $($_.Exception.Message)"
+            }
+        }
+    } finally {
+        if ($null -eq $oldGraphOutput) {
+            Remove-Item Env:TIDY_CODEBASE_GRAPH_OUTPUT -ErrorAction SilentlyContinue
+        } else {
+            $env:TIDY_CODEBASE_GRAPH_OUTPUT = $oldGraphOutput
+        }
+        Remove-Item $tempGraph -ErrorAction SilentlyContinue
+    }
+}
+
+if ($graphErrors.Count -eq 0) {
+    Add-Result "codebase graph" $true "fresh"
+} else {
+    Add-Result "codebase graph" $false ($graphErrors -join "; ")
 }
 
 # ChromaDB

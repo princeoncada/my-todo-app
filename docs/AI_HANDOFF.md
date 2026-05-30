@@ -1,6 +1,6 @@
-<!-- Current Version: 1.2.1-alpha -->
+<!-- Current Version: 1.2.1 -->
 # AI Handoff
-**Current Version**: 1.2.1-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.2.1 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.2.1 - Graph Navigation Doc Consistency
 **Next**: 1.3.0 - Phase 3 Completion: View Filter Hardening
 ---

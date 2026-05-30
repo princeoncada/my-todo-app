@@ -107,6 +107,11 @@ Never do:
 - Batch multiple files into one commit
 - Add Co-Authored-By or any AI co-author trailer to commit messages
 
+When updating workflow docs involving assistant output, preserve copy-paste safety:
+- Code blocks must contain only content intended for the named target tool.
+- Do not place explanatory markdown inside runnable PowerShell command blocks.
+- Do not combine Codex prompt content and PowerShell commands in the same code block.
+
 ---
 
 ## Required Tests

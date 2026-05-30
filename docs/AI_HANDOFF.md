@@ -1,6 +1,6 @@
-<!-- Current Version: 1.0.12-alpha -->
+<!-- Current Version: 1.0.12 -->
 # AI Handoff
-**Current Version**: 1.0.12-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.0.12 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.0.12 - Phase Identity Sync
 **Next**: 1.1.0 - Graphify Integration
 ---

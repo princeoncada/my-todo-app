@@ -68,7 +68,7 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.1.1-alpha
+- **Current version:** 1.1.1
 - **Current phase:** 1.1.1 - Graph Stable Refresh Fix
 - **Next phase:** 1.2.0 - ChromaDB Bootstrap
 
@@ -130,7 +130,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
-| 1.1.1 | alpha | 2026-05-29 | Graph Stable Refresh Fix | Fixes stable promotion graph freshness by regenerating and verifying codebase-graph.json during promote.ps1. |
+| 1.1.1 | stable | 2026-05-29 | Graph Stable Refresh Fix | Fixes stable promotion graph freshness by regenerating and verifying codebase-graph.json during promote.ps1. |
 | 1.1.0 | stable | 2026-05-29 | Graphify Integration | Adds Graphify/fallback codebase graph generation, committed codebase-graph.json, startup graph orientation, and validate graph freshness checks. |
 | 1.0.13 | stable | 2026-05-29 | Prompt and Commit Output Format Hardening | Hardens copy-paste-safe output rules for Codex prompts, validation blocks, alpha commit blocks, stable promotion commit blocks, and push blocks. |
 | 1.0.12 | stable | 2026-05-29 | Phase Identity Sync | Adds phase identity and roadmap closeout guards; promote.ps1 closes the promoted roadmap item in FUTURE_PLANS.md; validate.ps1 catches stale phase/backlog drift. |

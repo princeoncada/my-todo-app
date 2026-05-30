@@ -127,6 +127,14 @@ Do not read `docs/WORKFLOW.md` at startup. Read it only when writing or reviewin
 
 When validation checks fail after a Codex implementation, Claude Code must provide a fix master prompt immediately. Never ask the user to authorize direct implementation.
 
+## Codex Validation Boundary
+
+- Codex does implementation only.
+- Validation is user/controller-run, not Codex-run.
+- Codex must not report validation results unless the user provided those results.
+- If Codex says it ran validation despite instructions, treat the response as workflow drift and correct docs before continuing.
+- Assistant responses should not ask Codex to self-verify by running commands.
+
 ## Implementation Gate
 
 Claude Code may implement directly **only** when the user provides this exact phrase:
@@ -159,7 +167,7 @@ Do not broadly inspect the repo unless the task cannot be understood from the AI
 
 ## Required Test Workflow
 
-Every Codex implementation must update or add tests in the same branch. Before coding, identify the happy path, common cases, edge cases, unit coverage, and E2E coverage. After coding, run `npm run test:ci` and report exact results. Do not mark complete if tests were not added or updated unless clearly justified.
+Every Codex implementation must update or add tests in the same branch when behavior changes. Before coding, identify the happy path, common cases, edge cases, unit coverage, and E2E coverage. After coding, provide the required validation commands for the user/controller to run. Codex must not run validation, npm test scripts, graph audit, build, git, or commit commands, and must not claim checks passed unless the user provided the output.
 
 Use `docs/CODEX_RULES.md` (Required Tests section) as the source of truth for test commands, the manual regression checklist, and definition of done.
 

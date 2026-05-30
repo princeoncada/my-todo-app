@@ -82,18 +82,17 @@ Before this strategy: opening entrypoint + all feature docs + phase logs at sess
 
 ---
 
-## Graphify Code Navigation (Phase 1.1.0  -  Planned)
+## Graphify Code Navigation
 
-After Graphify integration (v1.1.0):
+tidy's graph is the committed `codebase-graph.json` (a normalized symbol/import
+map). It is a static artifact, not a live service:
 
-1. Read `codebase-graph.json` before touching source files  -  compact normalized symbol map
-2. Use `graphify-out/GRAPH_REPORT.md` for orientation-heavy or multi-file features
-3. Run `graphify query . "<symbol>"` for BFS traversal to locate related files
-4. Use `graphify explain . "<nodeName>"` for details on a specific symbol
+1. Read `codebase-graph.json` before touching source files to pick the smallest direct-read set
+2. For deeper orientation, read more of `codebase-graph.json` or the source files it points to
+3. Regenerate it with `npm run graph:codebase` after layout changes; `validate.ps1` gates freshness
+4. Do NOT run the live graphify CLI (`graphify query`, `graphify path`, `graphify explain`); tidy does not generate `graphify-out/`, so those commands error here
 
-Graphify is keyword/BFS-based  -  not semantic. Use it to find nodes by name, not to answer "what handles X" style questions. For those, use ChromaDB (`query_docs.py`) or read the appropriate feature doc.
-
-Graphify setup instructions will be added to `docs/CODEX_RULES.md` after Phase 1.1.0 is complete.
+The graph maps files/symbols by name, not meaning. Use it to find which file owns a symbol, not to answer "what handles X" questions. For those, use ChromaDB (`query_docs.py`) or read the appropriate doc.
 
 ---
 

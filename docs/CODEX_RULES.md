@@ -7,7 +7,7 @@ Standing ruleset for every Codex implementation session. Read this before writin
 ## Never Do (Absolute)
 
 - Do not commit, push, or create branches
-- Do not run `npm run test:ci`, `npm run build`, or any validation scripts
+- Do not run `npm run test:ci`, `npm run build`, validation scripts, graph audit commands, git commands, or commit commands
 - Do not modify `app/generated/prisma` (generated Prisma output)
 - Do not modify lockfiles unless the package manager automatically requires it for an explicitly requested dependency change
 - Do not update package versions unless explicitly asked
@@ -68,7 +68,7 @@ Unless the task specifically changes these areas, never touch:
 6. Read the active phase log from `docs/PHASE_LOG.md` (if implementing phase work)
 7. Read 2 - 3 source files directly relevant to the change
 8. Make the code change and matching test change in the same branch
-9. Validate: `npm run test:ci` after implementation (user runs this, not Codex)
+9. Identify the validation commands required after implementation and provide them for the user/controller to run
 10. Update `docs/AI_HANDOFF.md` if invariants or risks changed; update `docs/FUTURE_PLANS.md` for new gaps
 
 ## Graphify / Codebase Graph
@@ -81,6 +81,18 @@ Unless the task specifically changes these areas, never touch:
   solely from freshness; use the audit harness to prove required graph nodes and
   routing metadata exist.
 - Do not expand startup reads just to prove graph quality.
+
+## Validation Boundary
+
+Validation is user/controller-run, not Codex-run.
+
+- Provide validation commands only; do not execute them.
+- Codex must not claim validation passed unless the user provided the output.
+- Do not include a "Verified directly" section in Codex output.
+- Do not write "validated directly", "tests passed", "audit passed", or similar language unless those results were provided by the user in the same conversation.
+- Codex implementation summaries must include `Validation not run by Codex` and `Commands for user/controller to run`.
+- Codex may state that validation was not run because Codex is prohibited from running validation.
+- Codex must provide graph audit, build, test, and validation commands as user/controller instructions only.
 
 ---
 
@@ -131,7 +143,8 @@ When updating workflow docs involving assistant output, preserve copy-paste safe
 Every implementation PR must:
 - Update or add tests in the same branch
 - Before coding: identify happy path, common cases, edge cases, unit coverage, and E2E coverage
-- After coding: run `npm run test:ci` and report exact results
+- After coding: identify the required validation commands and provide them for the user/controller to run
+- Not claim validation, test, build, or audit commands passed unless the user/controller provided the output in the same conversation
 - Not mark complete if tests were not added or updated unless clearly justified with a documented reason
 
 Test commands:

@@ -1,8 +1,8 @@
-<!-- Current Version: 1.4.8-alpha -->
+<!-- Current Version: 1.4.8 -->
 # AI Handoff
-**Current Version**: 1.4.8-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.4.8 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.4.8 - Drag/Reorder Persistence Regression
-**Next**: 1.5.0 - Ownership Failure Test Baseline
+**Next**: 1.4.9 - Custom View Reorder E2E Stabilization
 ---
 ## What Was Last Done
 **Phase 1.3.2** completed ChatGPT architect real workflow test:
@@ -282,3 +282,4 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - Register submit button says "Login" (wrong copy)
 - Landing page typo "optimisic" + generic "Simple Todo App" branding
 - `apple-icon.png` referenced in metadata but missing from `public/`
+

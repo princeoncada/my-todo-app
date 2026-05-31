@@ -1,6 +1,6 @@
 {
-    "version":  "1.4.4-alpha",
-    "state":  "alpha",
+    "version":  "1.4.4",
+    "state":  "stable",
     "phase":  "1.4.4",
     "phaseTitle":  "Open Phase Roadmap Status Automation",
     "nextPhase":  "1.4.5 - Tag Mutation Projection Regression",

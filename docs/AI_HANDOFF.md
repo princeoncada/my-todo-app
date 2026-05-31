@@ -1,8 +1,8 @@
-<!-- Current Version: 1.4.6 -->
+<!-- Current Version: 1.4.7-alpha -->
 # AI Handoff
-**Current Version**: 1.4.6 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.4.6 - View Switching Race Regression
-**Next**: 1.4.7 - Create List + Create Item Race Regression
+**Current Version**: 1.4.7-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.4.7 - Create List + Create Item Race Regression
+**Next**: 1.4.8 - Drag/Reorder Persistence Regression
 ---
 ## What Was Last Done
 **Phase 1.3.2** completed ChatGPT architect real workflow test:
@@ -132,13 +132,13 @@
 - **Phase 3: View Filter Hardening** - in progress, active on `checkpoint/fix-cross-view-list-moves` (checkpoint 3 of 6 complete; final manual-regression documentation is a merge-gate step, not an implementation checkpoint)
 ## Active Branch
 `master`
-## Current 1.4.6 Context
-1.4.6 hardens fast view switching so older selected-view payloads and older selection rollback paths cannot repaint the dashboard after the user has selected a newer view. The latest-selected-view guard lives in `lib/dashboard-cache.ts` and is used by `ViewsSidebarPreview` plus `ListsContainer` before writing selected-view payloads into the current-view cache.
+## Current 1.4.7 Context
+1.4.7 hardens create-list plus immediate item-create by centralizing optimistic-list reconciliation in `lib/dashboard-cache.ts`. `reconcileCreatedListInSnapshot` replaces saved optimistic lists while preserving locally added optimistic items, relevant tags, and the optimistic order position, and removes duplicate optimistic rows for the saved list id.
 
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
-2. If 1.4.6 is stable, scope `1.4.7 - Create List + Create Item Race Regression`.
-3. Use the 1.4.0 reproduction tests, the 1.4.2 backend membership contract, the 1.4.3 dashboard projection contract, the 1.4.5 tag mutation affected-view contract, and the 1.4.6 latest-selected-view guard as the source for expected optimistic behavior.
+2. If 1.4.7 is stable, scope `1.4.8 - Drag/Reorder Persistence Regression`.
+3. Use the 1.4.0 reproduction tests, the 1.4.2 backend membership contract, the 1.4.3 dashboard projection contract, the 1.4.5 tag mutation affected-view contract, the 1.4.6 latest-selected-view guard, and the 1.4.7 create-list/create-item regression coverage as the source for expected optimistic behavior.
 4. Do not use `docs/PHASE_LOG.md` as active phase guidance; it is historical only.
 5. Do not create a product audit doc by default; capture product behavior through tests, FUTURE_PLANS acceptance criteria, AI_HANDOFF risks, and DECISIONS only for durable architecture choices.
 6. Keep all generated implementation prompts prompt-fence safe.
@@ -191,6 +191,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - Dashboard cache key aliases: `views` -> `view.getAll`, `allLists` -> `view.getViewListsWithItems({ viewId: allListsView.id })`, `currentView` -> `view.getCurrentViewListsWithItems`, `selectedView` -> `view.getViewListsWithItems({ viewId: selectedViewId })`
 - Projection: `ALL_LISTS` returns all lists; `CUSTOM` filters with `listMatchesView` using `ALL`/`ANY` match modes and zero-tag custom views match no lists; `UNTAGGED` returns only lists without tags; projected views apply per-view order from `ViewList` with list order fallback
 - Latest-selected-view guard: selected-view payloads and selection rollbacks must match the currently latest requested view before writing `currentView`
+- Created-list reconciliation preserves optimistic child items/tags/order when the saved list replaces an optimistic list in dashboard caches
 
 **Optimistic updates:**
 - Dashboard writes cache first, queues server saves second
@@ -200,7 +201,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - Use `enqueue` for every action that must persist
 - Active scopes: `views`, `list-tags`, `list-order`, `item-order`, `view-selection`, `list-edits`, `item-edits`
 - Optimistic markers: `isOptimistic: true` on list/item shapes; `userId: "optimistic"` on view shapes
-- List creation race: `ListComponent` waits for the optimistic list to be replaced by the saved server row before sending item creation requests
+- List creation race: `ListComponent` waits for the optimistic list to be replaced by the saved server row before sending item creation requests; regression coverage protects immediate item creation after list creation
 
 **Views and tags:**
 - Custom view membership is materialized in `ViewList` rows - not computed at read time
@@ -253,7 +254,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - `listItem.getListItems` - filters by `listId` only, no `parentList.userId` check
 
 **Optimistic race scenarios (manual testing only):**
-- Optimistic list creation followed by immediate item/tag changes before server save
+- Optimistic list creation followed by immediate item/tag changes before server save; immediate item creation is covered by cache helper unit tests and an E2E reload regression
 - Fast view switching is guarded by latest-selected-view checks; keep regression coverage for stale payloads and stale rollback
 - Reorders involving optimistic-only rows - IDs must be filtered before sending to server
 - Tag deletes or toggles that affect custom view membership mid-operation

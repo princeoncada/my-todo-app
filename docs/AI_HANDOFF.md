@@ -1,6 +1,6 @@
-<!-- Current Version: 1.2.6-alpha -->
+<!-- Current Version: 1.2.6 -->
 # AI Handoff
-**Current Version**: 1.2.6-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.2.6 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.2.6 - Roadmap Next-Phase Gate
 **Next**: 1.3.0 - ChatGPT Architect Local Context Workflow
 ---

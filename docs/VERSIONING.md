@@ -80,7 +80,7 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.2.6-alpha
+- **Current version:** 1.2.6
 - **Current phase:** 1.2.6 - Roadmap Next-Phase Gate
 - **Next phase:** 1.3.0 - ChatGPT Architect Local Context Workflow
 
@@ -142,7 +142,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
-| 1.2.6 | alpha | 2026-05-30 | Roadmap Next-Phase Gate | (in progress) |
+| 1.2.6 | stable | 2026-05-30 | Roadmap Next-Phase Gate | (in progress) |
 | 1.2.5 | stable | 2026-05-30 | Phase Routing Guardrail Cleanup | (in progress) |
 | 1.2.4 | stable | 2026-05-30 | Handoff Drift Cleanup | (in progress) |
 | 1.2.3 | stable | 2026-05-30 | Startup Oracle Cleanup | Removed preVersioningBaseline from STATE.json, kept pre-versioning history in VERSIONING/PHASE_LOG, added Planned Phase Capture rules, and inserted 1.2.4/1.2.5 cleanup patches before 1.3.0. |

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "tidy-codebase-graph/v1",
-  "version": "1.4.5",
+  "version": "1.4.6-alpha",
   "generatedAt": "2026-05-31",
   "generator": "scripts/generate_codebase_graph.py fallback scanner",
   "graphify": {
@@ -1428,6 +1428,9 @@
         "listMatchesView",
         "projectView",
         "selectedViewFromCache",
+        "isLatestSelectedView",
+        "canApplySelectedViewPayload",
+        "canRollbackViewSelection",
         "applyViewSelectionToViews",
         "applyViewSelection",
         "updateListInDashboardCaches",
@@ -1439,10 +1442,7 @@
         "reconcileAffectedViewLists",
         "rollbackScope",
         "setDashboardQueryDataOnce",
-        "updateListInViewSnapshot",
-        "keyHash",
-        "requiredTagIds",
-        "listTagIds"
+        "updateListInViewSnapshot"
       ],
       "imports": [
         "@tanstack/react-query",
@@ -2356,6 +2356,8 @@
         "queryClient",
         "keys",
         "defaultView",
+        "olderPayload",
+        "latestPayload",
         "DashboardSnapshot",
         "ViewsCache"
       ],

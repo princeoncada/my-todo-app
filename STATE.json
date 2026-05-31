@@ -1,9 +1,9 @@
 {
-    "version":  "1.4.5",
-    "state":  "stable",
-    "phase":  "1.4.5",
-    "phaseTitle":  "Tag Mutation Projection Regression",
-    "nextPhase":  "1.4.6 - View Switching Race Regression",
+    "version":  "1.4.6-alpha",
+    "state":  "alpha",
+    "phase":  "1.4.6",
+    "phaseTitle":  "View Switching Race Regression",
+    "nextPhase":  "1.4.7 - Create List + Create Item Race Regression",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-31"
 }

@@ -69,9 +69,9 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.2.4
-- **Current phase:** 1.2.4 - Handoff Drift Cleanup
-- **Next phase:** 1.2.5 - Phase Routing Guardrail Cleanup
+- **Current version:** 1.2.5-alpha
+- **Current phase:** 1.2.5 - Phase Routing Guardrail Cleanup
+- **Next phase:** 1.3.0 - ChatGPT Architect Local Context Workflow
 
 ---
 
@@ -131,6 +131,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.2.5 | alpha | 2026-05-30 | Phase Routing Guardrail Cleanup | (in progress) |
 | 1.2.4 | stable | 2026-05-30 | Handoff Drift Cleanup | (in progress) |
 | 1.2.3 | stable | 2026-05-30 | Startup Oracle Cleanup | Removed preVersioningBaseline from STATE.json, kept pre-versioning history in VERSIONING/PHASE_LOG, added Planned Phase Capture rules, and inserted 1.2.4/1.2.5 cleanup patches before 1.3.0. |
 | 1.2.2 | stable | 2026-05-30 | Chroma Visibility Fix | Fixed ChromaDB visibility in startup/validation flow and kept fallback behavior explicit when ChromaDB is unavailable. |

@@ -1,10 +1,16 @@
-<!-- Current Version: 1.3.0 -->
+<!-- Current Version: 1.3.1-alpha -->
 # AI Handoff
-**Current Version**: 1.3.0 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.3.0 - ChatGPT Architect Local Context Workflow
+**Current Version**: 1.3.1-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.3.1 - ChatGPT Architect Workflow Proof and Layout Review
 **Next**: 1.4.0 - Phase 3 Completion: View Filter Hardening
 ---
 ## What Was Last Done
+**Phase 1.3.0** completed ChatGPT architect local context workflow:
+- Added ChatGPT Architect Mode
+- Added Local Evidence Packet requirements
+- Documented local ChromaDB and local graph limitations
+- Required Codex prompts to state local evidence status
+- Added validation coverage for ChatGPT architect workflow docs
 **Phase 1.2.7** completed prompt fence safety hardening:
 - Documented that fenced master prompts must not contain nested fenced code blocks
 - Added safe alternatives using plain labels and indented command lines
@@ -119,10 +125,11 @@
 `master`
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
-2. If 1.3.0 is stable, request or confirm the Local Evidence Packet before scoping `1.4.0 - Phase 3 Completion: View Filter Hardening`.
-3. Do not scope source-heavy product work from remote GitHub state alone when local changes, ChromaDB output, or graph output may matter.
-4. Keep all generated implementation prompts prompt-fence safe.
-5. Do not include nested fenced code blocks inside fenced master prompts.
+2. Review `docs/CHATGPT_ARCHITECT_WORKFLOW_REVIEW.md` with the user.
+3. If 1.3.1 is stable and the user approves the workflow layout, request the Local Evidence Packet before scoping `1.4.0 - Phase 3 Completion: View Filter Hardening`.
+4. Do not scope 1.4.0 until the workflow layout is approved or revised.
+5. Keep all generated implementation prompts prompt-fence safe.
+6. Do not include nested fenced code blocks inside fenced master prompts.
 ---
 
 ## Architecture Boundary

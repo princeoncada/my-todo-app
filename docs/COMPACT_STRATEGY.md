@@ -28,7 +28,6 @@ Read `STATE.json` at session start. It contains everything needed to orient befo
 - `phase`  -  phase number
 - `phaseTitle`  -  what the current phase is about
 - `nextPhase`  -  what comes after
-- `preVersioningBaseline`  -  history of pre-1.0.0 phases
 
 Do not open `docs/VERSIONING.md` just to check the version. STATE.json is authoritative. Only read VERSIONING.md when you need the full history table or planned phases.
 

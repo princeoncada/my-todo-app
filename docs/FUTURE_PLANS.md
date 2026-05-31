@@ -64,12 +64,13 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.2.4 - Handoff Drift Cleanup (active) - see Planned
 ---
 
 ## Planned
 
 ### 1.2.4 - Handoff Drift Cleanup
-- **Status:** Open | Priority: P0 workflow anti-drift
+- **Status:** In progress | Priority: P0 workflow anti-drift
 - **Files:** docs/AI_HANDOFF.md, docs/VERSIONING.md, docs/PHASE_LOG.md
 - **Problem:** AI_HANDOFF contains stale next-session instructions pointing to completed 1.1.4 work; VERSIONING has a stable 1.2.2 row that still says in progress; PHASE_LOG has old 1.0.0 wording that says promotion is pending.
 - **Scope:** update handoff next-session instructions to point to the current cleanup sequence and then 1.3.0; fix stale historical wording without changing app behavior.

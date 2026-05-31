@@ -78,88 +78,237 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.3.3 - Docs Surface and Product Roadmap Rebaseline (active) - see Planned
 ---
 
 ## Planned
 
-### 1.4.0 - Phase 3 Completion: View Filter Hardening
-- **Status:** Open | Priority: projection correctness
-- **Phase log:** docs/PHASE_LOG.md (Phase 3)
-- **Problem:** Lists created in All Lists or custom views do not consistently appear in other custom views when filter tags match.
-- **Scope:** finish checkpoints 4-6; includes dashboard cache projection test coverage (selectedViewFromCache, projectView, list update/removal helpers, tag add/remove projection, view-selection projection).
-- **Acceptance:** All Lists shows all lists; ANY/ALL custom views correct; retag/create/move/reorder/refresh/switch deterministic; matching projection tests; no Dexie expansion, source-of-truth rewrite, drag/drop rewrite, or broad tRPC rewrite.
+### 1.3.3 - Docs Surface and Product Roadmap Rebaseline
+- **Status:** In progress | Priority: P0 roadmap correctness
+- **Files:** docs/FUTURE_PLANS.md, docs/PHASE_LOG.md, docs/WORKFLOW.md, docs/CODEX_RULES.md, docs/COMPACT_STRATEGY.md, docs/VERSIONING.md, docs/AI_HANDOFF.md, scripts/validate.ps1
+- **Problem:** The current product roadmap is too broad, keeps PHASE_LOG.md active as a legacy workflow surface, places UI/UX polish too early, and does not make each implementation phase explicitly test-backed.
+- **Scope:** retire PHASE_LOG.md from active workflow use; rebaseline FUTURE_PLANS into smaller test-backed product phases; move UI/UX polish later; update workflow docs so current product work uses FUTURE_PLANS, AI_HANDOFF, DECISIONS, and tests instead of adding new audit docs.
+- **Acceptance:** PHASE_LOG.md is marked historical only; active workflow docs no longer require updating PHASE_LOG.md for new versioned phases; FUTURE_PLANS contains the new smaller product phase sequence; every product implementation phase includes a useful test requirement; UI/UX polish is late; no new product audit document is added; no app behavior changes.
 
-### 1.5.0 - Ownership Hardening (Security)
-- **Status:** Open | Priority: P0/P1 security
-- **Files:** trpc/routers/listItemRouter.ts, components/list/ListsContainer.tsx, trpc/init.ts, trpc/routers/*.ts
-- **Problem:** listItem getListItems/renameListItem/deleteListItem/setCompletionListItem are protected but do not verify parentList.userId; reorderListItems does not verify target list ownership.
-- **Scope:** scope each listItem procedure through parentList.userId === ctx.userId (foreign ids -> FORBIDDEN/NOT_FOUND without mutating); reorder validates item ids AND target list ids before raw SQL (empty input still { success: true }); add ownership/API tests for list/listItem/tag/view ownership failures and unauthenticated -> UNAUTHORIZED.
-- **Acceptance:** optimistic rename/delete/completion shapes unchanged; cross-list moves among owned lists still work; tests repeatable and documented.
+### 1.4.0 - View Projection Reproduction Tests
+- **Status:** Open | Priority: P0 correctness test baseline
+- **Files:** tests/unit/dashboard-cache.test.ts, tests/e2e/views.spec.ts, tests/e2e/utils/*
+- **Problem:** View/list/tag projection bugs are currently too broad and under-specified. The app needs tests that reproduce the exact user-visible failures before implementation fixes begin.
+- **Scope:** add or update tests for list creation in All Lists, list creation inside custom views, matching tag add/remove behavior, custom view visibility, refresh persistence, and fast view switching.
+- **Acceptance:** tests describe the intended projection behavior; failures are explicit if current behavior is wrong; no broad implementation fix is bundled unless a tiny test harness adjustment is required.
 
-### 1.6.0 - Product Polish
-- **Status:** Open | Priority: P1/P2 UX + correctness
-- **Files:** app/layout.tsx, public/icon-clean.png, components/auth/Register.tsx, app/page.tsx
-- **Scope:** fix metadata/asset mismatch (metadata references /apple-icon.png missing from public/ - add the asset or update the reference); Register submit copy says "Login" -> account-creation language; fix landing typo "optimisic" and generic "Simple Todo App" branding.
-- **Acceptance:** metadata references existing assets only; no auth flow behavior change.
+### 1.4.1 - Backend View Membership Contract
+- **Status:** Open | Priority: P0 projection correctness
+- **Files:** trpc/routers/viewRouter.ts, trpc/routers/viewHelpers.ts, prisma/schema.prisma only if a proven relation bug requires it, tests/
+- **Problem:** Frontend projection and backend refresh can disagree because custom view membership is materialized in ViewList rows while the UI also derives membership from tags.
+- **Scope:** make backend view payloads match the same projection contract used by the frontend; decide whether ViewList remains membership plus order or becomes order metadata over tag-derived membership; update DECISIONS.md only if the durable architecture contract changes.
+- **Acceptance:** backend refresh returns the same visible lists the optimistic frontend projection expects; tests cover refresh correctness; no broad tRPC rewrite.
 
-### 1.7.0 - Cache & Tag Maintainability
-- **Status:** Open | Priority: P2 maintainability + consistency
-- **Files:** trpc/routers/tagRouter.ts, trpc/routers/viewHelpers.ts, components/list/ListAdder.tsx, components/list/ListsContainer.tsx, components/list/ListComponent.tsx, components/list/ListTagPicker.tsx, lib/dashboard-cache.ts
-- **Scope:** tag.removeFromList recompute once per logical remove; shared dashboard query-key helper (no key-shape change); replace string-matching invalidateViewPayloadQueries with typed/stable key matching.
-- **Acceptance:** optimistic + invalidation behavior unchanged; custom-view membership correct after tag remove.
+### 1.4.2 - Dashboard Cache Projection Contract
+- **Status:** Open | Priority: P0 frontend correctness
+- **Files:** lib/dashboard-cache.ts, components/list/ListAdder.tsx, components/list/ListsContainer.tsx, components/list/ListComponent.tsx, components/list/ListTagPicker.tsx, components/views/ViewsSidebarPreview.tsx, tests/
+- **Problem:** Multiple components manually write overlapping dashboard caches, which risks stale current-view, selected-view, and all-lists divergence.
+- **Scope:** route cross-component list/tag/view cache updates through shared dashboard-cache helpers; preserve query key shapes and optimistic UX; add regression tests for affected cache helpers.
+- **Acceptance:** All Lists, current view, and selected view caches stay consistent after create/rename/delete/tag changes; useful unit or E2E tests are added or updated.
 
-### 1.8.0 - Component Decomposition
-- **Status:** Open | Priority: P2 maintainability
-- **Files:** components/views/ViewsSidebarPreview.tsx, components/list/ListTagPicker.tsx, components/list/ListComponent.tsx, components/list/ListsContainer.tsx
-- **Scope:** extract small named hooks/helpers from the large dashboard components.
-- **Acceptance:** no query keys, mutation inputs, optimistic rollback behavior, or drag/drop invariants change.
+### 1.4.3 - Tag Mutation Projection Regression
+- **Status:** Open | Priority: P0 tag/view consistency
+- **Files:** trpc/routers/tagRouter.ts, trpc/routers/viewHelpers.ts, components/list/ListTagPicker.tsx, lib/dashboard-cache.ts, tests/
+- **Problem:** Tag add/remove/delete flows can leave affected custom views stale or duplicated because recompute and cache update paths are split.
+- **Scope:** make tag mutations reconcile affected custom views through one predictable path; preserve batching behavior; add tests for add/remove/delete and refresh persistence.
+- **Acceptance:** adding/removing/deleting tags updates all affected custom views; refresh matches the optimistic UI; tests prevent regressions.
 
-### 1.9.0 - Test Coverage Expansion
-- **Status:** Open | Priority: P2 correctness + regression prevention
-- **Files:** trpc/routers/viewHelpers.ts, tests/, components/list/*, components/views/*
-- **Scope:** view-helper recompute tests (empty tag sets, all-tags matching, previous-order preservation, all-lists fallback, no-match); E2E for list creation, tag changes affecting custom views, fast view switching, drag/drop reorder; documented auth/test-user setup.
-- **Acceptance:** tests repeatable; authenticated E2E setup documented.
+### 1.4.4 - View Switching Race Regression
+- **Status:** Open | Priority: P0 race correctness
+- **Files:** components/views/ViewsSidebarPreview.tsx, components/list/ListsContainer.tsx, lib/dashboard-cache.ts, tests/e2e/views.spec.ts
+- **Problem:** Fast view switching and late query responses can repaint the dashboard with stale data.
+- **Scope:** lock down current-view writes so late responses cannot overwrite the latest selected view; add tests or E2E coverage for fast switching and refresh.
+- **Acceptance:** latest selected view wins; stale fetches do not repaint the dashboard; tests cover the race or document why E2E is required.
 
-### 1.10.0 - Deploy Readiness
+### 1.4.5 - Create List + Create Item Race Regression
+- **Status:** Open | Priority: P0 optimistic correctness
+- **Files:** components/list/ListAdder.tsx, components/list/ListComponent.tsx, hooks/useOptimisticSync.ts, lib/dashboard-cache.ts, tests/e2e/list-items.spec.ts
+- **Problem:** Creating an item immediately after creating a list can break if the parent optimistic list has not reconciled with the server row.
+- **Scope:** test and harden the create-list-then-create-item flow; preserve the lightweight optimistic feel; avoid Dexie/source-of-truth expansion.
+- **Acceptance:** user can create a list and immediately add items; refresh keeps the list and items; regression tests cover the flow.
+
+### 1.4.6 - Drag/Reorder Persistence Regression
+- **Status:** Open | Priority: P1 reorder correctness
+- **Files:** components/list/ListsContainer.tsx, components/list/ListComponent.tsx, components/list/ListItemComponent.tsx, components/views/ViewsSidebarPreview.tsx, trpc/routers/listItemRouter.ts, trpc/routers/viewRouter.ts, tests/e2e/drag-drop.spec.ts
+- **Problem:** Reorder behavior must remain lightweight, optimistic, and persistent without rewriting caches during hover or sending optimistic-only IDs to the server.
+- **Scope:** prove drag/drop list, item, and view order persists after drop and refresh; preserve local-only hover behavior; add or update E2E regression coverage.
+- **Acceptance:** drag hover remains local; drop persists final order only; refresh shows the same order; regression tests cover list/item/view reorder.
+
+### 1.5.0 - Ownership Failure Test Baseline
+- **Status:** Open | Priority: P0 security test baseline
+- **Files:** trpc/routers/listItemRouter.ts, trpc/routers/*.ts, tests/
+- **Problem:** Ownership/security gaps need explicit tests before router fixes are made.
+- **Scope:** add tests for unauthenticated access, cross-user IDs, foreign list/item/tag/view IDs, and empty reorder input behavior.
+- **Acceptance:** tests identify current ownership expectations; failures are explicit if current code is unsafe.
+
+### 1.5.1 - List Item Ownership Fixes
+- **Status:** Open | Priority: P0 security
+- **Files:** trpc/routers/listItemRouter.ts, tests/
+- **Problem:** listItem getListItems, renameListItem, deleteListItem, and setCompletionListItem are protected but do not consistently verify parentList.userId.
+- **Scope:** verify parent list ownership before reading or mutating list items; preserve optimistic response shapes.
+- **Acceptance:** foreign IDs cannot mutate or read another user's data; owned flows still work; tests pass.
+
+### 1.5.2 - Reorder Target List Ownership Fix
+- **Status:** Open | Priority: P0 security
+- **Files:** trpc/routers/listItemRouter.ts, tests/
+- **Problem:** reorderListItems validates item ownership but must also verify every target listId belongs to the user before raw SQL updates.
+- **Scope:** validate item ids and target list ids before reorder; preserve empty input behavior as success; preserve owned cross-list moves.
+- **Acceptance:** foreign target lists are rejected without mutation; owned cross-list reorder works; tests cover both.
+
+### 1.5.3 - Ownership Regression Sweep
+- **Status:** Open | Priority: P1 security regression
+- **Files:** trpc/routers/*.ts, tests/
+- **Problem:** After targeted ownership fixes, the router surface needs a final regression sweep.
+- **Scope:** add or update coverage for list, listItem, tag, and view ownership failures; document remaining intentional gaps only if unavoidable.
+- **Acceptance:** ownership behavior is repeatable, tested, and safe enough before expanding API surface.
+
+### 1.6.0 - Optimistic Queue Race Test Baseline
+- **Status:** Open | Priority: P0 optimistic stability
+- **Files:** hooks/useOptimisticSync.ts, lib/dashboard-cache.ts, tests/
+- **Problem:** Most optimistic race behavior is not automatically proven, even though the app depends on optimistic-first UX.
+- **Scope:** add tests or test harnesses for enqueue, replacePending, rollback, cancellation, and independent mutation scopes.
+- **Acceptance:** test baseline captures current queue behavior and known race risks.
+
+### 1.6.1 - Scope Rollback Rules
+- **Status:** Open | Priority: P0 optimistic stability
+- **Files:** hooks/useOptimisticSync.ts, lib/dashboard-cache.ts, tests/
+- **Problem:** Rollbacks must not wipe unrelated newer optimistic work or repaint stale cache snapshots.
+- **Scope:** define and implement safer rollback rules per optimistic scope; add regression tests.
+- **Acceptance:** failed mutations only rollback their own intended changes; newer visible user actions are preserved.
+
+### 1.6.2 - Pending Mutation Cancellation Rules
+- **Status:** Open | Priority: P1 optimistic stability
+- **Files:** hooks/useOptimisticSync.ts, components/list/*, components/views/*, tests/
+- **Problem:** replacePending is correct for newest-state-wins flows, but unsafe if applied to actions where every mutation must persist.
+- **Scope:** review and test replacePending usage for reorder and view selection; keep enqueue for actions that must persist.
+- **Acceptance:** only newest-state-wins flows cancel earlier work; required user actions are not dropped.
+
+### 1.6.3 - Refresh/Crash Pending Work Decision
+- **Status:** Open | Priority: P1 local-first decision
+- **Files:** hooks/useOptimisticSync.ts, lib/local-db/*, docs/DECISIONS.md, docs/FUTURE_PLANS.md
+- **Problem:** In-memory queues can lose pending writes on refresh or crash.
+- **Scope:** decide whether to keep in-memory queues temporarily or begin Dexie-backed pending writes; record durable decision in DECISIONS.md if architecture changes.
+- **Acceptance:** future direction is explicit; no accidental half-offline rewrite.
+
+### 1.7.0 - Local DB Role Audit Through Tests
+- **Status:** Open | Priority: P1 local-first clarity
+- **Files:** lib/local-db/*, hooks/use-local-db-health-check.ts, tests/unit/*
+- **Problem:** Dexie/local DB exists as foundation but is not the dashboard source of truth.
+- **Scope:** prove what local DB currently does and does not do through tests; clarify that runtime behavior remains server/TanStack-driven unless later changed.
+- **Acceptance:** local DB role is tested and understood before offline integration work.
+
+### 1.7.1 - Outbox Replay Integration Test Plan
+- **Status:** Open | Priority: P2 offline architecture
+- **Files:** lib/local-db/sync-replay-client.ts, lib/sync/sync-endpoint-contract.ts, tests/
+- **Problem:** Outbox replay helpers exist but are not connected to real app mutations.
+- **Scope:** plan and test the integration contract before wiring replay into runtime behavior.
+- **Acceptance:** replay integration risks are covered by tests or explicit follow-up phases.
+
+### 1.7.2 - Offline Write Path Prototype
+- **Status:** Open | Priority: P2 offline prototype
+- **Files:** hooks/useOptimisticSync.ts, lib/local-db/*, lib/sync/*, tests/
+- **Problem:** Offline/PWA goals require a proven write path, but a broad source-of-truth rewrite is risky.
+- **Scope:** prototype the smallest safe offline write path; keep feature flags or isolation if needed.
+- **Acceptance:** prototype is tested, scoped, and does not silently replace dashboard source of truth.
+
+### 1.8.0 - Dashboard Component Responsibility Audit
+- **Status:** Open | Priority: P1 maintainability planning
+- **Files:** components/list/*, components/views/ViewsSidebarPreview.tsx, lib/dashboard-cache.ts
+- **Problem:** Large dashboard components increase risk for focused changes.
+- **Scope:** identify extraction targets and invariants without changing behavior.
+- **Acceptance:** extraction sequence is clear and test-backed; no extra product audit doc is added.
+
+### 1.8.1 - Extract Dashboard Query Key Helper
+- **Status:** Open | Priority: P1 maintainability
+- **Files:** lib/dashboard-cache.ts or new small helper, components/list/*, components/views/ViewsSidebarPreview.tsx, tests/
+- **Problem:** Query key construction is duplicated across components.
+- **Scope:** extract shared helper without changing key shapes.
+- **Acceptance:** query keys remain identical; tests or assertions prove no key-shape change.
+
+### 1.8.2 - Extract List Mutation Cache Helpers
+- **Status:** Open | Priority: P1 maintainability
+- **Files:** lib/dashboard-cache.ts, components/list/ListAdder.tsx, components/list/ListComponent.tsx, components/list/ListsContainer.tsx, tests/
+- **Problem:** List mutations duplicate cache logic.
+- **Scope:** move list mutation cache behavior into named helpers while preserving optimistic behavior.
+- **Acceptance:** existing behavior and tests remain stable; new or updated tests cover helper behavior.
+
+### 1.8.3 - Extract View Mutation Cache Helpers
+- **Status:** Open | Priority: P1 maintainability
+- **Files:** lib/dashboard-cache.ts, components/views/ViewsSidebarPreview.tsx, tests/
+- **Problem:** View mutation logic is concentrated in a large component.
+- **Scope:** extract view create/update/delete/select cache helpers.
+- **Acceptance:** view behavior, query keys, and rollback behavior do not change; tests cover extracted helpers.
+
+### 1.8.4 - Extract Tag Mutation Cache Helpers
+- **Status:** Open | Priority: P1 maintainability
+- **Files:** lib/dashboard-cache.ts, components/list/ListTagPicker.tsx, tests/
+- **Problem:** Tag mutation cache behavior is complex and easy to regress.
+- **Scope:** extract tag mutation cache helpers after projection behavior is stable.
+- **Acceptance:** affected custom views update correctly; tests cover helper behavior.
+
+### 1.9.0 - Deploy Env Documentation
 - **Status:** Open | Priority: P2 production readiness
 - **Files:** README.md, .env.example
-- **Scope:** document DATABASE_URL, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, NEXT_PUBLIC_SITE_URL; build/deploy steps note Prisma generate + migration expectations.
+- **Problem:** Deployment environment expectations must be clear before production use.
+- **Scope:** document DATABASE_URL, Supabase env vars, site URL, and local/prod differences.
+- **Acceptance:** new setup can follow docs without guessing.
 
-### 2.0.0 - Phase 4: Operation Coalescing
-- **Status:** Open | Priority: P3 architecture
-- **Files:** hooks/useOptimisticSync.ts, lib/dashboard-cache.ts
-- **Scope:** outbox coalescing + replay client wiring.
+### 1.9.1 - Build/Migration Readiness
+- **Status:** Open | Priority: P2 production readiness
+- **Files:** README.md, prisma/*, package.json only if needed
+- **Problem:** Build and migration expectations need a repeatable release path.
+- **Scope:** document Prisma generate, migration, and build steps.
+- **Acceptance:** production build/migration flow is clear and repeatable.
 
-### 2.1.0 - Phase 5: Rollback Safety
-- **Status:** Open | Priority: P3 architecture
-- **Files:** hooks/useOptimisticSync.ts, lib/dashboard-cache.ts
-- **Scope:** Dexie-backed rollback for optimistic write failures; durable optimistic sync/offline strategy (in-memory queues currently lose pending writes on refresh/crash).
+### 1.9.2 - Production Smoke Checklist
+- **Status:** Open | Priority: P2 production readiness
+- **Files:** README.md, docs/FUTURE_PLANS.md
+- **Problem:** Production changes need a small smoke checklist after deploy.
+- **Scope:** document login, dashboard load, create list, create item, tag view, reorder, and refresh smoke checks.
+- **Acceptance:** smoke checklist exists and does not duplicate full test docs.
 
-### 2.2.0 - Order Compaction
-- **Status:** Open | Priority: P3 long-term data health
-- **Files:** trpc/routers/listRouter.ts, trpc/routers/listItemRouter.ts, trpc/routers/viewRouter.ts, prisma/schema.prisma
-- **Scope:** compaction strategy for sparse/negative order values over long-lived accounts.
+### 1.10.0 - Copy and Metadata Hygiene
+- **Status:** Open | Priority: P3 late polish
+- **Files:** app/layout.tsx, public/*, README.md if needed
+- **Problem:** Metadata and public assets need cleanup, but this should happen after core behavior is trustworthy.
+- **Scope:** fix missing asset references and metadata consistency.
+- **Acceptance:** metadata references existing assets; no behavior change.
 
-### 3.0.0 - Phase 6: Scale Prep
-- **Status:** Open | Priority: P3 performance
-- **Files:** components/list/ListsContainer.tsx, trpc/routers/viewHelpers.ts, lib/dashboard-cache.ts
-- **Scope:** performance + query optimization; profile and optimize large accounts.
+### 1.10.1 - Auth Flow Copy Polish
+- **Status:** Open | Priority: P3 late polish
+- **Files:** components/auth/Register.tsx, auth components if needed
+- **Problem:** Auth copy should be clearer after core behavior is stable.
+- **Scope:** fix misleading copy such as Register submit language.
+- **Acceptance:** copy is clear; auth behavior unchanged.
 
-### 3.1.0 - Rate Limiting & Abuse Controls
-- **Status:** Open | Priority: P3 production hardening
-- **Files:** trpc/init.ts, trpc/routers/*.ts
-- **Scope:** rate limiting + abuse controls.
+### 1.10.2 - Landing Page Branding Polish
+- **Status:** Open | Priority: P3 late polish
+- **Files:** app/page.tsx
+- **Problem:** Landing copy and generic branding can be improved after product correctness.
+- **Scope:** fix typo and improve lightweight Tidy positioning.
+- **Acceptance:** copy improves without changing app behavior.
 
-### 3.2.0 - Phase 8: Observability
-- **Status:** Open | Priority: P3 operations
-- **Files:** hooks/useOptimisticSync.ts, trpc/routers/*.ts, lib/optimistic-debug.tsx
-- **Scope:** logging, error tracking, monitoring for API + sync failures.
+### 1.10.3 - Visual Review Pass
+- **Status:** Open | Priority: P3 late UI/UX
+- **Files:** components/list/*, components/views/ViewsSidebarPreview.tsx, app/page.tsx
+- **Problem:** Subjective UI/UX polish should be last because correctness matters first.
+- **Scope:** perform a small visual review pass only after state correctness, ownership, optimistic behavior, and tests are stable.
+- **Acceptance:** visual changes are small, reviewable, and do not alter data behavior.
 
 ---
 
 ## Potential Next Directions (unversioned)
 
 Assigned a version only when scoped.
+- Rate limiting and abuse controls
+- Observability
+- Scale/performance profiling
+- Order compaction
 - PWA manifest, icon set, service-worker plan (app/layout.tsx, public/*)
 - Mobile/touch drag-drop + responsive QA (components/list/*)
 - Accessibility + UI polish pass (components/list/*, components/views/ViewsSidebarPreview.tsx)
@@ -176,8 +325,9 @@ Assigned a version only when scoped.
 
 ## Known Cross-Cutting Risks
 
-- No automated tests prove most optimistic race behavior yet
-- PWA/offline is not implemented despite product goals
-- In-memory queues can lose pending writes on refresh or crash
-- Large components increase risk for focused changes
-- API ownership gaps (1.4.0) should land before expanding API surface area
+- No automated tests prove most optimistic race behavior yet.
+- PWA/offline is not implemented despite product goals.
+- In-memory queues can lose pending writes on refresh or crash.
+- Large components increase risk for focused changes.
+- API ownership gaps should land in 1.5.x before expanding API surface area.
+- Frontend projection and backend refresh must agree before UI/UX polish.

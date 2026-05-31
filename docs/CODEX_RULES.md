@@ -184,20 +184,15 @@ Manual dashboard regression checklist (run after any cache/optimistic/DnD change
 ## Documentation Update Requirements
 
 After every implementation:
-- Update `docs/AI_HANDOFF.md` if invariants, risks, data flow, or key files changed
-- Update `docs/FUTURE_PLANS.md`: mark completed items `Done`, add discovered bugs/risks, add follow-up tasks
+- Update `docs/AI_HANDOFF.md` if invariants, risks, data flow, key files, active branch, or next recommended action changed.
 - Update `docs/PHASE_LOG.md` when a phase checkpoint completes
-- Update `docs/AI_HANDOFF.md` when the active branch or next recommended action changes
 - If a decision changes, update `docs/DECISIONS.md`
+- Update `docs/FUTURE_PLANS.md` only when the prompt explicitly scopes roadmap maintenance, when adding discovered follow-up tasks/risks, or when recording a user-approved phase sequence.
+- Do not manually move items between Planned, In Progress, and Completed for versioning purposes unless the prompt explicitly scopes that roadmap maintenance.
+- Version open/close movement remains owned by `open-phase.ps1` and `promote.ps1`.
+- `docs/FUTURE_PLANS.md` remains roadmap state, not a sixth versioning location.
 
-When a user-approved phase sequence exists before implementation, the scoped phase must update `docs/FUTURE_PLANS.md` to reflect that sequence before product work continues.
-
-Rules:
-- Codex may update FUTURE_PLANS for explicitly scoped roadmap maintenance.
-- Codex must preserve monotonic version order.
-- Codex must not silently move roadmap items between Planned, In Progress, and Completed unless the prompt explicitly scopes that roadmap maintenance.
-- Version closeout remains handled by `promote.ps1`.
-- FUTURE_PLANS remains roadmap state, not a sixth versioning location.
+When a user-approved phase sequence exists before implementation, the scoped phase may update `docs/FUTURE_PLANS.md` to reflect that sequence before product work continues. Preserve monotonic version order and do not silently move roadmap items between Planned, In Progress, and Completed unless explicitly scoped.
 
 ---
 

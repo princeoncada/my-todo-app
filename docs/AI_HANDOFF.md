@@ -1,8 +1,8 @@
-<!-- Current Version: 1.4.2 -->
+<!-- Current Version: 1.4.3-alpha -->
 # AI Handoff
-**Current Version**: 1.4.2 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.4.2 - Backend View Membership Contract
-**Next**: 1.4.3 - Dashboard Cache Projection Contract
+**Current Version**: 1.4.3-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.4.3 - Dashboard Cache Projection Contract
+**Next**: 1.4.4 - Tag Mutation Projection Regression
 ---
 ## What Was Last Done
 **Phase 1.3.2** completed ChatGPT architect real workflow test:
@@ -132,13 +132,13 @@
 - **Phase 3: View Filter Hardening** - in progress, active on `checkpoint/fix-cross-view-list-moves` (checkpoint 3 of 6 complete; final manual-regression documentation is a merge-gate step, not an implementation checkpoint)
 ## Active Branch
 `master`
-## Current 1.4.2 Context
-1.4.2 defines the backend ViewList membership contract while preserving materialized custom view membership. Backend recompute now honors CUSTOM view `ALL` and `ANY` match modes; frontend dashboard-cache projection hardening remains next.
+## Current 1.4.3 Context
+1.4.3 defines the frontend dashboard-cache projection contract to match the backend membership rules from 1.4.2. Dashboard projection helpers now support `ALL_LISTS`, `CUSTOM` `ALL`/`ANY`, zero-tag custom views as empty, `UNTAGGED`, and projected list order from `ViewList.order` with list-order fallback.
 
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
-2. If 1.4.2 is stable, scope `1.4.3 - Dashboard Cache Projection Contract`.
-3. Use the 1.4.0 reproduction tests plus the 1.4.2 backend membership contract as the source for expected frontend projection behavior.
+2. If 1.4.3 is stable, scope `1.4.4 - Tag Mutation Projection Regression`.
+3. Use the 1.4.0 reproduction tests, the 1.4.2 backend membership contract, and the 1.4.3 dashboard projection contract as the source for expected tag mutation behavior.
 4. Do not use `docs/PHASE_LOG.md` as active phase guidance; it is historical only.
 5. Do not create a product audit doc by default; capture product behavior through tests, FUTURE_PLANS acceptance criteria, AI_HANDOFF risks, and DECISIONS only for durable architecture choices.
 6. Keep all generated implementation prompts prompt-fence safe.
@@ -189,7 +189,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - `ViewList.order` owns list order inside each view; `ListItem.order` owns item order inside each list
 - `View.order` owns custom view order
 - Dashboard cache key aliases: `views` -> `view.getAll`, `allLists` -> `view.getViewListsWithItems({ viewId: allListsView.id })`, `currentView` -> `view.getCurrentViewListsWithItems`, `selectedView` -> `view.getViewListsWithItems({ viewId: selectedViewId })`
-- Projection: `ALL_LISTS` returns all lists; `CUSTOM` filters with `listMatchesView` then applies per-view order from `ViewList`
+- Projection: `ALL_LISTS` returns all lists; `CUSTOM` filters with `listMatchesView` using `ALL`/`ANY` match modes and zero-tag custom views match no lists; `UNTAGGED` returns only lists without tags; projected views apply per-view order from `ViewList` with list order fallback
 
 **Optimistic updates:**
 - Dashboard writes cache first, queues server saves second
@@ -203,7 +203,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 
 **Views and tags:**
 - Custom view membership is materialized in `ViewList` rows - not computed at read time
-- Frontend projection and backend refresh must agree before UI/UX polish.
+- Frontend projection and backend refresh agree for dashboard-cache helper behavior before UI/UX polish.
 - Tag operations batch with a 150ms window via `pendingTagOperationsRef` in `ListTagPicker`; `tag.applyListTagChanges` is the preferred batch write path
 - View selection uses `replacePending`; only the newest in-flight fetch may write the current view cache after async completes
 - `tag.removeFromList` recomputes custom views twice (once inside transaction, once after) - known duplication; `applyListTagChanges` avoids this
@@ -257,12 +257,9 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - Reorders involving optimistic-only rows - IDs must be filtered before sending to server
 - Tag deletes or toggles that affect custom view membership mid-operation
 
-**View projection gaps (expected-failing 1.4.0 reproduction tests):**
-- ANY custom view matching currently behaves like ALL matching in dashboard projection helpers.
-- UNTAGGED view projection currently falls through to all lists instead of filtering to lists without tags.
 **Data model gaps:**
-- `ViewMatchMode.ANY` is supported by backend custom view recompute, but is not exposed in UI and still needs frontend dashboard-cache projection hardening.
-- `ViewType.UNTAGGED` exists in schema but is not implemented in UI or server logic.
+- `ViewMatchMode.ANY` is supported by backend custom view recompute and frontend dashboard-cache projection helpers, but is not exposed in UI.
+- `ViewType.UNTAGGED` exists in schema and frontend dashboard-cache projection helpers, but is not implemented as an exposed UI/server flow.
 - `tag.removeFromList` triggers duplicate custom view recompute (inside transaction + after)
 
 **Testing:**

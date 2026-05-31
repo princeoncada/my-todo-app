@@ -1,8 +1,8 @@
-<!-- Current Version: 1.4.4 -->
+<!-- Current Version: 1.4.5-alpha -->
 # AI Handoff
-**Current Version**: 1.4.4 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.4.4 - Open Phase Roadmap Status Automation
-**Next**: 1.4.5 - Tag Mutation Projection Regression
+**Current Version**: 1.4.5-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.4.5 - Tag Mutation Projection Regression
+**Next**: 1.4.6 - View Switching Race Regression
 ---
 ## What Was Last Done
 **Phase 1.3.2** completed ChatGPT architect real workflow test:
@@ -132,13 +132,13 @@
 - **Phase 3: View Filter Hardening** - in progress, active on `checkpoint/fix-cross-view-list-moves` (checkpoint 3 of 6 complete; final manual-regression documentation is a merge-gate step, not an implementation checkpoint)
 ## Active Branch
 `master`
-## Current 1.4.4 Context
-1.4.4 is a workflow automation cleanup for alpha roadmap state. `open-phase.ps1` should now mark both the In Progress entry and the matching Planned heading's `Status: In progress` line when opening or repairing an alpha phase.
+## Current 1.4.5 Context
+1.4.5 aligns tag mutation recompute and affected-view payloads with the backend membership contract and dashboard-cache projection contract. Tag mutations should use short write transactions first, then recompute affected custom views after the transaction and return refreshed affected view projection payloads.
 
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
-2. If 1.4.4 is stable, scope `1.4.5 - Tag Mutation Projection Regression`.
-3. Use the 1.4.0 reproduction tests, the 1.4.2 backend membership contract, and the 1.4.3 dashboard projection contract as the source for expected tag mutation behavior.
+2. If 1.4.5 is stable, scope `1.4.6 - View Switching Race Regression`.
+3. Use the 1.4.0 reproduction tests, the 1.4.2 backend membership contract, the 1.4.3 dashboard projection contract, and the 1.4.5 tag mutation affected-view contract as the source for expected view switching behavior.
 4. Do not use `docs/PHASE_LOG.md` as active phase guidance; it is historical only.
 5. Do not create a product audit doc by default; capture product behavior through tests, FUTURE_PLANS acceptance criteria, AI_HANDOFF risks, and DECISIONS only for durable architecture choices.
 6. Keep all generated implementation prompts prompt-fence safe.
@@ -205,8 +205,8 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - Custom view membership is materialized in `ViewList` rows - not computed at read time
 - Frontend projection and backend refresh agree for dashboard-cache helper behavior before UI/UX polish.
 - Tag operations batch with a 150ms window via `pendingTagOperationsRef` in `ListTagPicker`; `tag.applyListTagChanges` is the preferred batch write path
+- Tag mutations keep writes in short transactions, then recompute affected custom views and return refreshed affected view projection payloads.
 - View selection uses `replacePending`; only the newest in-flight fetch may write the current view cache after async completes
-- `tag.removeFromList` recomputes custom views twice (once inside transaction, once after) - known duplication; `applyListTagChanges` avoids this
 
 **Drag and drop:**
 - Drag ids: `list-${id}` (list card), `list-item-${id}` (item row), `list-drop-${id}` (list drop zone)
@@ -260,7 +260,6 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 **Data model gaps:**
 - `ViewMatchMode.ANY` is supported by backend custom view recompute and frontend dashboard-cache projection helpers, but is not exposed in UI.
 - `ViewType.UNTAGGED` exists in schema and frontend dashboard-cache projection helpers, but is not implemented as an exposed UI/server flow.
-- `tag.removeFromList` triggers duplicate custom view recompute (inside transaction + after)
 
 **Testing:**
 - Tests should protect every product implementation phase unless a phase is explicitly docs-only or test-only.

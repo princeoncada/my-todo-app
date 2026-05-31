@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.2.7 -->
+<!-- Current Version: 1.3.0-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -40,6 +40,40 @@ Run these steps at the start of every Claude Code session before asking for dire
 6. **Report findings**. Wait for explicit user direction before scoping or implementing.
 
 See `docs/COMPACT_STRATEGY.md` for token budget targets and the full context-minimization protocol.
+
+---
+
+### ChatGPT Architect Mode
+
+ChatGPT architect works from remote GitHub state plus pasted local evidence.
+Remote master is authoritative only after push. The local working tree is
+authoritative for uncommitted work, active branch edits, local ChromaDB output,
+local validation output, and regenerated graph output.
+
+Before source-heavy scoping, the user/controller must paste a Local Evidence
+Packet into ChatGPT chat. For docs-only roadmap/workflow phases, remote GitHub
+reads plus pasted validation output are usually sufficient. For product/source
+phases, ChatGPT must not scope from stale remote-only context when local changes
+matter. If the Local Evidence Packet is absent, ChatGPT must state whether the
+scope is remote-only.
+
+LOCAL EVIDENCE PACKET TEMPLATE:
+
+    git status --short
+    git log --oneline -5
+    Get-Content STATE.json
+    python scripts/query_docs.py "<question about the current task>"
+    npm run graph:codebase
+    git diff --stat
+
+OPTIONAL LOCAL EVIDENCE:
+
+    git diff -- <path>
+    Select-String -Path "docs\FUTURE_PLANS.md" -Pattern "<phase>"
+    Select-String -Path "docs\AI_HANDOFF.md" -Pattern "<topic>"
+
+Paste the packet into ChatGPT chat before scoping whenever local state can
+change the architecture decision or implementation prompt.
 
 ---
 

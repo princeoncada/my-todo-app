@@ -92,7 +92,7 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.3.1-alpha
+- **Current version:** 1.3.1
 - **Current phase:** 1.3.1 - ChatGPT Architect Workflow Proof and Layout Review
 - **Next phase:** 1.4.0 - Phase 3 Completion: View Filter Hardening
 
@@ -154,7 +154,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
-| 1.3.1 | alpha | 2026-05-30 | ChatGPT Architect Workflow Proof and Layout Review | (in progress) |
+| 1.3.1 | stable | 2026-05-30 | ChatGPT Architect Workflow Proof and Layout Review | (in progress) |
 | 1.3.0 | stable | 2026-05-30 | ChatGPT Architect Local Context Workflow | (in progress) |
 | 1.2.7 | stable | 2026-05-30 | Prompt Fence Safety Hardening | (in progress) |
 | 1.2.6 | stable | 2026-05-30 | Roadmap Next-Phase Gate | (in progress) |

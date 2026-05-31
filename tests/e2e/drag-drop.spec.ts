@@ -1,16 +1,46 @@
-import { test } from "@playwright/test";
+import { test, type Page } from "@playwright/test";
 
-import { createItem, createList } from "./utils/app";
-import { expectItemInList, expectItemNotInList, expectListOrder } from "./utils/assertions";
-import { dragByMouse } from "./utils/drag";
+import {
+  createItemInVisibleList,
+  createList,
+  createTag,
+  createView,
+  deleteView,
+  openAllLists,
+  waitForSuccessfulTrpcMutation,
+} from "./utils/app";
+import {
+  expectItemInList,
+  expectItemNotInList,
+  expectListOrder,
+  expectViewOrder,
+  getVisibleListCard,
+  getVisibleViewCard,
+} from "./utils/assertions";
+import { dragByMouseAndWaitForMutation } from "./utils/drag";
 import { cleanupNamedList, collectConsoleErrors, expectNoConsoleErrors, gotoDashboard, uniqueTestName } from "./utils/seed";
 import { testIds } from "./utils/test-ids";
 
 let consoleErrors: string[];
 
+async function createPersistedList(page: Page, name: string) {
+  const persisted = waitForSuccessfulTrpcMutation(page, "list.createList");
+
+  await createList(page, name);
+  await persisted;
+}
+
+async function createPersistedTag(page: Page, listName: string, tagName: string) {
+  const persisted = waitForSuccessfulTrpcMutation(page, "tag.create");
+
+  await createTag(page, listName, tagName);
+  await persisted;
+}
+
 test.beforeEach(async ({ page }) => {
   consoleErrors = collectConsoleErrors(page);
   await gotoDashboard(page);
+  await openAllLists(page);
 });
 
 test.afterEach(async () => {
@@ -20,17 +50,18 @@ test.afterEach(async () => {
 test("reorder lists if drag/drop is currently implemented", async ({ page }) => {
   const first = uniqueTestName("drag-list-first");
   const second = uniqueTestName("drag-list-second");
-  await createList(page, first);
-  await createList(page, second);
+  await createPersistedList(page, first);
+  await createPersistedList(page, second);
 
-  const firstCard = page.getByTestId(testIds.listCard).filter({ hasText: first }).first();
-  const secondCard = page.getByTestId(testIds.listCard).filter({ hasText: second }).first();
+  const firstCard = await getVisibleListCard(page, first);
+  const secondCard = await getVisibleListCard(page, second);
   await expectListOrder(page, [second, first]);
 
-  await dragByMouse(
+  await dragByMouseAndWaitForMutation(
     page,
     firstCard.getByTestId(testIds.listDragHandle),
-    secondCard.getByTestId(testIds.listDragHandle)
+    secondCard.getByTestId(testIds.listDragHandle),
+    "view.reorderViewLists"
   );
 
   await expectListOrder(page, [first, second]);
@@ -44,16 +75,17 @@ test("move item between lists if implemented", async ({ page }) => {
   const sourceList = uniqueTestName("move-source");
   const targetList = uniqueTestName("move-target");
   const itemName = uniqueTestName("move-item");
-  await createList(page, sourceList);
-  await createList(page, targetList);
-  await createItem(page, sourceList, itemName);
+  await createPersistedList(page, sourceList);
+  await createPersistedList(page, targetList);
+  await createItemInVisibleList(page, sourceList, itemName, { waitForPersistence: true });
 
   const item = page.getByTestId(testIds.listItem).filter({ hasText: itemName }).first();
-  const targetCard = page.getByTestId(testIds.listCard).filter({ hasText: targetList }).first();
-  await dragByMouse(
+  const targetCard = await getVisibleListCard(page, targetList);
+  await dragByMouseAndWaitForMutation(
     page,
     item.getByTestId(testIds.itemDragHandle),
-    targetCard.getByTestId(testIds.listDropZone)
+    targetCard.getByTestId(testIds.listDropZone),
+    "listItem.reorderListItems"
   );
 
   await expectItemNotInList(page, sourceList, itemName);
@@ -69,13 +101,18 @@ test("move item into empty list if implemented", async ({ page }) => {
   const sourceList = uniqueTestName("empty-move-source");
   const targetList = uniqueTestName("empty-move-target");
   const itemName = uniqueTestName("empty-move-item");
-  await createList(page, sourceList);
-  await createList(page, targetList);
-  await createItem(page, sourceList, itemName);
+  await createPersistedList(page, sourceList);
+  await createPersistedList(page, targetList);
+  await createItemInVisibleList(page, sourceList, itemName, { waitForPersistence: true });
 
   const item = page.getByTestId(testIds.listItem).filter({ hasText: itemName }).first();
-  const targetCard = page.getByTestId(testIds.listCard).filter({ hasText: targetList }).first();
-  await dragByMouse(page, item.getByTestId(testIds.itemDragHandle), targetCard.getByTestId(testIds.listDropZone));
+  const targetCard = await getVisibleListCard(page, targetList);
+  await dragByMouseAndWaitForMutation(
+    page,
+    item.getByTestId(testIds.itemDragHandle),
+    targetCard.getByTestId(testIds.listDropZone),
+    "listItem.reorderListItems"
+  );
 
   await expectItemNotInList(page, sourceList, itemName);
   await expectItemInList(page, targetList, itemName);
@@ -84,4 +121,37 @@ test("move item into empty list if implemented", async ({ page }) => {
   await expectItemInList(page, targetList, itemName);
   await cleanupNamedList(page, sourceList);
   await cleanupNamedList(page, targetList);
+});
+
+test("reorder custom views persists after reload", async ({ page }) => {
+  const listName = uniqueTestName("view-reorder-list");
+  const firstTag = uniqueTestName("view-reorder-tag-a");
+  const secondTag = uniqueTestName("view-reorder-tag-b");
+  const firstView = uniqueTestName("view-reorder-first");
+  const secondView = uniqueTestName("view-reorder-second");
+
+  await createPersistedList(page, listName);
+  await createPersistedTag(page, listName, firstTag);
+  await createPersistedTag(page, listName, secondTag);
+  await createView(page, firstView, firstTag);
+  await createView(page, secondView, secondTag);
+  await expectViewOrder(page, [secondView, firstView]);
+
+  const firstCard = await getVisibleViewCard(page, firstView);
+  const secondCard = await getVisibleViewCard(page, secondView);
+
+  await dragByMouseAndWaitForMutation(
+    page,
+    firstCard.getByLabel(`Reorder ${firstView}`),
+    secondCard.getByLabel(`Reorder ${secondView}`),
+    "view.reorderViews"
+  );
+
+  await expectViewOrder(page, [firstView, secondView]);
+  await page.reload();
+  await expectViewOrder(page, [firstView, secondView]);
+  await deleteView(page, firstView);
+  await deleteView(page, secondView);
+  await openAllLists(page);
+  await cleanupNamedList(page, listName);
 });

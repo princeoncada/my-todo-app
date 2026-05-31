@@ -368,7 +368,8 @@ if (-not $SkipChroma) {
         $chromaCmd = Get-Command chroma -ErrorAction SilentlyContinue
         if ($chromaCmd) {
             $chromaDataPath = Join-Path (Split-Path -Parent $PSScriptRoot) "chroma-data"
-            Start-Process -FilePath $chromaCmd.Source -ArgumentList @("run", "--path", $chromaDataPath) -WindowStyle Hidden
+            Start-Process -FilePath $chromaCmd.Source -ArgumentList @("run", "--path", $chromaDataPath) -WindowStyle Normal
+            Write-Host "  ChromaDB auto-started in a new window (close it to stop ChromaDB)" -ForegroundColor Yellow
             $retries = 0
             while (-not $chromaReady -and $retries -lt 15) {
                 Start-Sleep -Seconds 1

@@ -1,10 +1,15 @@
-<!-- Current Version: 1.2.7 -->
+<!-- Current Version: 1.3.0-alpha -->
 # AI Handoff
-**Current Version**: 1.2.7 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.2.7 - Prompt Fence Safety Hardening
-**Next**: 1.3.0 - ChatGPT Architect Local Context Workflow
+**Current Version**: 1.3.0-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.3.0 - ChatGPT Architect Local Context Workflow
+**Next**: 1.4.0 - Phase 3 Completion: View Filter Hardening
 ---
 ## What Was Last Done
+**Phase 1.2.7** completed prompt fence safety hardening:
+- Documented that fenced master prompts must not contain nested fenced code blocks
+- Added safe alternatives using plain labels and indented command lines
+- Added validation coverage for prompt fence safety documentation
+- Preserved 1.3.0 as the next planned phase
 **Phase 1.2.6** completed roadmap next-phase gate:
 - Inserted `1.3.0 - ChatGPT Architect Local Context Workflow` as the next planned phase
 - Renumbered product View Filter Hardening to 1.4.0
@@ -114,9 +119,17 @@
 `master`
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
-2. Confirm prompt-fence safety rules remain in place before generating implementation prompts.
-3. If 1.2.7 is stable, scope `1.3.0 - ChatGPT Architect Local Context Workflow`.
-4. Do not include nested fenced code blocks inside fenced master prompts.
+2. If 1.3.0 is stable, request or confirm the Local Evidence Packet before scoping `1.4.0 - Phase 3 Completion: View Filter Hardening`.
+3. Do not scope source-heavy product work from remote GitHub state alone when local changes, ChromaDB output, or graph output may matter.
+4. Keep all generated implementation prompts prompt-fence safe.
+5. Do not include nested fenced code blocks inside fenced master prompts.
+---
+
+## Architecture Boundary
+
+- ChatGPT architect sees pushed GitHub state plus pasted evidence only.
+- Local ChromaDB and local uncommitted changes must be pasted or pushed before they can influence ChatGPT architecture decisions.
+
 ---
 
 ## Current Product Snapshot

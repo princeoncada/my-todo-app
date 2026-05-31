@@ -1,8 +1,8 @@
-<!-- Current Version: 1.4.1 -->
+<!-- Current Version: 1.4.2-alpha -->
 # AI Handoff
-**Current Version**: 1.4.1 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.4.1 - AI Handoff Next Session Cleanup
-**Next**: 1.4.2 - Backend View Membership Contract
+**Current Version**: 1.4.2-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.4.2 - Backend View Membership Contract
+**Next**: 1.4.3 - Dashboard Cache Projection Contract
 ---
 ## What Was Last Done
 **Phase 1.3.2** completed ChatGPT architect real workflow test:
@@ -132,18 +132,17 @@
 - **Phase 3: View Filter Hardening** - in progress, active on `checkpoint/fix-cross-view-list-moves` (checkpoint 3 of 6 complete; final manual-regression documentation is a merge-gate step, not an implementation checkpoint)
 ## Active Branch
 `master`
-## Current 1.4.1 Context
-1.4.0 is stable and completed the View Projection Reproduction Tests baseline. This 1.4.1 patch cleans stale next-session handoff guidance before backend projection work begins.
+## Current 1.4.2 Context
+1.4.2 defines the backend ViewList membership contract while preserving materialized custom view membership. Backend recompute now honors CUSTOM view `ALL` and `ANY` match modes; frontend dashboard-cache projection hardening remains next.
 
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
-2. The next product phase after this cleanup is `1.4.2 - Backend View Membership Contract`.
-3. Before source-heavy 1.4.2 scoping, ask the user to run `.\scripts\export-chatgpt-architect-context.ps1 -Question "1.4.2 Backend View Membership Contract viewRouter viewHelpers ViewList custom view tags refresh projection"`.
-4. Wait for the exported packet before scoping 1.4.2.
-5. Do not use `docs/PHASE_LOG.md` as active phase guidance; it is historical only.
-6. Do not create a product audit doc by default; capture product behavior through tests, FUTURE_PLANS acceptance criteria, AI_HANDOFF risks, and DECISIONS only for durable architecture choices.
-7. Keep all generated implementation prompts prompt-fence safe.
-8. Do not include nested fenced code blocks inside fenced master prompts.
+2. If 1.4.2 is stable, scope `1.4.3 - Dashboard Cache Projection Contract`.
+3. Use the 1.4.0 reproduction tests plus the 1.4.2 backend membership contract as the source for expected frontend projection behavior.
+4. Do not use `docs/PHASE_LOG.md` as active phase guidance; it is historical only.
+5. Do not create a product audit doc by default; capture product behavior through tests, FUTURE_PLANS acceptance criteria, AI_HANDOFF risks, and DECISIONS only for durable architecture choices.
+6. Keep all generated implementation prompts prompt-fence safe.
+7. Do not include nested fenced code blocks inside fenced master prompts.
 ---
 
 ## Architecture Boundary
@@ -262,7 +261,8 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - ANY custom view matching currently behaves like ALL matching in dashboard projection helpers.
 - UNTAGGED view projection currently falls through to all lists instead of filtering to lists without tags.
 **Data model gaps:**
-- `ViewType.UNTAGGED` and `ViewMatchMode.ANY` exist in schema but are not implemented in UI or server logic
+- `ViewMatchMode.ANY` is supported by backend custom view recompute, but is not exposed in UI and still needs frontend dashboard-cache projection hardening.
+- `ViewType.UNTAGGED` exists in schema but is not implemented in UI or server logic.
 - `tag.removeFromList` triggers duplicate custom view recompute (inside transaction + after)
 
 **Testing:**

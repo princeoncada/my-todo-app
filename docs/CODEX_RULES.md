@@ -194,6 +194,12 @@ After every implementation:
 
 When a user-approved phase sequence exists before implementation, the scoped phase may update `docs/FUTURE_PLANS.md` to reflect that sequence before product work continues. Preserve monotonic version order and do not silently move roadmap items between Planned, In Progress, and Completed unless explicitly scoped.
 
+Codex must not set or preserve a `STATE.json.nextPhase` that is absent from `docs/FUTURE_PLANS.md` unless the prompt explicitly scopes adding or renumbering that roadmap entry in the same phase. If a prompt changes `nextPhase`, the prompt must also update `docs/FUTURE_PLANS.md` or explicitly instruct `open-phase.ps1` to use `-AllowMissingNextPhase` and then fix `docs/FUTURE_PLANS.md` during the phase.
+
+Preserve the invariant: stable STATE.json.nextPhase == first FUTURE_PLANS Planned heading.
+
+FUTURE_PLANS remains roadmap state, not a sixth versioning location.
+
 ---
 
 ## What to Read For Specific Tasks

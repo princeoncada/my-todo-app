@@ -1,9 +1,9 @@
 {
-    "version":  "1.2.3",
-    "state":  "stable",
-    "phase":  "1.2.3",
-    "phaseTitle":  "Startup Oracle Cleanup",
-    "nextPhase":  "1.2.4 - Handoff Drift Cleanup",
+    "version":  "1.2.4-alpha",
+    "state":  "alpha",
+    "phase":  "1.2.4",
+    "phaseTitle":  "Handoff Drift Cleanup",
+    "nextPhase":  "1.2.5 - Phase Routing Guardrail Cleanup",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-30"
 }

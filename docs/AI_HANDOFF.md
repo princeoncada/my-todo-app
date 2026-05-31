@@ -133,12 +133,12 @@
 ## Active Branch
 `master`
 ## Current 1.4.8 Context
-1.4.8 hardens drag/reorder persistence for lists, items, and custom views. Reorder payload builders in `lib/dashboard-cache.ts` exclude optimistic-only rows and compact saved-row order before server writes, while drag hover remains local and cache writes still happen only on drop.
+1.4.8 hardens drag/reorder persistence for lists and items. Reorder payload builders in `lib/dashboard-cache.ts` exclude optimistic-only rows and compact saved-row order before server writes, while drag hover remains local and cache writes still happen only on drop. Custom view reorder product code remains in place, but its authenticated E2E stabilization was intentionally deferred because the phase expanded into helper/harness stabilization.
 
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
-2. If 1.4.8 is stable, scope `1.5.0 - Ownership Failure Test Baseline`.
-3. Use the 1.4.0 reproduction tests, the 1.4.2 backend membership contract, the 1.4.3 dashboard projection contract, the 1.4.5 tag mutation affected-view contract, the 1.4.6 latest-selected-view guard, the 1.4.7 create-list/create-item regression coverage, and the 1.4.8 drag/reorder persistence coverage as the source for expected optimistic behavior.
+2. If 1.4.8 is stable, read `docs/FUTURE_PLANS.md` before scoping because custom view reorder E2E stabilization is tracked separately as 1.4.9.
+3. Use the 1.4.0 reproduction tests, the 1.4.2 backend membership contract, the 1.4.3 dashboard projection contract, the 1.4.5 tag mutation affected-view contract, the 1.4.6 latest-selected-view guard, the 1.4.7 create-list/create-item regression coverage, and the 1.4.8 list/item drag reorder persistence coverage as the source for expected optimistic behavior.
 4. Do not use `docs/PHASE_LOG.md` as active phase guidance; it is historical only.
 5. Do not create a product audit doc by default; capture product behavior through tests, FUTURE_PLANS acceptance criteria, AI_HANDOFF risks, and DECISIONS only for durable architecture choices.
 6. Keep all generated implementation prompts prompt-fence safe.
@@ -217,6 +217,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - Item cross-list move writes both `ListItem.listId` and `ListItem.order`
 - `ALL_LISTS` view is pinned - not sortable; only custom views are reorderable
 - Authenticated drag/drop E2E waits for reorder mutation success before reload assertions
+- 1.4.8 covers list/item reorder persistence; custom view reorder E2E stabilization is deferred to 1.4.9.
 
 **Authentication:**
 - All dashboard data is user-scoped by Supabase user id
@@ -259,6 +260,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - Optimistic list creation followed by immediate item/tag changes before server save; immediate item creation is covered by cache helper unit tests and an E2E reload regression
 - Fast view switching is guarded by latest-selected-view checks; keep regression coverage for stale payloads and stale rollback
 - Reorders involving optimistic-only rows - IDs must be filtered before sending to server
+- Custom view reorder product behavior exists, but its authenticated E2E path needs separate stabilization in 1.4.9
 - Tag deletes or toggles that affect custom view membership mid-operation
 
 **Data model gaps:**

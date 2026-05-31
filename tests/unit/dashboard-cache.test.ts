@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
+import { QueryClient } from "@tanstack/react-query";
 
-import { listMatchesView, projectView, selectedViewFromCache } from "@/lib/dashboard-cache";
+import {
+  applyDeletedTagToDashboardCaches,
+  applyTagChangeToCaches,
+  type DashboardSnapshot,
+  listMatchesView,
+  projectView,
+  selectedViewFromCache,
+  type ViewsCache,
+} from "@/lib/dashboard-cache";
 
 const tag = (id: string, name = id) => ({
   id,
@@ -46,9 +55,7 @@ const view = (overrides = {}) => ({
 });
 
 describe("dashboard cache projection", () => {
-  // Expected-failing reproduction tests for follow-up projection phases.
-  // Keep assertions intact: 1.4.1/1.4.2 should make these pass by fixing projection behavior.
-  it.fails("ANY custom matching includes lists with at least one required tag", () => {
+  it("ANY custom matching includes lists with at least one required tag", () => {
     const customView = view({ matchMode: "ANY" as const });
 
     expect(listMatchesView(list("has-a", ["a"]), customView)).toBe(true);
@@ -67,6 +74,13 @@ describe("dashboard cache projection", () => {
 
   it("custom views with no required tags match no lists", () => {
     expect(listMatchesView(list("untagged"), view({ viewTags: [] }))).toBe(false);
+  });
+
+  it("UNTAGGED views match only lists without tags", () => {
+    const untaggedView = view({ type: "UNTAGGED" as const, viewTags: [] });
+
+    expect(listMatchesView(list("tagged", ["a"]), untaggedView)).toBe(false);
+    expect(listMatchesView(list("untagged"), untaggedView)).toBe(true);
   });
 
   it("projects all lists without filtering", () => {
@@ -100,6 +114,38 @@ describe("dashboard cache projection", () => {
     ]);
   });
 
+  it("projects ANY custom views with at least one matching tag", () => {
+    const customView = view({ matchMode: "ANY" as const });
+    const snapshot = {
+      view: view({ type: "ALL_LISTS" as const, viewTags: [] }),
+      lists: [
+        list("has-a", ["a"], 2),
+        list("missing-all", [], 1),
+        list("has-b", ["b"], 0),
+      ],
+    };
+
+    expect(projectView(customView, snapshot)?.lists.map((entry) => entry.id)).toEqual([
+      "has-b",
+      "has-a",
+    ]);
+  });
+
+  it("uses list id as a deterministic tie-breaker when projected orders match", () => {
+    const customView = view({
+      viewTags: [{ viewId: "view-1", tagId: "a", tag: tag("a") }],
+    });
+    const snapshot = {
+      view: view({ type: "ALL_LISTS" as const, viewTags: [] }),
+      lists: [
+        list("b", ["a"], 1),
+        list("a", ["a"], 1),
+      ],
+    };
+
+    expect(projectView(customView, snapshot)?.lists.map((entry) => entry.id)).toEqual(["a", "b"]);
+  });
+
   it("excludes a custom view list after the matching tag is removed from the snapshot", () => {
     const customView = view({ viewTags: [{ viewId: "view-1", tagId: "a", tag: tag("a") }] });
     const snapshot = {
@@ -126,7 +172,7 @@ describe("dashboard cache projection", () => {
     expect(projectView(customView, snapshot)?.lists.map((entry) => entry.id)).toEqual(["added-tag"]);
   });
 
-  it.fails("projects UNTAGGED views to lists without tags", () => {
+  it("projects UNTAGGED views to lists without tags", () => {
     const untaggedView = view({
       type: "UNTAGGED" as const,
       viewTags: [],
@@ -141,6 +187,147 @@ describe("dashboard cache projection", () => {
     };
 
     expect(projectView(untaggedView, snapshot)?.lists.map((entry) => entry.id)).toEqual(["untagged"]);
+  });
+
+  it("reprojects dashboard caches after tag add and remove", () => {
+    const queryClient = new QueryClient();
+    const allListsView = view({ id: "all", type: "ALL_LISTS" as const, viewTags: [] });
+    const customView = view({
+      id: "custom",
+      viewTags: [{ viewId: "custom", tagId: "a", tag: tag("a") }],
+    });
+    const keys = {
+      views: ["views"],
+      allLists: ["all-lists"],
+      currentView: ["current-view"],
+      selectedView: ["selected-view"],
+    };
+
+    queryClient.setQueryData(keys.allLists, {
+      view: allListsView,
+      lists: [list("candidate", [], 0), list("member", ["a"], 1)],
+    });
+    queryClient.setQueryData(keys.currentView, {
+      view: customView,
+      lists: [list("member", ["a"], 1)],
+    });
+    queryClient.setQueryData(keys.selectedView, {
+      view: customView,
+      lists: [list("member", ["a"], 1)],
+    });
+
+    applyTagChangeToCaches(queryClient, keys, "candidate", tag("a"), "add");
+
+    expect(
+      queryClient
+        .getQueryData<DashboardSnapshot>(keys.currentView)
+        ?.lists.map((entry) => entry.id)
+    ).toEqual(["candidate", "member"]);
+
+    applyTagChangeToCaches(queryClient, keys, "member", tag("a"), "remove");
+
+    expect(
+      queryClient
+        .getQueryData<DashboardSnapshot>(keys.selectedView)
+        ?.lists.map((entry) => entry.id)
+    ).toEqual(["candidate"]);
+  });
+
+  it("reprojects UNTAGGED caches after tag add and remove", () => {
+    const queryClient = new QueryClient();
+    const allListsView = view({ id: "all", type: "ALL_LISTS" as const, viewTags: [] });
+    const untaggedView = view({ id: "untagged-view", type: "UNTAGGED" as const, viewTags: [] });
+    const keys = {
+      views: ["views"],
+      allLists: ["all-lists"],
+      currentView: ["current-view"],
+      selectedView: ["selected-view"],
+    };
+
+    queryClient.setQueryData(keys.allLists, {
+      view: allListsView,
+      lists: [list("becomes-untagged", ["a"], 0), list("already-untagged", [], 1)],
+    });
+    queryClient.setQueryData(keys.currentView, {
+      view: untaggedView,
+      lists: [list("already-untagged", [], 1)],
+    });
+    queryClient.setQueryData(keys.selectedView, {
+      view: untaggedView,
+      lists: [list("already-untagged", [], 1)],
+    });
+
+    applyTagChangeToCaches(queryClient, keys, "becomes-untagged", tag("a"), "remove");
+
+    expect(
+      queryClient
+        .getQueryData<DashboardSnapshot>(keys.currentView)
+        ?.lists.map((entry) => entry.id)
+    ).toEqual(["becomes-untagged", "already-untagged"]);
+
+    applyTagChangeToCaches(queryClient, keys, "already-untagged", tag("a"), "add");
+
+    expect(
+      queryClient
+        .getQueryData<DashboardSnapshot>(keys.selectedView)
+        ?.lists.map((entry) => entry.id)
+    ).toEqual(["becomes-untagged"]);
+  });
+
+  it("applies deleted tags through All Lists and reprojects custom views", () => {
+    const queryClient = new QueryClient();
+    const allListsView = view({ id: "all", type: "ALL_LISTS" as const, viewTags: [] });
+    const customView = view({
+      id: "custom",
+      viewTags: [
+        { viewId: "custom", tagId: "a", tag: tag("a") },
+        { viewId: "custom", tagId: "b", tag: tag("b") },
+      ],
+    });
+    const keys = {
+      views: ["views"],
+      allLists: ["all-lists"],
+      currentView: ["current-view"],
+      selectedView: ["selected-view"],
+    };
+
+    queryClient.setQueryData(keys.views, [allListsView, customView]);
+    queryClient.setQueryData(keys.allLists, {
+      view: allListsView,
+      lists: [
+        list("both", ["a", "b"], 0),
+        list("only-b", ["b"], 1),
+        list("untagged", [], 2),
+      ],
+    });
+    queryClient.setQueryData(keys.currentView, {
+      view: customView,
+      lists: [list("both", ["a", "b"], 0)],
+    });
+    queryClient.setQueryData(keys.selectedView, {
+      view: customView,
+      lists: [list("both", ["a", "b"], 0)],
+    });
+
+    applyDeletedTagToDashboardCaches(queryClient, keys, "a");
+
+    expect(
+      queryClient
+        .getQueryData<DashboardSnapshot>(keys.currentView)
+        ?.lists.map((entry) => entry.id)
+    ).toEqual(["both", "only-b"]);
+    expect(
+      queryClient
+        .getQueryData<DashboardSnapshot>(keys.allLists)
+        ?.lists.find((entry) => entry.id === "both")
+        ?.listTags.map((listTag) => listTag.tagId)
+    ).toEqual(["b"]);
+    expect(
+      queryClient
+        .getQueryData<ViewsCache>(keys.views)
+        ?.find((entry) => entry.id === "custom")
+        ?.viewTags.map((viewTag) => viewTag.tagId)
+    ).toEqual(["b"]);
   });
 
   it("selects the default view before falling back to All Lists", () => {

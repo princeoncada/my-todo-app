@@ -1,6 +1,6 @@
 {
   "schemaVersion": "tidy-codebase-graph/v1",
-  "version": "1.4.4",
+  "version": "1.4.5-alpha",
   "generatedAt": "2026-05-31",
   "generator": "scripts/generate_codebase_graph.py fallback scanner",
   "graphify": {
@@ -2668,10 +2668,12 @@
       "kind": "trpc_router",
       "extension": ".ts",
       "symbols": [
+        "getListTagsForList",
         "tagColorSchema",
         "tagRouter",
         "listTagChangeSchema",
         "updatedTags",
+        "affectedViewIds",
         "result",
         "affectedViews",
         "listTag",
@@ -2720,6 +2722,7 @@
       "symbols": [
         "listMatchesViewTags",
         "customViewMembershipWhere",
+        "customViewsAffectedByTagsWhere",
         "buildCustomViewListRows",
         "ensureAllListsView",
         "ensureDefaultView",
@@ -2727,17 +2730,16 @@
         "backfillAllListsView",
         "recomputeCustomView",
         "recomputeCustomViewsForUser",
+        "recomputeCustomViewsForIds",
         "recomputeCustomViewsForTags",
+        "getAffectedCustomViewIdsForTags",
+        "getAffectedCustomViewsForTags",
+        "getAffectedCustomViewsByIds",
+        "viewProjectionPayloadInclude",
         "ALL_LISTS_NAME",
         "listTagIdSet",
-        "assignedOrders",
-        "fallbackStart",
-        "knownOrder",
-        "order",
-        "hasDefaultView",
-        "topView",
-        "allListsView",
-        "defaultView"
+        "uniqueTagIds",
+        "assignedOrders"
       ],
       "imports": [
         "@/app/generated/prisma/client",

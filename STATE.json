@@ -1,8 +1,8 @@
 {
-    "version":  "1.2.5",
-    "state":  "stable",
-    "phase":  "1.2.5",
-    "phaseTitle":  "Phase Routing Guardrail Cleanup",
+    "version":  "1.2.6-alpha",
+    "state":  "alpha",
+    "phase":  "1.2.6",
+    "phaseTitle":  "Roadmap Next-Phase Gate",
     "nextPhase":  "1.3.0 - ChatGPT Architect Local Context Workflow",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-30"

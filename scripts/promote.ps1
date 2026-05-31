@@ -102,6 +102,15 @@ function Test-CompletedPhase {
     return $Content.Contains($Bullet)
 }
 
+function Get-FirstPlannedHeading {
+    param([string]$Content)
+    $section = Get-MatchedSection $Content "Planned"
+    if (-not $section.Success) { return "" }
+    $match = [regex]::Match($section.Groups["body"].Value, "(?m)^###\s+(?<heading>.+?)\s*$")
+    if ($match.Success) { return $match.Groups["heading"].Value }
+    return ""
+}
+
 # 1. STATE.json
 $state.version     = $stableVer
 $state.state       = "stable"
@@ -203,6 +212,14 @@ if ($futurePlansUpdated -ne $futurePlansBefore) {
     Write-Host "  Updated: $futurePlansPath (roadmap closeout)" -ForegroundColor Green
 } else {
     Write-Host "  Roadmap already closed: $futurePlansPath" -ForegroundColor Yellow
+}
+
+if (-not $state.seriesComplete -and -not [string]::IsNullOrWhiteSpace($state.nextPhase)) {
+    $firstPlannedHeading = Get-FirstPlannedHeading $futurePlansUpdated
+    if ($firstPlannedHeading -ne $state.nextPhase) {
+        Write-Error "Post-promotion roadmap drift: first FUTURE_PLANS Planned heading '$firstPlannedHeading' does not match STATE.json nextPhase '$($state.nextPhase)'."
+        exit 1
+    }
 }
 
 # Generated graph refresh: not a versioning location, but embedded version must

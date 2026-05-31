@@ -1,8 +1,8 @@
-<!-- Current Version: 1.4.0 -->
+<!-- Current Version: 1.4.1-alpha -->
 # AI Handoff
-**Current Version**: 1.4.0 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.4.0 - View Projection Reproduction Tests
-**Next**: 1.4.1 - Backend View Membership Contract
+**Current Version**: 1.4.1-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.4.1 - AI Handoff Next Session Cleanup
+**Next**: 1.4.2 - Backend View Membership Contract
 ---
 ## What Was Last Done
 **Phase 1.3.2** completed ChatGPT architect real workflow test:
@@ -132,17 +132,18 @@
 - **Phase 3: View Filter Hardening** - in progress, active on `checkpoint/fix-cross-view-list-moves` (checkpoint 3 of 6 complete; final manual-regression documentation is a merge-gate step, not an implementation checkpoint)
 ## Active Branch
 `master`
-## Current 1.3.3 Context
-1.3.3 rebaselines the product roadmap into smaller test-backed phases, marks `docs/PHASE_LOG.md` historical only, and keeps UI/UX polish late.
+## Current 1.4.1 Context
+1.4.0 is stable and completed the View Projection Reproduction Tests baseline. This 1.4.1 patch cleans stale next-session handoff guidance before backend projection work begins.
 
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
-2. If 1.3.3 is stable, ask the user to run `scripts/export-chatgpt-architect-context.ps1` for 1.4.0.
-3. Scope `1.4.0 - View Projection Reproduction Tests` using the exported local evidence packet.
-4. Do not use `docs/PHASE_LOG.md` as active phase guidance; it is historical only.
-5. Do not create a new product audit doc; capture product behavior understanding through tests, FUTURE_PLANS acceptance criteria, AI_HANDOFF risks, and DECISIONS only for durable architecture choices.
-6. Keep all generated implementation prompts prompt-fence safe.
-7. Do not include nested fenced code blocks inside fenced master prompts.
+2. The next product phase after this cleanup is `1.4.2 - Backend View Membership Contract`.
+3. Before source-heavy 1.4.2 scoping, ask the user to run `.\scripts\export-chatgpt-architect-context.ps1 -Question "1.4.2 Backend View Membership Contract viewRouter viewHelpers ViewList custom view tags refresh projection"`.
+4. Wait for the exported packet before scoping 1.4.2.
+5. Do not use `docs/PHASE_LOG.md` as active phase guidance; it is historical only.
+6. Do not create a product audit doc by default; capture product behavior through tests, FUTURE_PLANS acceptance criteria, AI_HANDOFF risks, and DECISIONS only for durable architecture choices.
+7. Keep all generated implementation prompts prompt-fence safe.
+8. Do not include nested fenced code blocks inside fenced master prompts.
 ---
 
 ## Architecture Boundary

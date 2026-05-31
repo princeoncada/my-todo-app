@@ -5,6 +5,21 @@ type ViewDb = typeof db | Prisma.TransactionClient;
 
 const ALL_LISTS_NAME = "All Lists";
 
+export const viewProjectionPayloadInclude = {
+  viewTags: {
+    include: { tag: true },
+  },
+  viewLists: {
+    select: {
+      listId: true,
+      order: true,
+    },
+    orderBy: {
+      order: "asc",
+    },
+  },
+} satisfies Prisma.ViewInclude;
+
 type ListOrderCandidate = {
   id: string;
 };
@@ -50,6 +65,25 @@ export function customViewMembershipWhere(
         some: { tagId },
       },
     })),
+  };
+}
+
+export function customViewsAffectedByTagsWhere(
+  userId: string,
+  tagIds: string[]
+): Prisma.ViewWhereInput | null {
+  const uniqueTagIds = [...new Set(tagIds)];
+
+  if (uniqueTagIds.length === 0) return null;
+
+  return {
+    userId,
+    type: ViewType.CUSTOM,
+    viewTags: {
+      some: {
+        tagId: { in: uniqueTagIds },
+      },
+    },
   };
 }
 
@@ -322,31 +356,86 @@ export async function recomputeCustomViewsForUser(
   }
 }
 
+export async function recomputeCustomViewsForIds(
+  userId: string,
+  viewIds: string[],
+  client: ViewDb = db
+) {
+  const uniqueViewIds = [...new Set(viewIds)];
+
+  for (const viewId of uniqueViewIds) {
+    await recomputeCustomView(userId, viewId, client);
+  }
+}
+
 export async function recomputeCustomViewsForTags(
   userId: string,
   tagIds: string[],
   client: ViewDb = db
 ) {
-  const uniqueTagIds = [...new Set(tagIds)];
-
-  if (uniqueTagIds.length === 0) return;
+  const where = customViewsAffectedByTagsWhere(userId, tagIds);
+  if (!where) return;
 
   const customViews = await client.view.findMany({
-    where: {
-      userId,
-      type: ViewType.CUSTOM,
-      viewTags: {
-        some: {
-          tagId: { in: uniqueTagIds },
-        },
-      },
-    },
+    where,
     select: {
       id: true,
     },
   });
 
-  for (const view of customViews) {
-    await recomputeCustomView(userId, view.id, client);
-  }
+  await recomputeCustomViewsForIds(
+    userId,
+    customViews.map((view) => view.id),
+    client
+  );
+}
+
+export async function getAffectedCustomViewIdsForTags(
+  userId: string,
+  tagIds: string[],
+  client: ViewDb = db
+) {
+  const where = customViewsAffectedByTagsWhere(userId, tagIds);
+  if (!where) return [];
+
+  const customViews = await client.view.findMany({
+    where,
+    select: {
+      id: true,
+    },
+  });
+
+  return customViews.map((view) => view.id);
+}
+
+export async function getAffectedCustomViewsForTags(
+  userId: string,
+  tagIds: string[],
+  client: ViewDb = db
+) {
+  const where = customViewsAffectedByTagsWhere(userId, tagIds);
+  if (!where) return [];
+
+  return await client.view.findMany({
+    where,
+    include: viewProjectionPayloadInclude,
+  });
+}
+
+export async function getAffectedCustomViewsByIds(
+  userId: string,
+  viewIds: string[],
+  client: ViewDb = db
+) {
+  const uniqueViewIds = [...new Set(viewIds)];
+  if (uniqueViewIds.length === 0) return [];
+
+  return await client.view.findMany({
+    where: {
+      userId,
+      type: ViewType.CUSTOM,
+      id: { in: uniqueViewIds },
+    },
+    include: viewProjectionPayloadInclude,
+  });
 }

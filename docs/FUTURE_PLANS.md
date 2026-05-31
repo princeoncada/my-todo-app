@@ -92,12 +92,13 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.4.6 - View Switching Race Regression (active) - see Planned
 ---
 
 ## Planned
 
 ### 1.4.6 - View Switching Race Regression
-- **Status:** Open | Priority: P0 race correctness
+- **Status:** In progress | Priority: P0 race correctness
 - **Files:** components/views/ViewsSidebarPreview.tsx, components/list/ListsContainer.tsx, lib/dashboard-cache.ts, tests/e2e/views.spec.ts
 - **Problem:** Fast view switching and late query responses can repaint the dashboard with stale data.
 - **Scope:** lock down current-view writes so late responses cannot overwrite the latest selected view; add tests or E2E coverage for fast switching and refresh.

@@ -93,9 +93,9 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.4.1
-- **Current phase:** 1.4.1 - AI Handoff Next Session Cleanup
-- **Next phase:** 1.4.2 - Backend View Membership Contract
+- **Current version:** 1.4.2-alpha
+- **Current phase:** 1.4.2 - Backend View Membership Contract
+- **Next phase:** 1.4.3 - Dashboard Cache Projection Contract
 
 ---
 
@@ -155,6 +155,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.4.2 | alpha | 2026-05-31 | Backend View Membership Contract | (in progress) |
 | 1.4.1 | stable | 2026-05-31 | AI Handoff Next Session Cleanup | (in progress) |
 | 1.4.0 | stable | 2026-05-30 | View Projection Reproduction Tests | (in progress) |
 | 1.3.3 | stable | 2026-05-30 | Docs Surface and Product Roadmap Rebaseline | (in progress) |

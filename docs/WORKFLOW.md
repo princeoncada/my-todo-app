@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.2.4 -->
+<!-- Current Version: 1.2.5-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -28,7 +28,7 @@ Codex does **not**: commit, push, run `npm run test:ci`, create branches, run va
 
 Run these steps at the start of every Claude Code session before asking for direction:
 
-1. `git pull origin master` - sync latest
+1. If operating in a local repo, run `git pull origin master` - sync latest. If local git is unavailable, report why and continue with remote/direct reads only.
 2. **Read `STATE.json`** - report: version, state, phase, phaseTitle, nextPhase, and any in-progress branch when present
 3. **Read `codebase-graph.json` if present** - use it only as an orientation map to choose the smallest direct-read source/doc set. If it is missing, stale, or invalid, state that and fall back to direct file reads.
 4. **Read `docs/FUTURE_PLANS.md` fresh** - report the first Planned backlog item separately from STATE.json `nextPhase`.

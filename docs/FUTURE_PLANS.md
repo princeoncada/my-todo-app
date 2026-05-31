@@ -69,6 +69,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.3.2 - ChatGPT Architect Real Workflow Test~~ (stable 2026-05-30)
 
+- ~~1.3.3 - Docs Surface and Product Roadmap Rebaseline~~ (stable 2026-05-30)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -78,17 +80,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.3.3 - Docs Surface and Product Roadmap Rebaseline (active) - see Planned
 ---
 
 ## Planned
-
-### 1.3.3 - Docs Surface and Product Roadmap Rebaseline
-- **Status:** In progress | Priority: P0 roadmap correctness
-- **Files:** docs/FUTURE_PLANS.md, docs/PHASE_LOG.md, docs/WORKFLOW.md, docs/CODEX_RULES.md, docs/COMPACT_STRATEGY.md, docs/VERSIONING.md, docs/AI_HANDOFF.md, scripts/validate.ps1
-- **Problem:** The current product roadmap is too broad, keeps PHASE_LOG.md active as a legacy workflow surface, places UI/UX polish too early, and does not make each implementation phase explicitly test-backed.
-- **Scope:** retire PHASE_LOG.md from active workflow use; rebaseline FUTURE_PLANS into smaller test-backed product phases; move UI/UX polish later; update workflow docs so current product work uses FUTURE_PLANS, AI_HANDOFF, DECISIONS, and tests instead of adding new audit docs.
-- **Acceptance:** PHASE_LOG.md is marked historical only; active workflow docs no longer require updating PHASE_LOG.md for new versioned phases; FUTURE_PLANS contains the new smaller product phase sequence; every product implementation phase includes a useful test requirement; UI/UX polish is late; no new product audit document is added; no app behavior changes.
 
 ### 1.4.0 - View Projection Reproduction Tests
 - **Status:** Open | Priority: P0 correctness test baseline

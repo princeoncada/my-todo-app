@@ -1,6 +1,6 @@
 {
   "name": "todo-app",
-  "version": "1.2.4",
+  "version": "1.2.5-alpha",
   "private": true,
   "scripts": {
     "chroma": "chroma run --path ./chroma-data",

@@ -1,6 +1,6 @@
 {
-    "version":  "1.4.3-alpha",
-    "state":  "alpha",
+    "version":  "1.4.3",
+    "state":  "stable",
     "phase":  "1.4.3",
     "phaseTitle":  "Dashboard Cache Projection Contract",
     "nextPhase":  "1.4.4 - Tag Mutation Projection Regression",

@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.2.2 -->
+<!-- Current Version: 1.2.3-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -29,7 +29,7 @@ Codex does **not**: commit, push, run `npm run test:ci`, create branches, run va
 Run these steps at the start of every Claude Code session before asking for direction:
 
 1. `git pull origin master` - sync latest
-2. **Read `STATE.json`** - report: version, state, phase, phaseTitle, nextPhase, any in-progress branch, pre-versioning notes
+2. **Read `STATE.json`** - report: version, state, phase, phaseTitle, nextPhase, and any in-progress branch when present
 3. **Read `codebase-graph.json` if present** - use it only as an orientation map to choose the smallest direct-read source/doc set. If it is missing, stale, or invalid, state that and fall back to direct file reads.
 4. **Read `docs/FUTURE_PLANS.md` fresh** - report the first Planned backlog item separately from STATE.json `nextPhase`.
 5. **Query ChromaDB** (when running on `localhost:8000`):
@@ -66,6 +66,18 @@ QUERY (ChromaDB) -> READ (STATE.json + codebase graph + minimal docs) -> CONFIRM
   -> ANALYZE (pass/fail) -> FIX (if needed)
   -> PROMOTE (.\scripts\promote.ps1) -> COMMIT (user runs git)
 ```
+
+### Planned Phase Capture
+
+When the user and AI architect agree on a patch or phase sequence before implementation, the next scoped implementation phase must record that agreed sequence in `docs/FUTURE_PLANS.md`.
+
+Rules:
+- Insert newly agreed patch phases before the next minor/major phase when they must happen first.
+- Preserve monotonic version order.
+- Patches under the current minor may be inserted before the next minor without renumbering the next minor.
+- New minor or major insertions must push later Planned versions back according to the Planned Renumber Rule in `docs/VERSIONING.md`.
+- Do not leave the roadmap implying the next implementation is a later phase when cleanup patches have been agreed first.
+- This does not make `docs/FUTURE_PLANS.md` a versioning location. It remains the roadmap owner only.
 
 ### Alpha vs. Stable Scope Rule
 

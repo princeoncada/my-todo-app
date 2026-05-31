@@ -1,6 +1,6 @@
-<!-- Current Version: 1.2.3-alpha -->
+<!-- Current Version: 1.2.3 -->
 # AI Handoff
-**Current Version**: 1.2.3-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.2.3 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.2.3 - Startup Oracle Cleanup
 **Next**: 1.2.4 - Handoff Drift Cleanup
 ---

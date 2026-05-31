@@ -1,10 +1,15 @@
-<!-- Current Version: 1.3.1 -->
+<!-- Current Version: 1.3.2-alpha -->
 # AI Handoff
-**Current Version**: 1.3.1 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.3.1 - ChatGPT Architect Workflow Proof and Layout Review
+**Current Version**: 1.3.2-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.3.2 - ChatGPT Architect Real Workflow Test
 **Next**: 1.4.0 - Phase 3 Completion: View Filter Hardening
 ---
 ## What Was Last Done
+**Phase 1.3.1** completed ChatGPT workflow proof/layout review:
+- Added a static workflow review document
+- Added validation coverage for the review document
+- Confirmed 1.4.0 remained the next planned product phase
+- Later superseded by 1.3.2 because the user wanted a real workflow export/test instead of a static review document
 **Phase 1.3.0** completed ChatGPT architect local context workflow:
 - Added ChatGPT Architect Mode
 - Added Local Evidence Packet requirements
@@ -123,11 +128,14 @@
 - **Phase 3: View Filter Hardening** - in progress, active on `checkpoint/fix-cross-view-list-moves` (checkpoint 3 of 6 complete; final manual-regression documentation is a merge-gate step, not an implementation checkpoint)
 ## Active Branch
 `master`
+## Current 1.3.2 Context
+1.3.2 replaces the static review-document approach with a real export script.
+
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
-2. Review `docs/CHATGPT_ARCHITECT_WORKFLOW_REVIEW.md` with the user.
-3. If 1.3.1 is stable and the user approves the workflow layout, request the Local Evidence Packet before scoping `1.4.0 - Phase 3 Completion: View Filter Hardening`.
-4. Do not scope 1.4.0 until the workflow layout is approved or revised.
+2. If 1.3.2 is stable, ask the user to run `scripts/export-chatgpt-architect-context.ps1` for the next source-heavy phase.
+3. Review the generated packet layout with the user.
+4. Only scope 1.4.0 after the user approves or revises the packet layout.
 5. Keep all generated implementation prompts prompt-fence safe.
 6. Do not include nested fenced code blocks inside fenced master prompts.
 ---

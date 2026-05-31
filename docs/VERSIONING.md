@@ -21,6 +21,7 @@ Every version bump must update **all five** in the same commit:
 4. `package.json` - `version` field
 5. `docs/WORKFLOW.md` - version comment at top
 
+Use `.\scripts\open-phase.ps1` to open a new `-alpha` phase across all five locations automatically.
 Use `.\scripts\promote.ps1` to promote `-alpha` -> `-stable` across all five locations automatically.
 
 ## Doc Continuity Model
@@ -32,7 +33,7 @@ new place - that is how drift starts.
 
 | Fact | Owner | Where it also appears | Kept in sync by |
 |------|-------|-----------------------|-----------------|
-| Version + state string | `STATE.json` (`version`, `state`) | VERSIONING (current + history), AI_HANDOFF (comment + prose), package.json, WORKFLOW (comment) | Sync: `promote.ps1` + Gate: `validate.ps1` |
+| Version + state string | `STATE.json` (`version`, `state`) | VERSIONING (current + history), AI_HANDOFF (comment + prose), package.json, WORKFLOW (comment) | Sync: `open-phase.ps1` (alpha) + `promote.ps1` (stable) + Gate: `validate.ps1` |
 | Phase identity (number + title) | `STATE.json` (`phase`, `phaseTitle`) | VERSIONING (Current State), AI_HANDOFF (Current Phase), PHASE_LOG | Gate: `validate.ps1` checks current VERSIONING and AI_HANDOFF copies against STATE.json |
 | Next phase | `STATE.json` (`nextPhase`) | VERSIONING (Next phase line), AI_HANDOFF (Next line) | Gate: `validate.ps1` checks current VERSIONING and AI_HANDOFF copies against STATE.json |
 | Next backlog item | `docs/FUTURE_PLANS.md` (first Planned) | reported at startup | Point: read fresh each session |
@@ -68,8 +69,8 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.2.1
-- **Current phase:** 1.2.1 - Graph Navigation Doc Consistency
+- **Current version:** 1.2.2-alpha
+- **Current phase:** 1.2.2 - Chroma Visibility Fix
 - **Next phase:** 1.3.0 - Phase 3 Completion: View Filter Hardening
 
 ---
@@ -130,6 +131,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.2.2 | alpha | 2026-05-30 | Chroma Visibility Fix | (in progress) |
 | 1.2.1 | stable | 2026-05-30 | Graph Navigation Doc Consistency | COMPACT_STRATEGY.md graphify section rewritten to the static codebase-graph.json path (removed broken graphify-out/live-CLI steps); validate.ps1 graph-usage guard fails if any doc instructs the unavailable live graphify CLI. |
 | 1.2.0 | stable | 2026-05-30 | ChromaDB Bootstrap | ingest_docs.py BOM-safe + cosine + indexes CODEBASE_GRAPH.md; validate.ps1 auto-starts ChromaDB and ingests or FAILs loudly; chroma-data bootstrapped so query_docs.py returns real chunks. |
 | 1.1.4 | stable | 2026-05-29 | Graph Routing Usage Contract | Requires visible graph-routed file selection in implementation scoping without adding startup-loop overhead or token benchmarking. |

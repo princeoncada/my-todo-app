@@ -67,6 +67,21 @@ ChromaDB runs locally on `localhost:8000`  -  no cloud dependencies.
 
 ---
 
+## ChatGPT Architect Context Boundary
+
+Local ChromaDB is accessible to local agents/tools, not ChatGPT chat directly.
+ChatGPT architect can use ChromaDB only when the user pastes `query_docs.py`
+output. Query-first still applies in ChatGPT architect mode, but the query
+result must be provided by the user/controller when ChatGPT cannot access
+localhost.
+
+Committed `codebase-graph.json` is available to ChatGPT after push through
+GitHub. Local regenerated graph output is invisible to ChatGPT until pushed or
+pasted. The graph is an orientation map only; it does not replace direct file
+reads or pasted local evidence.
+
+---
+
 ## Token Budget Targets
 
 | Session Phase | Target Overhead |

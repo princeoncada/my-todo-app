@@ -2,7 +2,13 @@ import z from "zod";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/lib/db";
 import { createTRPCRouter, protectedProcedure } from "../init";
-import { recomputeCustomViewsForTags, recomputeCustomViewsForUser } from "./viewHelpers";
+import {
+  getAffectedCustomViewIdsForTags,
+  getAffectedCustomViewsByIds,
+  getAffectedCustomViewsForTags,
+  recomputeCustomViewsForIds,
+  recomputeCustomViewsForTags,
+} from "./viewHelpers";
 
 export const tagColorSchema = z.enum([
   "gray",
@@ -19,6 +25,16 @@ const listTagChangeSchema = z.object({
   tagId: z.uuid(),
   action: z.enum(["add", "remove"]),
 });
+
+function getListTagsForList(userId: string, listId: string) {
+  return db.listTag.findMany({
+    where: {
+      listId,
+      list: { userId },
+    },
+    include: { tag: true },
+  });
+}
 
 export const tagRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx: { userId } }) => {
@@ -69,6 +85,7 @@ export const tagRouter = createTRPCRouter({
   delete: protectedProcedure.input(z.object({
     id: z.uuid(),
   })).mutation(async ({ ctx: { userId }, input: { id } }) => {
+    const affectedViewIds = await getAffectedCustomViewIdsForTags(userId, [id]);
     const result = await db.$transaction(async (tx) => {
       const result = await tx.tag.deleteMany({
         where: {
@@ -82,28 +99,13 @@ export const tagRouter = createTRPCRouter({
       };
     });
 
-    await recomputeCustomViewsForUser(userId);
+    if (result.deleted) {
+      await recomputeCustomViewsForIds(userId, affectedViewIds);
+    }
 
-    const affectedViews = await db.view.findMany({
-      where: {
-        userId,
-        type: "CUSTOM",
-      },
-      include: {
-        viewTags: {
-          include: { tag: true },
-        },
-        viewLists: {
-          select: {
-            listId: true,
-            order: true,
-          },
-          orderBy: {
-            order: "asc",
-          },
-        },
-      },
-    });
+    const affectedViews = result.deleted
+      ? await getAffectedCustomViewsByIds(userId, affectedViewIds)
+      : [];
 
     return {
       ...result,
@@ -148,8 +150,18 @@ export const tagRouter = createTRPCRouter({
     });
 
     await recomputeCustomViewsForTags(userId, [tagId]);
+    const [listTags, affectedViews] = await Promise.all([
+      getListTagsForList(userId, listId),
+      getAffectedCustomViewsForTags(userId, [tagId]),
+    ]);
 
-    return listTag;
+    return {
+      listId,
+      tagId,
+      listTag,
+      listTags,
+      affectedViews,
+    };
   }),
   removeFromList: protectedProcedure.input(z.object({
     listId: z.uuid(),
@@ -169,16 +181,27 @@ export const tagRouter = createTRPCRouter({
         },
       });
 
-      await recomputeCustomViewsForUser(userId, tx);
-
       return {
         detached: result.count > 0,
       };
     });
 
-    await recomputeCustomViewsForTags(userId, [tagId]);
+    if (result.detached) {
+      await recomputeCustomViewsForTags(userId, [tagId]);
+    }
 
-    return result;
+    const [listTags, affectedViews] = await Promise.all([
+      getListTagsForList(userId, listId),
+      result.detached ? getAffectedCustomViewsForTags(userId, [tagId]) : [],
+    ]);
+
+    return {
+      listId,
+      tagId,
+      ...result,
+      listTags,
+      affectedViews,
+    };
   }),
 
   applyListTagChanges: protectedProcedure.input(z.object({
@@ -263,38 +286,8 @@ export const tagRouter = createTRPCRouter({
     await recomputeCustomViewsForTags(userId, tagIds);
 
     const [listTags, affectedViews] = await Promise.all([
-      db.listTag.findMany({
-        where: {
-          listId,
-          list: { userId },
-        },
-        include: { tag: true },
-      }),
-      db.view.findMany({
-        where: {
-          userId,
-          type: "CUSTOM",
-          viewTags: {
-            some: {
-              tagId: { in: tagIds },
-            },
-          },
-        },
-        include: {
-          viewTags: {
-            include: { tag: true },
-          },
-          viewLists: {
-            select: {
-              listId: true,
-              order: true,
-            },
-            orderBy: {
-              order: "asc",
-            },
-          },
-        },
-      }),
+      getListTagsForList(userId, listId),
+      getAffectedCustomViewsForTags(userId, tagIds),
     ]);
 
     return {

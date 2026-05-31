@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.2.5 -->
+<!-- Current Version: 1.2.6-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -78,6 +78,15 @@ Rules:
 - New minor or major insertions must push later Planned versions back according to the Planned Renumber Rule in `docs/VERSIONING.md`.
 - Do not leave the roadmap implying the next implementation is a later phase when cleanup patches have been agreed first.
 - This does not make `docs/FUTURE_PLANS.md` a versioning location. It remains the roadmap owner only.
+
+### Roadmap Next-Phase Gate
+
+When `STATE.json` is stable, `STATE.json.nextPhase` must equal the first Planned heading in `docs/FUTURE_PLANS.md`.
+Plain assertion: STATE.json.nextPhase must equal the first Planned heading.
+
+When opening an alpha phase, `STATE.json.nextPhase` must exist as a Planned heading unless the phase is explicitly scoped to add or renumber `docs/FUTURE_PLANS.md` in the same patch.
+
+Use `open-phase.ps1 -AllowMissingNextPhase` only for explicitly scoped roadmap rewrite patches. No phase may be promoted stable while `STATE.json.nextPhase` and the first Planned roadmap item disagree. `docs/FUTURE_PLANS.md` remains roadmap state, not a sixth versioning location.
 
 ### Alpha vs. Stable Scope Rule
 

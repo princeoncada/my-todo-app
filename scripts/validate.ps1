@@ -377,6 +377,42 @@ if ($graphUsageHits.Count -eq 0) {
     Add-Result "graph usage" $false ("docs instruct unavailable graphify CLI: " + ($graphUsageHits -join ", "))
 }
 
+# Prompt fence safety documentation guard - ensure the workflow rule exists.
+$promptFenceRequirements = @(
+    @{
+        Path = "docs/WORKFLOW.md"
+        Phrase = "Do not use markdown triple-backtick fences inside a fenced master prompt."
+    },
+    @{
+        Path = "docs/CODEX_RULES.md"
+        Phrase = "Master prompts must not contain nested markdown fences."
+    },
+    @{
+        Path = "docs/VERSIONING.md"
+        Phrase = "Prompt format safety is a workflow invariant."
+    },
+    @{
+        Path = "docs/AI_HANDOFF.md"
+        Phrase = "Do not include nested fenced code blocks inside fenced master prompts."
+    }
+)
+$promptFenceErrors = @()
+foreach ($requirement in $promptFenceRequirements) {
+    if (-not (Test-Path $requirement.Path)) {
+        $promptFenceErrors += "$($requirement.Path) missing"
+        continue
+    }
+    $docContent = Get-Content $requirement.Path -Raw -Encoding UTF8
+    if (-not $docContent.Contains($requirement.Phrase)) {
+        $promptFenceErrors += "$($requirement.Path) missing phrase '$($requirement.Phrase)'"
+    }
+}
+if ($promptFenceErrors.Count -eq 0) {
+    Add-Result "prompt fence safety" $true "documentation present"
+} else {
+    Add-Result "prompt fence safety" $false ($promptFenceErrors -join "; ")
+}
+
 # ChromaDB - auto-start if needed, then ingest docs (FAIL loudly if unreachable)
 if (-not $SkipChroma) {
     $chromaUri = "http://localhost:8000/api/v2/heartbeat"

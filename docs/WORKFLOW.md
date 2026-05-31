@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.3.2 -->
+<!-- Current Version: 1.3.3-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -112,6 +112,12 @@ Rules:
 - New minor or major insertions must push later Planned versions back according to the Planned Renumber Rule in `docs/VERSIONING.md`.
 - Do not leave the roadmap implying the next implementation is a later phase when cleanup patches have been agreed first.
 - This does not make `docs/FUTURE_PLANS.md` a versioning location. It remains the roadmap owner only.
+
+### Product Phase Planning
+
+Product implementation phases should be small and test-backed. Every product implementation phase must add or update useful tests unless explicitly scoped as docs-only/test-only with a reason.
+
+Product behavior audits should become reproduction tests or roadmap acceptance criteria, not new standalone docs by default. UI/UX polish should stay late unless it blocks correctness or usability.
 
 ### Roadmap Next-Phase Gate
 

@@ -46,7 +46,18 @@ const view = (overrides = {}) => ({
 });
 
 describe("dashboard cache projection", () => {
-  it("ALL custom matching requires all view tags", () => {
+  // Expected-failing reproduction tests for follow-up projection phases.
+  // Keep assertions intact: 1.4.1/1.4.2 should make these pass by fixing projection behavior.
+  it.fails("ANY custom matching includes lists with at least one required tag", () => {
+    const customView = view({ matchMode: "ANY" as const });
+
+    expect(listMatchesView(list("has-a", ["a"]), customView)).toBe(true);
+    expect(listMatchesView(list("has-b", ["b"]), customView)).toBe(true);
+    expect(listMatchesView(list("has-both", ["a", "b"]), customView)).toBe(true);
+    expect(listMatchesView(list("missing-all", []), customView)).toBe(false);
+  });
+
+  it("ALL custom matching excludes lists missing any required view tag", () => {
     const customView = view();
 
     expect(listMatchesView(list("match", ["a", "b"]), customView)).toBe(true);
@@ -65,23 +76,71 @@ describe("dashboard cache projection", () => {
     expect(projectView(allListsView, snapshot)?.lists.map((entry) => entry.id)).toEqual(["a", "b"]);
   });
 
-  it("projects custom views by filtering and view order", () => {
+  it("projects custom views by filtering and ViewList order with list order fallback", () => {
     const customView = view({
       viewLists: [
-        { listId: "second", order: 0 },
-        { listId: "first", order: 1 },
+        { listId: "first", order: 20 },
+        { listId: "second", order: 10 },
       ],
     });
     const snapshot = {
       view: view({ type: "ALL_LISTS" as const, viewTags: [] }),
       lists: [
-        list("first", ["a", "b"], 10),
+        list("first", ["a", "b"], 0),
         list("hidden", ["a"], 0),
-        list("second", ["a", "b"], 20),
+        list("fallback", ["a", "b"], 15),
+        list("second", ["a", "b"], 0),
       ],
     };
 
-    expect(projectView(customView, snapshot)?.lists.map((entry) => entry.id)).toEqual(["second", "first"]);
+    expect(projectView(customView, snapshot)?.lists.map((entry) => entry.id)).toEqual([
+      "second",
+      "fallback",
+      "first",
+    ]);
+  });
+
+  it("excludes a custom view list after the matching tag is removed from the snapshot", () => {
+    const customView = view({ viewTags: [{ viewId: "view-1", tagId: "a", tag: tag("a") }] });
+    const snapshot = {
+      view: view({ type: "ALL_LISTS" as const, viewTags: [] }),
+      lists: [
+        list("removed-tag", []),
+        list("still-matching", ["a"]),
+      ],
+    };
+
+    expect(projectView(customView, snapshot)?.lists.map((entry) => entry.id)).toEqual(["still-matching"]);
+  });
+
+  it("includes a custom view list after the required tag is added to the snapshot", () => {
+    const customView = view({ viewTags: [{ viewId: "view-1", tagId: "a", tag: tag("a") }] });
+    const snapshot = {
+      view: view({ type: "ALL_LISTS" as const, viewTags: [] }),
+      lists: [
+        list("added-tag", ["a"]),
+        list("missing-tag", []),
+      ],
+    };
+
+    expect(projectView(customView, snapshot)?.lists.map((entry) => entry.id)).toEqual(["added-tag"]);
+  });
+
+  it.fails("projects UNTAGGED views to lists without tags", () => {
+    const untaggedView = view({
+      type: "UNTAGGED" as const,
+      viewTags: [],
+      viewLists: [],
+    });
+    const snapshot = {
+      view: view({ type: "ALL_LISTS" as const, viewTags: [] }),
+      lists: [
+        list("tagged", ["a"]),
+        list("untagged", []),
+      ],
+    };
+
+    expect(projectView(untaggedView, snapshot)?.lists.map((entry) => entry.id)).toEqual(["untagged"]);
   });
 
   it("selects the default view before falling back to All Lists", () => {

@@ -12,10 +12,16 @@ Always read in this sequence  -  stop as soon as you have enough context:
 2. **ChromaDB query** (when available)  -  2 - 3 relevant chunks in seconds, not thousands of tokens
 3. **`docs/AI_HANDOFF.md`**  -  product snapshot, invariants, known risks
 4. **`docs/CODEX_RULES.md`** task routing table  -  pick the smallest source file set for the task
-5. **Phase log for the active phase**  -  only if implementing phase-specific work
-6. **Targeted source files**  -  only the files directly affected by the change
+5. **`docs/FUTURE_PLANS.md`**  -  only when choosing or updating roadmap scope
+6. **`docs/DECISIONS.md`**  -  only when a durable architecture decision changes
+7. **Targeted source files/tests**  -  only the files directly affected by the change
 
 Never scan the repo broadly. Never open files speculatively.
+
+Active product work uses `docs/FUTURE_PLANS.md`, `docs/AI_HANDOFF.md`,
+`docs/CODEX_RULES.md`, `docs/DECISIONS.md` only when architecture decisions
+change, and targeted source files/tests. `docs/PHASE_LOG.md` is historical and
+not part of the normal active read path.
 
 ---
 
@@ -60,7 +66,7 @@ python scripts/ingest_docs.py
 ```
 
 ChromaDB ingests these files into the `tidy_docs` collection:
-- `docs/AI_HANDOFF.md`, `docs/PHASE_LOG.md`, `docs/FUTURE_PLANS.md`, `docs/DECISIONS.md`, `docs/CODEX_RULES.md`
+- `docs/AI_HANDOFF.md`, `docs/PHASE_LOG.md` (historical archive), `docs/FUTURE_PLANS.md`, `docs/DECISIONS.md`, `docs/CODEX_RULES.md`
 - `docs/VERSIONING.md`, `docs/WORKFLOW.md`, `docs/COMPACT_STRATEGY.md`
 
 ChromaDB runs locally on `localhost:8000`  -  no cloud dependencies.

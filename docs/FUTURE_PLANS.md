@@ -80,12 +80,13 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.4.0 - View Projection Reproduction Tests (active) - see Planned
 ---
 
 ## Planned
 
 ### 1.4.0 - View Projection Reproduction Tests
-- **Status:** Open | Priority: P0 correctness test baseline
+- **Status:** In progress | Priority: P0 correctness test baseline
 - **Files:** tests/unit/dashboard-cache.test.ts, tests/e2e/views.spec.ts, tests/e2e/utils/*
 - **Problem:** View/list/tag projection bugs are currently too broad and under-specified. The app needs tests that reproduce the exact user-visible failures before implementation fixes begin.
 - **Scope:** add or update tests for list creation in All Lists, list creation inside custom views, matching tag add/remove behavior, custom view visibility, refresh persistence, and fast view switching.

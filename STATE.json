@@ -1,9 +1,9 @@
 {
-    "version":  "1.4.8",
-    "state":  "stable",
-    "phase":  "1.4.8",
-    "phaseTitle":  "Drag/Reorder Persistence Regression",
-    "nextPhase":  "1.4.9 - Custom View Reorder E2E Stabilization",
+    "version":  "1.4.9-alpha",
+    "state":  "alpha",
+    "phase":  "1.4.9",
+    "phaseTitle":  "Branch-Based Phase Workflow Draft",
+    "nextPhase":  "1.4.10 - Context Index Routing Map",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-31"
 }

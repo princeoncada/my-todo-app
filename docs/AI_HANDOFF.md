@@ -1,8 +1,8 @@
-<!-- Current Version: 1.4.8 -->
+<!-- Current Version: 1.4.9-alpha -->
 # AI Handoff
-**Current Version**: 1.4.8 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.4.8 - Drag/Reorder Persistence Regression
-**Next**: 1.4.9 - Custom View Reorder E2E Stabilization
+**Current Version**: 1.4.9-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.4.9 - Branch-Based Phase Workflow Draft
+**Next**: 1.4.10 - Context Index Routing Map
 ---
 ## What Was Last Done
 **Phase 1.3.2** completed ChatGPT architect real workflow test:

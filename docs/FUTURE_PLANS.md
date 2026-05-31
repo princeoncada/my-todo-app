@@ -82,46 +82,54 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.4.1 - AI Handoff Next Session Cleanup (active) - see Planned
 ---
 
 ## Planned
 
-### 1.4.1 - Backend View Membership Contract
+### 1.4.1 - AI Handoff Next Session Cleanup
+- **Status:** In progress | Priority: P0 workflow correctness
+- **Files:** docs/AI_HANDOFF.md, docs/FUTURE_PLANS.md
+- **Problem:** AI_HANDOFF still points next sessions at completed 1.4.0 startup/scoping instructions.
+- **Scope:** replace stale next-session instructions and renumber the 1.4.x planned product phases so backend view membership remains next after cleanup.
+- **Acceptance:** startup handoff points to 1.4.2 backend scoping packet, 1.4.0 remains completed, PHASE_LOG remains historical only, no product files are touched.
+
+### 1.4.2 - Backend View Membership Contract
 - **Status:** Open | Priority: P0 projection correctness
 - **Files:** trpc/routers/viewRouter.ts, trpc/routers/viewHelpers.ts, prisma/schema.prisma only if a proven relation bug requires it, tests/
 - **Problem:** Frontend projection and backend refresh can disagree because custom view membership is materialized in ViewList rows while the UI also derives membership from tags.
 - **Scope:** make backend view payloads match the same projection contract used by the frontend; decide whether ViewList remains membership plus order or becomes order metadata over tag-derived membership; update DECISIONS.md only if the durable architecture contract changes.
 - **Acceptance:** backend refresh returns the same visible lists the optimistic frontend projection expects; tests cover refresh correctness; no broad tRPC rewrite.
 
-### 1.4.2 - Dashboard Cache Projection Contract
+### 1.4.3 - Dashboard Cache Projection Contract
 - **Status:** Open | Priority: P0 frontend correctness
 - **Files:** lib/dashboard-cache.ts, components/list/ListAdder.tsx, components/list/ListsContainer.tsx, components/list/ListComponent.tsx, components/list/ListTagPicker.tsx, components/views/ViewsSidebarPreview.tsx, tests/
 - **Problem:** Multiple components manually write overlapping dashboard caches, which risks stale current-view, selected-view, and all-lists divergence.
 - **Scope:** route cross-component list/tag/view cache updates through shared dashboard-cache helpers; preserve query key shapes and optimistic UX; add regression tests for affected cache helpers.
 - **Acceptance:** All Lists, current view, and selected view caches stay consistent after create/rename/delete/tag changes; useful unit or E2E tests are added or updated.
 
-### 1.4.3 - Tag Mutation Projection Regression
+### 1.4.4 - Tag Mutation Projection Regression
 - **Status:** Open | Priority: P0 tag/view consistency
 - **Files:** trpc/routers/tagRouter.ts, trpc/routers/viewHelpers.ts, components/list/ListTagPicker.tsx, lib/dashboard-cache.ts, tests/
 - **Problem:** Tag add/remove/delete flows can leave affected custom views stale or duplicated because recompute and cache update paths are split.
 - **Scope:** make tag mutations reconcile affected custom views through one predictable path; preserve batching behavior; add tests for add/remove/delete and refresh persistence.
 - **Acceptance:** adding/removing/deleting tags updates all affected custom views; refresh matches the optimistic UI; tests prevent regressions.
 
-### 1.4.4 - View Switching Race Regression
+### 1.4.5 - View Switching Race Regression
 - **Status:** Open | Priority: P0 race correctness
 - **Files:** components/views/ViewsSidebarPreview.tsx, components/list/ListsContainer.tsx, lib/dashboard-cache.ts, tests/e2e/views.spec.ts
 - **Problem:** Fast view switching and late query responses can repaint the dashboard with stale data.
 - **Scope:** lock down current-view writes so late responses cannot overwrite the latest selected view; add tests or E2E coverage for fast switching and refresh.
 - **Acceptance:** latest selected view wins; stale fetches do not repaint the dashboard; tests cover the race or document why E2E is required.
 
-### 1.4.5 - Create List + Create Item Race Regression
+### 1.4.6 - Create List + Create Item Race Regression
 - **Status:** Open | Priority: P0 optimistic correctness
 - **Files:** components/list/ListAdder.tsx, components/list/ListComponent.tsx, hooks/useOptimisticSync.ts, lib/dashboard-cache.ts, tests/e2e/list-items.spec.ts
 - **Problem:** Creating an item immediately after creating a list can break if the parent optimistic list has not reconciled with the server row.
 - **Scope:** test and harden the create-list-then-create-item flow; preserve the lightweight optimistic feel; avoid Dexie/source-of-truth expansion.
 - **Acceptance:** user can create a list and immediately add items; refresh keeps the list and items; regression tests cover the flow.
 
-### 1.4.6 - Drag/Reorder Persistence Regression
+### 1.4.7 - Drag/Reorder Persistence Regression
 - **Status:** Open | Priority: P1 reorder correctness
 - **Files:** components/list/ListsContainer.tsx, components/list/ListComponent.tsx, components/list/ListItemComponent.tsx, components/views/ViewsSidebarPreview.tsx, trpc/routers/listItemRouter.ts, trpc/routers/viewRouter.ts, tests/e2e/drag-drop.spec.ts
 - **Problem:** Reorder behavior must remain lightweight, optimistic, and persistent without rewriting caches during hover or sending optimistic-only IDs to the server.

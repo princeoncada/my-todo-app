@@ -93,7 +93,7 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.4.9-alpha
+- **Current version:** 1.4.9
 - **Current phase:** 1.4.9 - Branch-Based Phase Workflow Draft
 - **Next phase:** 1.4.10 - Context Index Routing Map
 
@@ -155,7 +155,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
-| 1.4.9 | alpha | 2026-05-31 | Branch-Based Phase Workflow Draft | (in progress) |
+| 1.4.9 | stable | 2026-05-31 | Branch-Based Phase Workflow Draft | (in progress) |
 | 1.4.8 | stable | 2026-05-31 | Drag/Reorder Persistence Regression | (in progress) |
 | 1.4.7 | stable | 2026-05-31 | Create List + Create Item Race Regression | (in progress) |
 | 1.4.6 | stable | 2026-05-31 | View Switching Race Regression | (in progress) |

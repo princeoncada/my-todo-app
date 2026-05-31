@@ -89,6 +89,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.4.8 - Drag/Reorder Persistence Regression~~ (stable 2026-05-31)
 
+- ~~1.4.9 - Branch-Based Phase Workflow Draft~~ (stable 2026-05-31)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -98,35 +100,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.4.9 - Branch-Based Phase Workflow Draft (active) - see Planned
 ---
 
 ## Planned
-
-### 1.4.9 - Branch-Based Phase Workflow Draft
-- **Status:** In progress | Priority: P1 workflow reliability
-- **Files:** docs/FUTURE_PLANS.md
-- **DRAFT:** This phase is a roadmap/workflow draft only. It records proposed branch-based guidance for review; it does not finalize the workflow or implement all hardening changes.
-- **Problem:** Master should remain stable while implementation phases preserve useful engineering history on phase branches.
-- **Scope:** Draft the branch-based phase lifecycle and record the follow-up phases needed to compress context, harden debugging discipline, finalize the workflow, and defer custom view reorder E2E stabilization.
-- **Draft branch-based implementation workflow:**
-  1. master must stay stable.
-  2. Every new phase starts from stable master.
-  3. Create a phase branch before opening or implementing the phase.
-  4. Run open-phase.ps1 on the phase branch, not master.
-  5. Implementation loops happen only on the phase branch.
-  6. Commit all meaningful changes one by one, including alpha/in-progress fixes, to preserve git action history.
-  7. Run validation on the phase branch.
-  8. When the phase branch is fully green, merge it into master.
-  9. Revalidate on master.
-  10. Promote on master.
-  11. Commit promotion files one by one.
-  12. Push master only after stable promotion.
-  13. If a phase expands too much, split the remaining work into the next planned phase instead of looping endlessly.
-- **Draft notes:** This is draft guidance only. Final workflow rules will be handled in a later phase.
-- **Commit-history note:** Meaningful failed attempts, diagnostic commits, rollback commits, and in-alpha fix commits may be preserved on phase branches when they represent reviewable engineering history. Fake activity commits are forbidden.
-- **Terminal no-next-phase note:** Terminal no-next-phase support is valid conceptually, but it is not part of 1.4.9. If needed later, it should be handled by a dedicated versioning/script phase.
-- **Acceptance:** FUTURE_PLANS captures the draft branch workflow and the follow-up phase sequence without changing active workflow docs or app behavior.
 
 ### 1.4.10 - Context Index Routing Map
 - **Status:** Open | Priority: P1 token/context compression

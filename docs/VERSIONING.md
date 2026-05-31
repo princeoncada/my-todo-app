@@ -66,6 +66,13 @@ Rules:
   emitted as separate top-level sections: Section 1 master prompt, Section 2
   validation, and optional commit/promotion blocks. When a section itself is
   fenced, examples inside it must be unfenced or indented.
+- Repo state questions are answered from pushed GitHub state or local repo state
+  depending on execution context. ChatGPT architect mode uses pushed GitHub
+  state plus pasted local evidence; local-only facts are not visible to ChatGPT
+  until pasted or pushed. The Local Evidence Packet is the bridge for local
+  ChromaDB, graph output, git diff/status, and validation output. This does not
+  change `STATE.json` ownership or `docs/FUTURE_PLANS.md` ownership, and prompt
+  format safety still applies when documenting the Local Evidence Packet.
 - On any phase renumber, update FUTURE_PLANS (Planned) and PHASE_LOG target-version
   references together - they are not auto-synced.
 - The chathead opener instructs reading `STATE.json` + `docs/FUTURE_PLANS.md`; it
@@ -85,9 +92,9 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.2.7
-- **Current phase:** 1.2.7 - Prompt Fence Safety Hardening
-- **Next phase:** 1.3.0 - ChatGPT Architect Local Context Workflow
+- **Current version:** 1.3.0-alpha
+- **Current phase:** 1.3.0 - ChatGPT Architect Local Context Workflow
+- **Next phase:** 1.4.0 - Phase 3 Completion: View Filter Hardening
 
 ---
 
@@ -147,6 +154,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.3.0 | alpha | 2026-05-30 | ChatGPT Architect Local Context Workflow | (in progress) |
 | 1.2.7 | stable | 2026-05-30 | Prompt Fence Safety Hardening | (in progress) |
 | 1.2.6 | stable | 2026-05-30 | Roadmap Next-Phase Gate | (in progress) |
 | 1.2.5 | stable | 2026-05-30 | Phase Routing Guardrail Cleanup | (in progress) |

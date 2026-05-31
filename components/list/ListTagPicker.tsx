@@ -457,6 +457,7 @@ export default function ListTagPicker({
 
           <button
             type="button"
+            aria-label={`Remove ${tag.name} tag`}
             onClick={() => scheduleTagFlush(tag, "remove")}
             className="shrink-0 rounded-full opacity-70 transition hover:cursor-pointer hover:opacity-100"
           >

@@ -1,6 +1,6 @@
-<!-- Current Version: 1.2.4-alpha -->
+<!-- Current Version: 1.2.4 -->
 # AI Handoff
-**Current Version**: 1.2.4-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.2.4 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.2.4 - Handoff Drift Cleanup
 **Next**: 1.2.5 - Phase Routing Guardrail Cleanup
 ---

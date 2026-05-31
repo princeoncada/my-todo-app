@@ -69,9 +69,9 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.2.3
-- **Current phase:** 1.2.3 - Startup Oracle Cleanup
-- **Next phase:** 1.2.4 - Handoff Drift Cleanup
+- **Current version:** 1.2.4-alpha
+- **Current phase:** 1.2.4 - Handoff Drift Cleanup
+- **Next phase:** 1.2.5 - Phase Routing Guardrail Cleanup
 
 ---
 
@@ -131,8 +131,9 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
-| 1.2.3 | stable | 2026-05-30 | Startup Oracle Cleanup | (in progress) |
-| 1.2.2 | stable | 2026-05-30 | Chroma Visibility Fix | (in progress) |
+| 1.2.4 | alpha | 2026-05-30 | Handoff Drift Cleanup | (in progress) |
+| 1.2.3 | stable | 2026-05-30 | Startup Oracle Cleanup | Removed preVersioningBaseline from STATE.json, kept pre-versioning history in VERSIONING/PHASE_LOG, added Planned Phase Capture rules, and inserted 1.2.4/1.2.5 cleanup patches before 1.3.0. |
+| 1.2.2 | stable | 2026-05-30 | Chroma Visibility Fix | Fixed ChromaDB visibility in startup/validation flow and kept fallback behavior explicit when ChromaDB is unavailable. |
 | 1.2.1 | stable | 2026-05-30 | Graph Navigation Doc Consistency | COMPACT_STRATEGY.md graphify section rewritten to the static codebase-graph.json path (removed broken graphify-out/live-CLI steps); validate.ps1 graph-usage guard fails if any doc instructs the unavailable live graphify CLI. |
 | 1.2.0 | stable | 2026-05-30 | ChromaDB Bootstrap | ingest_docs.py BOM-safe + cosine + indexes CODEBASE_GRAPH.md; validate.ps1 auto-starts ChromaDB and ingests or FAILs loudly; chroma-data bootstrapped so query_docs.py returns real chunks. |
 | 1.1.4 | stable | 2026-05-29 | Graph Routing Usage Contract | Requires visible graph-routed file selection in implementation scoping without adding startup-loop overhead or token benchmarking. |

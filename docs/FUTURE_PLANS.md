@@ -81,6 +81,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.4.4 - Open Phase Roadmap Status Automation~~ (stable 2026-05-31)
 
+- ~~1.4.5 - Tag Mutation Projection Regression~~ (stable 2026-05-31)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -90,17 +92,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.4.5 - Tag Mutation Projection Regression (active) - see Planned
 ---
 
 ## Planned
-
-### 1.4.5 - Tag Mutation Projection Regression
-- **Status:** In progress | Priority: P0 tag/view consistency
-- **Files:** trpc/routers/tagRouter.ts, trpc/routers/viewHelpers.ts, components/list/ListTagPicker.tsx, lib/dashboard-cache.ts, tests/
-- **Problem:** Tag add/remove/delete flows can leave affected custom views stale or duplicated because recompute and cache update paths are split.
-- **Scope:** make tag mutations reconcile affected custom views through one predictable path; preserve batching behavior; add tests for add/remove/delete and refresh persistence.
-- **Acceptance:** adding/removing/deleting tags updates all affected custom views; refresh matches the optimistic UI; tests prevent regressions.
 
 ### 1.4.6 - View Switching Race Regression
 - **Status:** Open | Priority: P0 race correctness

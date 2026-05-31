@@ -413,6 +413,50 @@ if ($promptFenceErrors.Count -eq 0) {
     Add-Result "prompt fence safety" $false ($promptFenceErrors -join "; ")
 }
 
+# ChatGPT architect documentation guard - ensure local evidence boundaries remain documented.
+$chatGptArchitectRequirements = @(
+    @{
+        Path = "AGENTS.md"
+        Phrase = "ChatGPT Architect Mode"
+    },
+    @{
+        Path = "docs/WORKFLOW.md"
+        Phrase = "Local Evidence Packet"
+    },
+    @{
+        Path = "docs/COMPACT_STRATEGY.md"
+        Phrase = "ChatGPT architect"
+    },
+    @{
+        Path = "docs/CODEX_RULES.md"
+        Phrase = "ChatGPT Architect Evidence Boundary"
+    },
+    @{
+        Path = "docs/AI_HANDOFF.md"
+        Phrase = "ChatGPT architect sees pushed GitHub state plus pasted evidence only"
+    },
+    @{
+        Path = "docs/VERSIONING.md"
+        Phrase = "Local Evidence Packet"
+    }
+)
+$chatGptArchitectErrors = @()
+foreach ($requirement in $chatGptArchitectRequirements) {
+    if (-not (Test-Path $requirement.Path)) {
+        $chatGptArchitectErrors += "$($requirement.Path) missing"
+        continue
+    }
+    $docContent = Get-Content $requirement.Path -Raw -Encoding UTF8
+    if (-not $docContent.Contains($requirement.Phrase)) {
+        $chatGptArchitectErrors += "$($requirement.Path) missing phrase '$($requirement.Phrase)'"
+    }
+}
+if ($chatGptArchitectErrors.Count -eq 0) {
+    Add-Result "chatgpt architect docs" $true "documentation present"
+} else {
+    Add-Result "chatgpt architect docs" $false ($chatGptArchitectErrors -join "; ")
+}
+
 # ChromaDB - auto-start if needed, then ingest docs (FAIL loudly if unreachable)
 if (-not $SkipChroma) {
     $chromaUri = "http://localhost:8000/api/v2/heartbeat"
@@ -486,19 +530,22 @@ if (-not $SkipE2E) {
 
 # Summary
 Write-Host ""
-$passCount = ($results | Where-Object { $_.Passed }).Count
-$failCount  = ($results | Where-Object { -not $_.Passed }).Count
+$passedResults = @($results | Where-Object { $_.Passed -eq $true })
+$failedResults = @($results | Where-Object { $_.Passed -ne $true })
+$passCount = $passedResults.Count
+$failCount = $failedResults.Count
 
 foreach ($r in $results) {
-    $icon   = if ($r.Passed) { "PASS" } else { "FAIL" }
-    $color  = if ($r.Passed) { "Green" } else { "Red" }
+    $resultPassed = $r.Passed -eq $true
+    $icon   = if ($resultPassed) { "PASS" } else { "FAIL" }
+    $color  = if ($resultPassed) { "Green" } else { "Red" }
     $detail = if ($r.Detail) { "  $($r.Detail)" } else { "" }
     Write-Host "  [$icon] $($r.Label)$detail" -ForegroundColor $color
 }
 
 Write-Host ""
 if ($failCount -gt 0) {
-    Write-Host "$passCount passed, $failCount FAILED - fix before promoting." -ForegroundColor Red
+    Write-Host "VALIDATION FAILED: $passCount passed, $failCount failed - not ready for promote.ps1." -ForegroundColor Red
     exit 1
 } else {
     Write-Host "$passCount passed - ready for promote.ps1." -ForegroundColor Green

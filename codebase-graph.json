@@ -1,6 +1,6 @@
 {
   "schemaVersion": "tidy-codebase-graph/v1",
-  "version": "1.4.1",
+  "version": "1.4.2-alpha",
   "generatedAt": "2026-05-31",
   "generator": "scripts/generate_codebase_graph.py fallback scanner",
   "graphify": {
@@ -2519,6 +2519,19 @@
       ]
     },
     {
+      "path": "tests/unit/view-helpers.test.ts",
+      "kind": "test",
+      "extension": ".ts",
+      "symbols": [
+        "rows"
+      ],
+      "imports": [
+        "vitest",
+        "@/app/generated/prisma/client",
+        "@/trpc/routers/viewHelpers"
+      ]
+    },
+    {
       "path": "trpc/client.tsx",
       "kind": "trpc",
       "extension": ".tsx",
@@ -2699,6 +2712,9 @@
       "kind": "trpc_router",
       "extension": ".ts",
       "symbols": [
+        "listMatchesViewTags",
+        "customViewMembershipWhere",
+        "buildCustomViewListRows",
         "ensureAllListsView",
         "ensureDefaultView",
         "setSelectedView",
@@ -2707,18 +2723,15 @@
         "recomputeCustomViewsForUser",
         "recomputeCustomViewsForTags",
         "ALL_LISTS_NAME",
+        "listTagIdSet",
+        "assignedOrders",
+        "fallbackStart",
+        "knownOrder",
+        "order",
         "hasDefaultView",
         "topView",
         "allListsView",
-        "defaultView",
-        "view",
-        "existingListIds",
-        "missingLists",
-        "bottomViewList",
-        "startOrder",
-        "tagIds",
-        "allViewLists",
-        "allListOrders"
+        "defaultView"
       ],
       "imports": [
         "@/app/generated/prisma/client",
@@ -4176,6 +4189,12 @@
       "to": "lib/local-db/sync-status.ts",
       "type": "imports",
       "import": "@/lib/local-db/sync-status"
+    },
+    {
+      "from": "tests/unit/view-helpers.test.ts",
+      "to": "trpc/routers/viewHelpers.ts",
+      "type": "imports",
+      "import": "@/trpc/routers/viewHelpers"
     },
     {
       "from": "trpc/client.tsx",

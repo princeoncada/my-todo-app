@@ -93,9 +93,9 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.4.4
-- **Current phase:** 1.4.4 - Open Phase Roadmap Status Automation
-- **Next phase:** 1.4.5 - Tag Mutation Projection Regression
+- **Current version:** 1.4.5-alpha
+- **Current phase:** 1.4.5 - Tag Mutation Projection Regression
+- **Next phase:** 1.4.6 - View Switching Race Regression
 
 ---
 
@@ -155,6 +155,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.4.5 | alpha | 2026-05-31 | Tag Mutation Projection Regression | (in progress) |
 | 1.4.4 | stable | 2026-05-31 | Open Phase Roadmap Status Automation | (in progress) |
 | 1.4.3 | stable | 2026-05-31 | Dashboard Cache Projection Contract | (in progress) |
 | 1.4.2 | stable | 2026-05-31 | Backend View Membership Contract | (in progress) |

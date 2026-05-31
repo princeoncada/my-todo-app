@@ -1,9 +1,9 @@
 {
-    "version":  "1.4.0-alpha",
-    "state":  "alpha",
+    "version":  "1.4.0",
+    "state":  "stable",
     "phase":  "1.4.0",
     "phaseTitle":  "View Projection Reproduction Tests",
     "nextPhase":  "1.4.1 - Backend View Membership Contract",
     "seriesComplete":  false,
-    "lastUpdated":  "2026-05-30"
+    "lastUpdated":  "2026-05-31"
 }

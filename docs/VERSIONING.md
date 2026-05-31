@@ -34,7 +34,7 @@ new place - that is how drift starts.
 | Fact | Owner | Where it also appears | Kept in sync by |
 |------|-------|-----------------------|-----------------|
 | Version + state string | `STATE.json` (`version`, `state`) | VERSIONING (current + history), AI_HANDOFF (comment + prose), package.json, WORKFLOW (comment) | Sync: `open-phase.ps1` (alpha) + `promote.ps1` (stable) + Gate: `validate.ps1` |
-| Phase identity (number + title) | `STATE.json` (`phase`, `phaseTitle`) | VERSIONING (Current State), AI_HANDOFF (Current Phase), PHASE_LOG | Gate: `validate.ps1` checks current VERSIONING and AI_HANDOFF copies against STATE.json |
+| Phase identity (number + title) | `STATE.json` (`phase`, `phaseTitle`) | VERSIONING (Current State), AI_HANDOFF (Current Phase) | Gate: `validate.ps1` checks current VERSIONING and AI_HANDOFF copies against STATE.json |
 | Next phase | `STATE.json` (`nextPhase`) | VERSIONING (Next phase line), AI_HANDOFF (Next line) | Sync: `open-phase.ps1` (alpha) + `promote.ps1` (stable) + Gate: `validate.ps1` checks copies and stable roadmap agreement |
 | Next backlog item | `docs/FUTURE_PLANS.md` (first Planned) | reported at startup; compared with STATE.json nextPhase when stable | Point: read fresh each session + Gate: `validate.ps1` |
 | Roadmap (version-sequenced) | `docs/FUTURE_PLANS.md` (Planned) | VERSIONING holds history only; startup reads it | Point: FUTURE_PLANS is the single roadmap owner |
@@ -73,8 +73,9 @@ Rules:
   ChromaDB, graph output, git diff/status, and validation output. This does not
   change `STATE.json` ownership or `docs/FUTURE_PLANS.md` ownership, and prompt
   format safety still applies when documenting the Local Evidence Packet.
-- On any phase renumber, update FUTURE_PLANS (Planned) and PHASE_LOG target-version
-  references together - they are not auto-synced.
+- `docs/PHASE_LOG.md` is historical traceability for pre-versioning work and old
+  checkpoint evidence. It is not an active workflow surface for new versioned
+  phases.
 - The chathead opener instructs reading `STATE.json` + `docs/FUTURE_PLANS.md`; it
   must never embed a "current state" or "next work" snapshot.
 
@@ -92,9 +93,9 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.3.2
-- **Current phase:** 1.3.2 - ChatGPT Architect Real Workflow Test
-- **Next phase:** 1.4.0 - Phase 3 Completion: View Filter Hardening
+- **Current version:** 1.3.3-alpha
+- **Current phase:** 1.3.3 - Docs Surface and Product Roadmap Rebaseline
+- **Next phase:** 1.4.0 - View Projection Reproduction Tests
 
 ---
 
@@ -154,13 +155,14 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
-| 1.3.2 | stable | 2026-05-30 | ChatGPT Architect Real Workflow Test | (in progress) |
-| 1.3.1 | stable | 2026-05-30 | ChatGPT Architect Workflow Proof and Layout Review | (in progress) |
-| 1.3.0 | stable | 2026-05-30 | ChatGPT Architect Local Context Workflow | (in progress) |
-| 1.2.7 | stable | 2026-05-30 | Prompt Fence Safety Hardening | (in progress) |
-| 1.2.6 | stable | 2026-05-30 | Roadmap Next-Phase Gate | (in progress) |
-| 1.2.5 | stable | 2026-05-30 | Phase Routing Guardrail Cleanup | (in progress) |
-| 1.2.4 | stable | 2026-05-30 | Handoff Drift Cleanup | (in progress) |
+| 1.3.3 | alpha | 2026-05-30 | Docs Surface and Product Roadmap Rebaseline | (in progress) |
+| 1.3.2 | stable | 2026-05-30 | ChatGPT Architect Real Workflow Test | Replaced the static workflow review doc with a real local export script and validation coverage for the ChatGPT-ready context packet layout. |
+| 1.3.1 | stable | 2026-05-30 | ChatGPT Architect Workflow Proof and Layout Review | Added a static ChatGPT workflow review document and validation coverage; later superseded by 1.3.2's real export script. |
+| 1.3.0 | stable | 2026-05-30 | ChatGPT Architect Local Context Workflow | Added ChatGPT Architect Mode, Local Evidence Packet requirements, ChromaDB/graph local-evidence boundaries, and validation coverage. |
+| 1.2.7 | stable | 2026-05-30 | Prompt Fence Safety Hardening | Documented prompt-fence safety rules and added validation coverage for required prompt-format documentation. |
+| 1.2.6 | stable | 2026-05-30 | Roadmap Next-Phase Gate | Added nextPhase/FUTURE_PLANS drift guards across validation, open-phase, promote, and workflow docs. |
+| 1.2.5 | stable | 2026-05-30 | Phase Routing Guardrail Cleanup | Aligned phase routing guardrails, roadmap movement boundaries, and Phase 3 checkpoint wording. |
+| 1.2.4 | stable | 2026-05-30 | Handoff Drift Cleanup | Removed stale handoff/versioning references and corrected old phase-log promotion wording. |
 | 1.2.3 | stable | 2026-05-30 | Startup Oracle Cleanup | Removed preVersioningBaseline from STATE.json, kept pre-versioning history in VERSIONING/PHASE_LOG, added Planned Phase Capture rules, and inserted 1.2.4/1.2.5 cleanup patches before 1.3.0. |
 | 1.2.2 | stable | 2026-05-30 | Chroma Visibility Fix | Fixed ChromaDB visibility in startup/validation flow and kept fallback behavior explicit when ChromaDB is unavailable. |
 | 1.2.1 | stable | 2026-05-30 | Graph Navigation Doc Consistency | COMPACT_STRATEGY.md graphify section rewritten to the static codebase-graph.json path (removed broken graphify-out/live-CLI steps); validate.ps1 graph-usage guard fails if any doc instructs the unavailable live graphify CLI. |

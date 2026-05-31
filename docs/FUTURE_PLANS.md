@@ -74,9 +74,17 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.3.1 - ChatGPT Architect Workflow Proof and Layout Review (active) - see Planned
 ---
 
 ## Planned
+
+### 1.3.1 - ChatGPT Architect Workflow Proof and Layout Review
+- **Status:** In progress | Priority: P0 workflow reliability
+- **Files:** docs/CHATGPT_ARCHITECT_WORKFLOW_REVIEW.md, docs/FUTURE_PLANS.md, docs/AI_HANDOFF.md, scripts/validate.ps1
+- **Problem:** 1.3.0 added the ChatGPT Architect workflow, but the user needs a reviewable proof/layout document that shows what changed, how context is passed into ChatGPT, and what must be approved before product work resumes.
+- **Scope:** create a ChatGPT Architect workflow review document; prove 1.3.0 implementation through visible checks; document before/after workflow layout, Local Evidence Packet layout, ChromaDB/graph context flow, remote-only limits, and 1.4.0 scoping preview; add validation coverage for the review document.
+- **Acceptance:** review document exists; it shows 1.3.0 changes and proof points; it includes approval checklist and 1.4.0 preview; validation fails if the review document or required review sections disappear; no app behavior changes.
 
 ### 1.4.0 - Phase 3 Completion: View Filter Hardening
 - **Status:** Open | Priority: projection correctness

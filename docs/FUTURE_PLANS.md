@@ -84,12 +84,13 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.4.2 - Backend View Membership Contract (active) - see Planned
 ---
 
 ## Planned
 
 ### 1.4.2 - Backend View Membership Contract
-- **Status:** Open | Priority: P0 projection correctness
+- **Status:** In progress | Priority: P0 projection correctness
 - **Files:** trpc/routers/viewRouter.ts, trpc/routers/viewHelpers.ts, prisma/schema.prisma only if a proven relation bug requires it, tests/
 - **Problem:** Frontend projection and backend refresh can disagree because custom view membership is materialized in ViewList rows while the UI also derives membership from tags.
 - **Scope:** make backend view payloads match the same projection contract used by the frontend; decide whether ViewList remains membership plus order or becomes order metadata over tag-derived membership; update DECISIONS.md only if the durable architecture contract changes.

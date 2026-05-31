@@ -2,6 +2,8 @@
 
 Chronological record of all implementation phases and their checkpoint validation results.
 
+PHASE_LOG.md is a historical pre-versioning archive. It is not an active workflow surface for new versioned phases. New product work is tracked in FUTURE_PLANS, AI_HANDOFF, DECISIONS when architecture decisions change, and tests.
+
 ---
 
 ## Phase 1.0.0: AI Workflow Foundation  -  COMPLETE

@@ -1,9 +1,9 @@
 {
-    "version":  "1.4.6",
-    "state":  "stable",
-    "phase":  "1.4.6",
-    "phaseTitle":  "View Switching Race Regression",
-    "nextPhase":  "1.4.7 - Create List + Create Item Race Regression",
+    "version":  "1.4.7-alpha",
+    "state":  "alpha",
+    "phase":  "1.4.7",
+    "phaseTitle":  "Create List + Create Item Race Regression",
+    "nextPhase":  "1.4.8 - Drag/Reorder Persistence Regression",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-31"
 }

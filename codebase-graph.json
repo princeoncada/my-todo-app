@@ -1,6 +1,6 @@
 {
   "schemaVersion": "tidy-codebase-graph/v1",
-  "version": "1.4.6",
+  "version": "1.4.7-alpha",
   "generatedAt": "2026-05-31",
   "generator": "scripts/generate_codebase_graph.py fallback scanner",
   "graphify": {
@@ -391,23 +391,23 @@
         "listIsOptimistic",
         "itemIsAlreadyInCache",
         "removeItemFromCache",
-        "waitForSavedList",
+        "waitForSavedListInDashboardCaches",
         "handleViewListItemAdder",
         "handleDeleteList",
-        "currentList",
         "ListComponent",
         "listIsOnlyInBrowser",
         "timeout",
         "trpc",
         "queryClient",
-        "queryKey",
         "previousAllLists",
         "previousCurrentView",
         "previousSelectedView",
         "deleteListMutation",
         "deleteList",
         "deletedList",
-        "alreadyRestored"
+        "alreadyRestored",
+        "alreadyInCache",
+        "handleCreateItem"
       ],
       "imports": [
         "@/lib/utils",
@@ -1431,6 +1431,8 @@
         "isLatestSelectedView",
         "canApplySelectedViewPayload",
         "canRollbackViewSelection",
+        "reconcileCreatedListInSnapshot",
+        "hasSavedListInDashboardSnapshots",
         "applyViewSelectionToViews",
         "applyViewSelection",
         "updateListInDashboardCaches",
@@ -1440,9 +1442,7 @@
         "applyDeletedTagToDashboardCaches",
         "reconcileSavedListTags",
         "reconcileAffectedViewLists",
-        "rollbackScope",
-        "setDashboardQueryDataOnce",
-        "updateListInViewSnapshot"
+        "rollbackScope"
       ],
       "imports": [
         "@tanstack/react-query",
@@ -2219,6 +2219,8 @@
       "extension": ".ts",
       "symbols": [
         "createList",
+        "createItemInVisibleList",
+        "createListAndImmediatelyAddItem",
         "renameList",
         "deleteList",
         "openAllLists",
@@ -2229,7 +2231,9 @@
         "createTag",
         "removeTagFromList",
         "createView",
+        "waitForSuccessfulTrpcMutation",
         "card",
+        "persisted",
         "item",
         "Page"
       ],
@@ -2347,6 +2351,7 @@
       "extension": ".ts",
       "symbols": [
         "tag",
+        "item",
         "list",
         "view",
         "customView",
@@ -2358,8 +2363,13 @@
         "defaultView",
         "olderPayload",
         "latestPayload",
-        "DashboardSnapshot",
-        "ViewsCache"
+        "optimisticItem",
+        "savedList",
+        "reconciled",
+        "allListsSnapshot",
+        "currentViewSnapshot",
+        "selectedViewSnapshot",
+        "DashboardSnapshot"
       ],
       "imports": [
         "vitest",

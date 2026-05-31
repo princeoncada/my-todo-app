@@ -1,6 +1,6 @@
 {
-    "version":  "1.2.6-alpha",
-    "state":  "alpha",
+    "version":  "1.2.6",
+    "state":  "stable",
     "phase":  "1.2.6",
     "phaseTitle":  "Roadmap Next-Phase Gate",
     "nextPhase":  "1.3.0 - ChatGPT Architect Local Context Workflow",

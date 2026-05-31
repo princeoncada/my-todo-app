@@ -1,6 +1,6 @@
 {
   "schemaVersion": "tidy-codebase-graph/v1",
-  "version": "1.3.0",
+  "version": "1.3.1-alpha",
   "generatedAt": "2026-05-30",
   "generator": "scripts/generate_codebase_graph.py fallback scanner",
   "graphify": {
@@ -1090,6 +1090,13 @@
     },
     {
       "path": "docs/AI_HANDOFF.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/CHATGPT_ARCHITECT_WORKFLOW_REVIEW.md",
       "kind": "documentation",
       "extension": ".md",
       "symbols": [],

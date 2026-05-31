@@ -85,7 +85,7 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.2.7-alpha
+- **Current version:** 1.2.7
 - **Current phase:** 1.2.7 - Prompt Fence Safety Hardening
 - **Next phase:** 1.3.0 - ChatGPT Architect Local Context Workflow
 
@@ -147,7 +147,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
-| 1.2.7 | alpha | 2026-05-30 | Prompt Fence Safety Hardening | (in progress) |
+| 1.2.7 | stable | 2026-05-30 | Prompt Fence Safety Hardening | (in progress) |
 | 1.2.6 | stable | 2026-05-30 | Roadmap Next-Phase Gate | (in progress) |
 | 1.2.5 | stable | 2026-05-30 | Phase Routing Guardrail Cleanup | (in progress) |
 | 1.2.4 | stable | 2026-05-30 | Handoff Drift Cleanup | (in progress) |

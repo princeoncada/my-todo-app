@@ -10,7 +10,12 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CurrentView, OptimisticList } from "./types";
 import { Plus } from "lucide-react";
-import { invalidateViewPayloadQueries, queryKeysEqual, selectedViewFromCache } from "@/lib/dashboard-cache";
+import {
+  invalidateViewPayloadQueries,
+  queryKeysEqual,
+  reconcileCreatedListInSnapshot,
+  selectedViewFromCache,
+} from "@/lib/dashboard-cache";
 import { Skeleton } from "../ui/skeleton";
 
 
@@ -133,39 +138,7 @@ const ListAdder = () => {
     },
     async onSuccess(createdList, variables) {
       const replaceOptimisticList = (current: CurrentView | undefined) => {
-        if (!current) return current;
-
-        const matchingLists = current.lists.filter((list) => list.id === variables.id);
-        if (matchingLists.length === 0) return current;
-
-        const preservedList = matchingLists.reduce((bestList, list) =>
-          list.listItems.length > bestList.listItems.length ? list : bestList
-        );
-        let insertedCreatedList = false;
-
-        return {
-          ...current,
-          lists: current.lists.reduce<CurrentView["lists"]>((nextLists, list) => {
-              if (list.id !== variables.id) {
-                nextLists.push(list);
-                return nextLists;
-              }
-
-              if (insertedCreatedList) {
-                return nextLists;
-              }
-
-              insertedCreatedList = true;
-              nextLists.push({
-                ...createdList,
-                order: list.order,
-                // Items can be added while a new list is still saving. Keep them instead of wiping the local work.
-                listItems: preservedList.listItems,
-                listTags: preservedList.listTags,
-              });
-              return nextLists;
-            }, []),
-        };
+        return reconcileCreatedListInSnapshot(current, createdList, variables.id);
       };
 
       queryClient.setQueryData<CurrentView>(dashboardKeys.allLists, replaceOptimisticList);

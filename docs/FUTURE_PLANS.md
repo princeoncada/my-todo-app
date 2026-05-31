@@ -72,16 +72,17 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.3.0 - ChatGPT Architect Local Context Workflow (active) - see Planned
 ---
 
 ## Planned
 
 ### 1.3.0 - ChatGPT Architect Local Context Workflow
-- **Status:** Open | Priority: P0 workflow reliability
-- **Files:** AGENTS.md, docs/WORKFLOW.md, docs/CODEX_RULES.md, docs/COMPACT_STRATEGY.md, docs/FUTURE_PLANS.md, docs/AI_HANDOFF.md
+- **Status:** In progress | Priority: P0 workflow reliability
+- **Files:** AGENTS.md, docs/WORKFLOW.md, docs/CODEX_RULES.md, docs/COMPACT_STRATEGY.md, docs/FUTURE_PLANS.md, docs/AI_HANDOFF.md, docs/VERSIONING.md, scripts/validate.ps1
 - **Problem:** ChatGPT chat can read pushed GitHub state but cannot directly access local uncommitted work, local ChromaDB, local generated graph changes, or local git status unless the user pastes that evidence. The workflow needs an explicit ChatGPT-as-architect boundary so architecture decisions use complete local evidence when needed.
-- **Scope:** define the ChatGPT architect evidence packet; document when local ChromaDB query output, git status, git diff, and regenerated graph state must be pasted; clarify remote-master vs local-working-tree authority; define how ChatGPT should use committed codebase-graph.json versus pasted local graph/query output; update session/scoping prompts so local evidence is required before source-heavy architecture work.
-- **Acceptance:** ChatGPT architect workflow clearly distinguishes pushed repo state from local-only evidence; local evidence packet is documented; ChromaDB and graph usage boundaries are explicit; product implementation phases are not scoped from stale remote-only context when local changes matter.
+- **Scope:** define the ChatGPT architect Local Evidence Packet; document when local ChromaDB query output, git status, git diff, validation output, and regenerated graph state must be pasted; clarify remote-master vs local-working-tree authority; define how ChatGPT should use committed codebase-graph.json versus pasted local graph/query output; update scoping rules so local evidence is required before source-heavy architecture work.
+- **Acceptance:** ChatGPT architect workflow clearly distinguishes pushed repo state from local-only evidence; Local Evidence Packet is documented; ChromaDB and graph usage boundaries are explicit; validation checks the workflow docs; product implementation phases are not scoped from stale remote-only context when local changes matter.
 
 ### 1.4.0 - Phase 3 Completion: View Filter Hardening
 - **Status:** Open | Priority: projection correctness

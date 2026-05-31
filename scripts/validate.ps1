@@ -457,6 +457,40 @@ if ($chatGptArchitectErrors.Count -eq 0) {
     Add-Result "chatgpt architect docs" $false ($chatGptArchitectErrors -join "; ")
 }
 
+# ChatGPT architect workflow review guard - ensure the review artifact remains visible.
+$workflowReviewPath = "docs/CHATGPT_ARCHITECT_WORKFLOW_REVIEW.md"
+$workflowReviewSections = @(
+    "ChatGPT Architect Workflow Review",
+    "What Changed in 1.3.0",
+    "Proof That 1.3.0 Is Implemented",
+    "Before vs After",
+    "Context Flow Layout",
+    "Local Evidence Packet Layout",
+    "Remote-Only Mode",
+    "ChromaDB Context Flow",
+    "Graph Context Flow",
+    "Example Good Packet",
+    "Example Incomplete Packet",
+    "1.4.0 Scoping Layout Preview",
+    "Approval Checklist"
+)
+$workflowReviewErrors = @()
+if (-not (Test-Path $workflowReviewPath)) {
+    $workflowReviewErrors += "$workflowReviewPath missing"
+} else {
+    $workflowReviewContent = Get-Content $workflowReviewPath -Raw -Encoding UTF8
+    foreach ($section in $workflowReviewSections) {
+        if (-not $workflowReviewContent.Contains($section)) {
+            $workflowReviewErrors += "$workflowReviewPath missing section '$section'"
+        }
+    }
+}
+if ($workflowReviewErrors.Count -eq 0) {
+    Add-Result "chatgpt architect workflow review" $true "review document present"
+} else {
+    Add-Result "chatgpt architect workflow review" $false ($workflowReviewErrors -join "; ")
+}
+
 # ChromaDB - auto-start if needed, then ingest docs (FAIL loudly if unreachable)
 if (-not $SkipChroma) {
     $chromaUri = "http://localhost:8000/api/v2/heartbeat"

@@ -93,7 +93,7 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.3.3-alpha
+- **Current version:** 1.3.3
 - **Current phase:** 1.3.3 - Docs Surface and Product Roadmap Rebaseline
 - **Next phase:** 1.4.0 - View Projection Reproduction Tests
 
@@ -155,7 +155,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
-| 1.3.3 | alpha | 2026-05-30 | Docs Surface and Product Roadmap Rebaseline | (in progress) |
+| 1.3.3 | stable | 2026-05-30 | Docs Surface and Product Roadmap Rebaseline | (in progress) |
 | 1.3.2 | stable | 2026-05-30 | ChatGPT Architect Real Workflow Test | Replaced the static workflow review doc with a real local export script and validation coverage for the ChatGPT-ready context packet layout. |
 | 1.3.1 | stable | 2026-05-30 | ChatGPT Architect Workflow Proof and Layout Review | Added a static ChatGPT workflow review document and validation coverage; later superseded by 1.3.2's real export script. |
 | 1.3.0 | stable | 2026-05-30 | ChatGPT Architect Local Context Workflow | Added ChatGPT Architect Mode, Local Evidence Packet requirements, ChromaDB/graph local-evidence boundaries, and validation coverage. |

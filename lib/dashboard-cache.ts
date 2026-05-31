@@ -6,6 +6,8 @@ export type ViewCacheItem = ViewsCache[number];
 export type CurrentViewSnapshot = RouterOutputs["view"]["getCurrentViewListsWithItems"];
 export type DashboardSnapshot = CurrentViewSnapshot
 export type DashboardList = DashboardSnapshot["lists"][number];
+type CreatedListPayload = Omit<DashboardList, "order" | "listItems" | "listTags"> &
+  Partial<Pick<DashboardList, "order" | "listItems" | "listTags">>;
 export type DashboardTag = RouterOutputs["tag"]["getAll"][number];
 export type SavedListTags = DashboardList["listTags"];
 export type AffectedTagView =
@@ -117,6 +119,66 @@ export function canRollbackViewSelection(
   failedViewId: string | null | undefined
 ) {
   return isLatestSelectedView(latestSelectedViewId, failedViewId);
+}
+
+export function reconcileCreatedListInSnapshot(
+  snapshot: DashboardSnapshot | undefined,
+  savedList: CreatedListPayload,
+  optimisticListId: string
+) {
+  if (!snapshot) return snapshot;
+
+  const matchingLists = snapshot.lists.filter((list) => list.id === optimisticListId);
+  if (matchingLists.length === 0) return snapshot;
+
+  const preservedList = matchingLists.reduce((bestList, list) => {
+    if (list.listItems.length !== bestList.listItems.length) {
+      return list.listItems.length > bestList.listItems.length ? list : bestList;
+    }
+
+    return list.listTags.length > bestList.listTags.length ? list : bestList;
+  });
+  const [firstMatchingList] = matchingLists;
+  let insertedSavedList = false;
+
+  return {
+    ...snapshot,
+    lists: snapshot.lists.reduce<DashboardSnapshot["lists"]>((nextLists, list) => {
+      if (list.id !== optimisticListId) {
+        nextLists.push(list);
+        return nextLists;
+      }
+
+      if (insertedSavedList) {
+        return nextLists;
+      }
+
+      insertedSavedList = true;
+      nextLists.push({
+        ...savedList,
+        order: firstMatchingList.order,
+        listItems: preservedList.listItems.length > 0
+          ? preservedList.listItems
+          : savedList.listItems ?? [],
+        listTags: preservedList.listTags.length > 0
+          ? preservedList.listTags
+          : savedList.listTags ?? [],
+      });
+      return nextLists;
+    }, []),
+  };
+}
+
+export function hasSavedListInDashboardSnapshots(
+  snapshots: Array<DashboardSnapshot | undefined>,
+  listId: string
+) {
+  return snapshots.some((snapshot) =>
+    snapshot?.lists.some((list) =>
+      list.id === listId &&
+      !("isOptimistic" in list && list.isOptimistic)
+    )
+  );
 }
 
 export function applyViewSelectionToViews(

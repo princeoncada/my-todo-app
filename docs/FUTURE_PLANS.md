@@ -55,6 +55,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.2.3 - Startup Oracle Cleanup~~ (stable 2026-05-30)
 
+- ~~1.2.4 - Handoff Drift Cleanup~~ (stable 2026-05-30)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -64,17 +66,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.2.4 - Handoff Drift Cleanup (active) - see Planned
 ---
 
 ## Planned
-
-### 1.2.4 - Handoff Drift Cleanup
-- **Status:** In progress | Priority: P0 workflow anti-drift
-- **Files:** docs/AI_HANDOFF.md, docs/VERSIONING.md, docs/PHASE_LOG.md
-- **Problem:** AI_HANDOFF contains stale next-session instructions pointing to completed 1.1.4 work; VERSIONING has a stable 1.2.2 row that still says in progress; PHASE_LOG has old 1.0.0 wording that says promotion is pending.
-- **Scope:** update handoff next-session instructions to point to the current cleanup sequence and then 1.3.0; fix stale historical wording without changing app behavior.
-- **Acceptance:** no doc tells the architect to resume completed 1.1.x work; stable history does not say in progress; old promotion-pending wording is removed or corrected.
 
 ### 1.2.5 - Phase Routing Guardrail Cleanup
 - **Status:** Open | Priority: P0 workflow anti-drift

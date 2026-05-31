@@ -86,9 +86,10 @@ Fix and harden view/list/tag projection consistency without changing the dashboa
 - Purpose: Fix cross-view behavior when a list is created, moved, retagged, or reordered while switching views. A list must appear in every view it qualifies for and disappear from views it no longer qualifies for. Reorder must not alter tag membership.
 - Target validation: add/update tests -> typecheck [done] lint [done] test [done] `test:e2e:smoke` [done]
 
-**checkpoint/manual-regression-docs**  -  Planned
-- Purpose: Finalize docs, validation evidence, known risks, next phase recommendations
-- Target: `npm run test:ci` [done] `npm run build` [done] smoke E2E [done] auth E2E if available
+### Final Validation / Merge Documentation
+- Purpose: Finalize docs, validation evidence, known risks, and next phase recommendations before merge/promotion.
+- Target: `npm run test:ci` [done], `npm run build` [done], smoke E2E [done], auth E2E if available.
+- This is a merge-gate documentation step, not a numbered implementation checkpoint.
 
 ### Merge Gate
 `phase/view-filter-hardening` -> `master` requires:

@@ -6,6 +6,7 @@ export type ViewCacheItem = ViewsCache[number];
 export type CurrentViewSnapshot = RouterOutputs["view"]["getCurrentViewListsWithItems"];
 export type DashboardSnapshot = CurrentViewSnapshot
 export type DashboardList = DashboardSnapshot["lists"][number];
+type DashboardListItem = DashboardList["listItems"][number];
 type CreatedListPayload = Omit<DashboardList, "order" | "listItems" | "listTags"> &
   Partial<Pick<DashboardList, "order" | "listItems" | "listTags">>;
 export type DashboardTag = RouterOutputs["tag"]["getAll"][number];
@@ -22,6 +23,28 @@ export type DashboardKeys = {
   currentView: QueryKey;
   selectedView: QueryKey;
 };
+
+export type PersistedOrderPayload = {
+  id: string;
+  order: number;
+};
+
+export type PersistedItemOrderPayload = PersistedOrderPayload & {
+  listId: string;
+};
+
+function isOptimisticRow(value: unknown) {
+  return Boolean(
+    value &&
+    typeof value === "object" &&
+    "isOptimistic" in value &&
+    value.isOptimistic
+  );
+}
+
+function isOptimisticViewRow(value: ViewCacheItem) {
+  return value.userId === "optimistic";
+}
 
 export function queryKeysEqual(left: QueryKey, right: QueryKey) {
   return JSON.stringify(left) === JSON.stringify(right);
@@ -179,6 +202,44 @@ export function hasSavedListInDashboardSnapshots(
       !("isOptimistic" in list && list.isOptimistic)
     )
   );
+}
+
+export function buildPersistedListOrderPayload(
+  lists: DashboardList[]
+): PersistedOrderPayload[] {
+  return lists
+    .filter((list) => !isOptimisticRow(list))
+    .map((list, index) => ({
+      id: list.id,
+      order: index,
+    }));
+}
+
+export function buildPersistedItemOrderPayload(
+  lists: DashboardList[]
+): PersistedItemOrderPayload[] {
+  return lists.flatMap((list) =>
+    isOptimisticRow(list)
+      ? []
+      : list.listItems
+        .filter((item: DashboardListItem) => !isOptimisticRow(item))
+        .map((item: DashboardListItem, index: number) => ({
+          id: item.id,
+          listId: list.id,
+          order: index,
+        }))
+  );
+}
+
+export function buildPersistedViewOrderPayload(
+  views: ViewCacheItem[]
+): PersistedOrderPayload[] {
+  return views
+    .filter((view) => !isOptimisticViewRow(view))
+    .map((view, index) => ({
+      id: view.id,
+      order: index,
+    }));
 }
 
 export function applyViewSelectionToViews(

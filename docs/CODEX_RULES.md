@@ -145,6 +145,11 @@ When updating workflow docs involving assistant output, preserve copy-paste safe
 - Code blocks must contain only content intended for the named target tool.
 - Do not place explanatory markdown inside runnable PowerShell command blocks.
 - Do not combine Codex prompt content and PowerShell commands in the same code block.
+- Master prompts must not contain nested markdown fences.
+- If ChatGPT or Claude provides a fenced master prompt for Codex, commands inside that prompt must be plain text or indented lines.
+- Validation commands should be placed in a separate top-level Section 2 code block outside the master prompt.
+- Never put a powershell, bash, json, or any other fenced block inside the master prompt block.
+- This applies to generated prompts, handoff prompts, and validation sections intended for copy/paste.
 
 ---
 

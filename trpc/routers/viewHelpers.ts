@@ -5,6 +5,96 @@ type ViewDb = typeof db | Prisma.TransactionClient;
 
 const ALL_LISTS_NAME = "All Lists";
 
+type ListOrderCandidate = {
+  id: string;
+};
+
+export function listMatchesViewTags(
+  listTagIds: string[],
+  requiredTagIds: string[],
+  matchMode: ViewMatchMode
+) {
+  if (requiredTagIds.length === 0) return false;
+
+  const listTagIdSet = new Set(listTagIds);
+
+  if (matchMode === ViewMatchMode.ANY) {
+    return requiredTagIds.some((tagId) => listTagIdSet.has(tagId));
+  }
+
+  return requiredTagIds.every((tagId) => listTagIdSet.has(tagId));
+}
+
+export function customViewMembershipWhere(
+  userId: string,
+  requiredTagIds: string[],
+  matchMode: ViewMatchMode
+): Prisma.ListWhereInput | null {
+  if (requiredTagIds.length === 0) return null;
+
+  if (matchMode === ViewMatchMode.ANY) {
+    return {
+      userId,
+      listTags: {
+        some: {
+          tagId: { in: requiredTagIds },
+        },
+      },
+    };
+  }
+
+  return {
+    userId,
+    AND: requiredTagIds.map((tagId) => ({
+      listTags: {
+        some: { tagId },
+      },
+    })),
+  };
+}
+
+export function buildCustomViewListRows({
+  viewId,
+  matchingLists,
+  previousOrders,
+  allListOrders,
+}: {
+  viewId: string;
+  matchingLists: ListOrderCandidate[];
+  previousOrders: Map<string, number>;
+  allListOrders: Map<string, number>;
+}) {
+  const assignedOrders = matchingLists
+    .map((list) => previousOrders.get(list.id) ?? allListOrders.get(list.id))
+    .filter((order): order is number => order !== undefined);
+  const fallbackStart = assignedOrders.length > 0
+    ? Math.max(...assignedOrders) + 1
+    : 0;
+
+  let fallbackOffset = 0;
+
+  return matchingLists.map((list) => {
+    const knownOrder = previousOrders.get(list.id) ?? allListOrders.get(list.id);
+
+    if (knownOrder !== undefined) {
+      return {
+        viewId,
+        listId: list.id,
+        order: knownOrder,
+      };
+    }
+
+    const order = fallbackStart + fallbackOffset;
+    fallbackOffset += 1;
+
+    return {
+      viewId,
+      listId: list.id,
+      order,
+    };
+  });
+}
+
 export async function ensureAllListsView(userId: string, client: ViewDb = db) {
   let allListsView = await client.view.findFirst({
     where: {
@@ -160,12 +250,17 @@ export async function recomputeCustomView(
   if (!view) return;
 
   const tagIds = view.viewTags.map((viewTag) => viewTag.tagId);
+  const membershipWhere = customViewMembershipWhere(
+    userId,
+    tagIds,
+    view.matchMode
+  );
 
   await client.viewList.deleteMany({
     where: { viewId },
   });
 
-  if (tagIds.length === 0) return;
+  if (!membershipWhere) return;
 
   const allListsView = await ensureAllListsView(userId, client);
   const allViewLists = await client.viewList.findMany({
@@ -185,27 +280,25 @@ export async function recomputeCustomView(
   );
 
   const matchingLists = await client.list.findMany({
-    where: {
-      userId,
-      AND: tagIds.map((tagId) => ({
-        listTags: {
-          some: { tagId },
-        },
-      })),
-    },
+    where: membershipWhere,
     select: {
       id: true
     },
+    orderBy: [
+      { createdAt: "asc" },
+      { id: "asc" },
+    ],
   });
 
   if (matchingLists.length === 0) return;
 
   await client.viewList.createMany({
-    data: matchingLists.map((list, index) => ({
+    data: buildCustomViewListRows({
       viewId,
-      listId: list.id,
-      order: previousOrders.get(list.id) ?? allListOrders.get(list.id) ?? index,
-    })),
+      matchingLists,
+      previousOrders,
+      allListOrders,
+    }),
     skipDuplicates: true,
   });
 }

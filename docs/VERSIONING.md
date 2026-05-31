@@ -61,6 +61,11 @@ Rules:
 - When opening alpha, `open-phase.ps1` requires `STATE.json.nextPhase` to exist
   in Planned unless `-AllowMissingNextPhase` is used for a scoped roadmap rewrite
   patch that adds or renumbers FUTURE_PLANS before validation.
+- Prompt format safety is a workflow invariant. Docs that define prompt
+  templates must avoid nested fenced code blocks. Workflow prompts should be
+  emitted as separate top-level sections: Section 1 master prompt, Section 2
+  validation, and optional commit/promotion blocks. When a section itself is
+  fenced, examples inside it must be unfenced or indented.
 - On any phase renumber, update FUTURE_PLANS (Planned) and PHASE_LOG target-version
   references together - they are not auto-synced.
 - The chathead opener instructs reading `STATE.json` + `docs/FUTURE_PLANS.md`; it
@@ -80,8 +85,8 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.2.6
-- **Current phase:** 1.2.6 - Roadmap Next-Phase Gate
+- **Current version:** 1.2.7-alpha
+- **Current phase:** 1.2.7 - Prompt Fence Safety Hardening
 - **Next phase:** 1.3.0 - ChatGPT Architect Local Context Workflow
 
 ---
@@ -142,6 +147,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.2.7 | alpha | 2026-05-30 | Prompt Fence Safety Hardening | (in progress) |
 | 1.2.6 | stable | 2026-05-30 | Roadmap Next-Phase Gate | (in progress) |
 | 1.2.5 | stable | 2026-05-30 | Phase Routing Guardrail Cleanup | (in progress) |
 | 1.2.4 | stable | 2026-05-30 | Handoff Drift Cleanup | (in progress) |

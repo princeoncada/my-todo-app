@@ -68,49 +68,64 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.2.6 - Roadmap Next-Phase Gate (active) - see Planned
 ---
 
 ## Planned
 
-### 1.3.0 - Phase 3 Completion: View Filter Hardening
+### 1.2.6 - Roadmap Next-Phase Gate
+- **Status:** In progress | Priority: P0 workflow anti-drift
+- **Files:** scripts/validate.ps1, scripts/open-phase.ps1, scripts/promote.ps1, docs/FUTURE_PLANS.md, docs/WORKFLOW.md, docs/CODEX_RULES.md, docs/VERSIONING.md, docs/AI_HANDOFF.md
+- **Problem:** STATE.json.nextPhase can diverge from the first Planned heading in FUTURE_PLANS, allowing roadmap drift to pass validation and promotion.
+- **Scope:** insert the ChatGPT Architect Local Context Workflow as the next 1.3.0 phase; renumber later planned phases to preserve monotonic order; add validation/open/promote script gates so STATE.json.nextPhase must match the first Planned heading when stable and must exist in Planned when alpha.
+- **Acceptance:** STATE.json.nextPhase and the first FUTURE_PLANS Planned heading agree; validate.ps1 fails if they diverge; open-phase.ps1 blocks or explicitly allows missing nextPhase roadmap targets; promote.ps1 blocks promotion if post-closeout nextPhase drift exists; no app behavior changes.
+
+### 1.3.0 - ChatGPT Architect Local Context Workflow
+- **Status:** Open | Priority: P0 workflow reliability
+- **Files:** AGENTS.md, docs/WORKFLOW.md, docs/CODEX_RULES.md, docs/COMPACT_STRATEGY.md, docs/FUTURE_PLANS.md, docs/AI_HANDOFF.md
+- **Problem:** ChatGPT chat can read pushed GitHub state but cannot directly access local uncommitted work, local ChromaDB, local generated graph changes, or local git status unless the user pastes that evidence. The workflow needs an explicit ChatGPT-as-architect boundary so architecture decisions use complete local evidence when needed.
+- **Scope:** define the ChatGPT architect evidence packet; document when local ChromaDB query output, git status, git diff, and regenerated graph state must be pasted; clarify remote-master vs local-working-tree authority; define how ChatGPT should use committed codebase-graph.json versus pasted local graph/query output; update session/scoping prompts so local evidence is required before source-heavy architecture work.
+- **Acceptance:** ChatGPT architect workflow clearly distinguishes pushed repo state from local-only evidence; local evidence packet is documented; ChromaDB and graph usage boundaries are explicit; product implementation phases are not scoped from stale remote-only context when local changes matter.
+
+### 1.4.0 - Phase 3 Completion: View Filter Hardening
 - **Status:** Open | Priority: projection correctness
 - **Phase log:** docs/PHASE_LOG.md (Phase 3)
 - **Problem:** Lists created in All Lists or custom views do not consistently appear in other custom views when filter tags match.
 - **Scope:** finish checkpoints 4-6; includes dashboard cache projection test coverage (selectedViewFromCache, projectView, list update/removal helpers, tag add/remove projection, view-selection projection).
 - **Acceptance:** All Lists shows all lists; ANY/ALL custom views correct; retag/create/move/reorder/refresh/switch deterministic; matching projection tests; no Dexie expansion, source-of-truth rewrite, drag/drop rewrite, or broad tRPC rewrite.
 
-### 1.4.0 - Ownership Hardening (Security)
+### 1.5.0 - Ownership Hardening (Security)
 - **Status:** Open | Priority: P0/P1 security
 - **Files:** trpc/routers/listItemRouter.ts, components/list/ListsContainer.tsx, trpc/init.ts, trpc/routers/*.ts
 - **Problem:** listItem getListItems/renameListItem/deleteListItem/setCompletionListItem are protected but do not verify parentList.userId; reorderListItems does not verify target list ownership.
 - **Scope:** scope each listItem procedure through parentList.userId === ctx.userId (foreign ids -> FORBIDDEN/NOT_FOUND without mutating); reorder validates item ids AND target list ids before raw SQL (empty input still { success: true }); add ownership/API tests for list/listItem/tag/view ownership failures and unauthenticated -> UNAUTHORIZED.
 - **Acceptance:** optimistic rename/delete/completion shapes unchanged; cross-list moves among owned lists still work; tests repeatable and documented.
 
-### 1.5.0 - Product Polish
+### 1.6.0 - Product Polish
 - **Status:** Open | Priority: P1/P2 UX + correctness
 - **Files:** app/layout.tsx, public/icon-clean.png, components/auth/Register.tsx, app/page.tsx
 - **Scope:** fix metadata/asset mismatch (metadata references /apple-icon.png missing from public/ - add the asset or update the reference); Register submit copy says "Login" -> account-creation language; fix landing typo "optimisic" and generic "Simple Todo App" branding.
 - **Acceptance:** metadata references existing assets only; no auth flow behavior change.
 
-### 1.6.0 - Cache & Tag Maintainability
+### 1.7.0 - Cache & Tag Maintainability
 - **Status:** Open | Priority: P2 maintainability + consistency
 - **Files:** trpc/routers/tagRouter.ts, trpc/routers/viewHelpers.ts, components/list/ListAdder.tsx, components/list/ListsContainer.tsx, components/list/ListComponent.tsx, components/list/ListTagPicker.tsx, lib/dashboard-cache.ts
 - **Scope:** tag.removeFromList recompute once per logical remove; shared dashboard query-key helper (no key-shape change); replace string-matching invalidateViewPayloadQueries with typed/stable key matching.
 - **Acceptance:** optimistic + invalidation behavior unchanged; custom-view membership correct after tag remove.
 
-### 1.7.0 - Component Decomposition
+### 1.8.0 - Component Decomposition
 - **Status:** Open | Priority: P2 maintainability
 - **Files:** components/views/ViewsSidebarPreview.tsx, components/list/ListTagPicker.tsx, components/list/ListComponent.tsx, components/list/ListsContainer.tsx
 - **Scope:** extract small named hooks/helpers from the large dashboard components.
 - **Acceptance:** no query keys, mutation inputs, optimistic rollback behavior, or drag/drop invariants change.
 
-### 1.8.0 - Test Coverage Expansion
+### 1.9.0 - Test Coverage Expansion
 - **Status:** Open | Priority: P2 correctness + regression prevention
 - **Files:** trpc/routers/viewHelpers.ts, tests/, components/list/*, components/views/*
 - **Scope:** view-helper recompute tests (empty tag sets, all-tags matching, previous-order preservation, all-lists fallback, no-match); E2E for list creation, tag changes affecting custom views, fast view switching, drag/drop reorder; documented auth/test-user setup.
 - **Acceptance:** tests repeatable; authenticated E2E setup documented.
 
-### 1.9.0 - Deploy Readiness
+### 1.10.0 - Deploy Readiness
 - **Status:** Open | Priority: P2 production readiness
 - **Files:** README.md, .env.example
 - **Scope:** document DATABASE_URL, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, NEXT_PUBLIC_SITE_URL; build/deploy steps note Prisma generate + migration expectations.

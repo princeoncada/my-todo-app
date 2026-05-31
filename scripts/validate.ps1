@@ -64,6 +64,14 @@ function Test-PlannedPhaseHeading {
     return $Content -match $pattern
 }
 
+function Test-PlannedPhaseHeadingInPlanned {
+    param([string]$Content, [string]$PhaseLabel)
+    $section = Get-MarkdownSection $Content "Planned"
+    if (-not $section.Success) { return $false }
+    $pattern = "(?m)^###\s+" + [regex]::Escape($PhaseLabel) + "\s*$"
+    return $section.Groups["body"].Value -match $pattern
+}
+
 function Get-PlannedPhaseSection {
     param([string]$Content, [string]$PhaseLabel)
     $pattern = "(?ms)^###\s+" + [regex]::Escape($PhaseLabel) + "\s*\r?\n(?<body>.*?)(?=^###\s+|^---\s*$|^##\s+|\z)"
@@ -196,6 +204,18 @@ if (Test-Path "STATE.json") {
             }
         } else {
             $phaseErrors += "STATE.json state '$($phaseState.state)' is not alpha or stable"
+        }
+
+        if (-not $phaseState.seriesComplete -and -not [string]::IsNullOrWhiteSpace($nextPhase)) {
+            if ($phaseState.state -eq "stable") {
+                if ($firstPlannedHeading -ne $nextPhase) {
+                    $phaseErrors += "docs/FUTURE_PLANS.md first Planned heading '$firstPlannedHeading' does not match STATE.json nextPhase '$nextPhase'"
+                }
+            } elseif ($phaseState.state -eq "alpha") {
+                if (-not (Test-PlannedPhaseHeadingInPlanned $futurePlans $nextPhase)) {
+                    $phaseErrors += "docs/FUTURE_PLANS.md Planned is missing STATE.json nextPhase '$nextPhase'"
+                }
+            }
         }
     } else {
         $phaseErrors += "docs/FUTURE_PLANS.md missing"

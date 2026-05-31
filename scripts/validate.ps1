@@ -492,6 +492,77 @@ if ($workflowTestErrors.Count -eq 0) {
     Add-Result "chatgpt architect workflow test" $false ($workflowTestErrors -join "; ")
 }
 
+# Docs surface rebaseline guard - ensure PHASE_LOG stays historical and roadmap is test-backed.
+$docsSurfaceErrors = @()
+if (-not (Test-Path "docs/PHASE_LOG.md")) {
+    $docsSurfaceErrors += "docs/PHASE_LOG.md missing"
+} else {
+    $phaseLogContent = Get-Content "docs/PHASE_LOG.md" -Raw -Encoding UTF8
+    if (-not $phaseLogContent.Contains("historical pre-versioning archive")) {
+        $docsSurfaceErrors += "docs/PHASE_LOG.md missing phrase 'historical pre-versioning archive'"
+    }
+}
+
+$docsSurfaceAbsentChecks = @(
+    @{
+        Path = "docs/CODEX_RULES.md"
+        Phrase = "Update `docs/PHASE_LOG.md` when a phase checkpoint completes"
+    },
+    @{
+        Path = "docs/COMPACT_STRATEGY.md"
+        Phrase = "Phase log for the active phase"
+    },
+    @{
+        Path = "docs/VERSIONING.md"
+        Phrase = "On any phase renumber, update FUTURE_PLANS (Planned) and PHASE_LOG target-version"
+    },
+    @{
+        Path = "docs/FUTURE_PLANS.md"
+        Phrase = "PRODUCT_BEHAVIOR_AUDIT.md"
+    }
+)
+foreach ($check in $docsSurfaceAbsentChecks) {
+    if (-not (Test-Path $check.Path)) {
+        $docsSurfaceErrors += "$($check.Path) missing"
+        continue
+    }
+    $docContent = Get-Content $check.Path -Raw -Encoding UTF8
+    if ($docContent.Contains($check.Phrase)) {
+        $docsSurfaceErrors += "$($check.Path) still contains '$($check.Phrase)'"
+    }
+}
+
+$docsSurfacePresentChecks = @(
+    @{
+        Path = "docs/WORKFLOW.md"
+        Phrase = "Every product implementation phase must add or update useful tests"
+    },
+    @{
+        Path = "docs/FUTURE_PLANS.md"
+        Phrase = "1.4.0 - View Projection Reproduction Tests"
+    },
+    @{
+        Path = "docs/FUTURE_PLANS.md"
+        Phrase = "1.10.3 - Visual Review Pass"
+    }
+)
+foreach ($check in $docsSurfacePresentChecks) {
+    if (-not (Test-Path $check.Path)) {
+        $docsSurfaceErrors += "$($check.Path) missing"
+        continue
+    }
+    $docContent = Get-Content $check.Path -Raw -Encoding UTF8
+    if (-not $docContent.Contains($check.Phrase)) {
+        $docsSurfaceErrors += "$($check.Path) missing phrase '$($check.Phrase)'"
+    }
+}
+
+if ($docsSurfaceErrors.Count -eq 0) {
+    Add-Result "docs surface rebaseline" $true "documentation surface updated"
+} else {
+    Add-Result "docs surface rebaseline" $false ($docsSurfaceErrors -join "; ")
+}
+
 # ChromaDB - auto-start if needed, then ingest docs (FAIL loudly if unreachable)
 if (-not $SkipChroma) {
     $chromaUri = "http://localhost:8000/api/v2/heartbeat"

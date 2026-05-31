@@ -66,12 +66,13 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.2.5 - Phase Routing Guardrail Cleanup (active) - see Planned
 ---
 
 ## Planned
 
 ### 1.2.5 - Phase Routing Guardrail Cleanup
-- **Status:** Open | Priority: P0 workflow anti-drift
+- **Status:** In progress | Priority: P0 workflow anti-drift
 - **Files:** AGENTS.md, docs/WORKFLOW.md, docs/CODEX_RULES.md, docs/FUTURE_PLANS.md, docs/AI_HANDOFF.md, docs/PHASE_LOG.md
 - **Problem:** Phase 3 checkpoint count and routing language are inconsistent across docs; startup protocol differs between AGENTS and WORKFLOW; Codex roadmap-update wording can be misread as permission to move roadmap state manually.
 - **Scope:** normalize Phase 3 checkpoint count and treatment of manual-regression docs; align startup protocol wording around `git pull origin master`; tighten Codex roadmap-update boundaries.

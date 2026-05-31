@@ -85,6 +85,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.4.6 - View Switching Race Regression~~ (stable 2026-05-31)
 
+- ~~1.4.7 - Create List + Create Item Race Regression~~ (stable 2026-05-31)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -94,17 +96,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.4.7 - Create List + Create Item Race Regression (active) - see Planned
 ---
 
 ## Planned
-
-### 1.4.7 - Create List + Create Item Race Regression
-- **Status:** In progress | Priority: P0 optimistic correctness
-- **Files:** components/list/ListAdder.tsx, components/list/ListComponent.tsx, hooks/useOptimisticSync.ts, lib/dashboard-cache.ts, tests/e2e/list-items.spec.ts
-- **Problem:** Creating an item immediately after creating a list can break if the parent optimistic list has not reconciled with the server row.
-- **Scope:** test and harden the create-list-then-create-item flow; preserve the lightweight optimistic feel; avoid Dexie/source-of-truth expansion.
-- **Acceptance:** user can create a list and immediately add items; refresh keeps the list and items; regression tests cover the flow.
 
 ### 1.4.8 - Drag/Reorder Persistence Regression
 - **Status:** Open | Priority: P1 reorder correctness

@@ -77,6 +77,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.4.2 - Backend View Membership Contract~~ (stable 2026-05-31)
 
+- ~~1.4.3 - Dashboard Cache Projection Contract~~ (stable 2026-05-31)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -86,17 +88,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.4.3 - Dashboard Cache Projection Contract (active) - see Planned
 ---
 
 ## Planned
-
-### 1.4.3 - Dashboard Cache Projection Contract
-- **Status:** In progress | Priority: P0 frontend correctness
-- **Files:** lib/dashboard-cache.ts, components/list/ListAdder.tsx, components/list/ListsContainer.tsx, components/list/ListComponent.tsx, components/list/ListTagPicker.tsx, components/views/ViewsSidebarPreview.tsx, tests/
-- **Problem:** Multiple components manually write overlapping dashboard caches, which risks stale current-view, selected-view, and all-lists divergence.
-- **Scope:** route cross-component list/tag/view cache updates through shared dashboard-cache helpers; preserve query key shapes and optimistic UX; add regression tests for affected cache helpers.
-- **Acceptance:** All Lists, current view, and selected view caches stay consistent after create/rename/delete/tag changes; useful unit or E2E tests are added or updated.
 
 ### 1.4.4 - Tag Mutation Projection Regression
 - **Status:** Open | Priority: P0 tag/view consistency

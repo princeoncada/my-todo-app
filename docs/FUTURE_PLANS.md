@@ -79,6 +79,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.4.3 - Dashboard Cache Projection Contract~~ (stable 2026-05-31)
 
+- ~~1.4.4 - Open Phase Roadmap Status Automation~~ (stable 2026-05-31)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -88,17 +90,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.4.4 - Open Phase Roadmap Status Automation (active) - see Planned
 ---
 
 ## Planned
-
-### 1.4.4 - Open Phase Roadmap Status Automation
-- **Status:** In progress | Priority: P0 workflow correctness
-- **Files:** scripts/open-phase.ps1, scripts/validate.ps1, docs/FUTURE_PLANS.md
-- **Problem:** open-phase.ps1 opens alpha roadmap state only halfway by adding In Progress but not changing the matching Planned section to Status: In progress, causing repeated manual in-alpha fixes.
-- **Scope:** make open-phase.ps1 update the matching Planned status line automatically and keep validate.ps1 strict.
-- **Acceptance:** opening a future alpha marks both In Progress and Planned Status: In progress; repeated open-phase repair does not duplicate roadmap status; validation catches drift; no product files are touched.
 
 ### 1.4.5 - Tag Mutation Projection Regression
 - **Status:** Open | Priority: P0 tag/view consistency

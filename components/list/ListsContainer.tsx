@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  buildPersistedItemOrderPayload,
+  buildPersistedListOrderPayload,
   canApplySelectedViewPayload,
   DashboardSnapshot,
   selectedViewFromCache,
@@ -21,19 +23,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import ListComponent from './ListComponent';
 import ListItemComponent from './ListItemComponent';
 import ListSkeleton from './ListSkeleton';
-import { CurrentView, List, ListItem, Lists, OptimisticList, OptimisticListItem } from './types';
+import { CurrentView, List, Lists, OptimisticList, OptimisticListItem } from './types';
 import ListEmpty from './ListEmpty';
 
 type DragPreviewLists = Lists;
-
-function isStillOptimistic(value: unknown) {
-  return Boolean(
-    value &&
-    typeof value === "object" &&
-    "isOptimistic" in value &&
-    value.isOptimistic
-  );
-}
 
 function reorderListsForDrag(
   baseLists: Lists,
@@ -295,16 +288,13 @@ const ListsContainer = () => {
     reorderListsTimeoutRef.current = setTimeout(() => {
       optimisticSync.replacePending("list-order", async () => {
         if (!currentView) return;
-        const savedLists = nextLists.filter((list) => !isStillOptimistic(list));
+        const savedLists = buildPersistedListOrderPayload(nextLists);
         if (savedLists.length === 0) return;
 
-        measureRequest("view.reorderViewLists", { count: nextLists.length });
+        measureRequest("view.reorderViewLists", { count: savedLists.length });
         await reorderViewListsMutation.mutateAsync({
           viewId: currentView.view.id,
-          lists: savedLists.map((list: List, index: number) => ({
-            id: list.id,
-            order: index
-          }))
+          lists: savedLists
         });
       }, { label: "view.reorderViewLists" });
     }, 300);
@@ -340,17 +330,7 @@ const ListsContainer = () => {
 
     reorderListItemsTimeoutRef.current = setTimeout(() => {
       optimisticSync.replacePending("item-order", async () => {
-        const savedItems = nextLists.flatMap((list: List) =>
-          isStillOptimistic(list)
-            ? []
-            : list.listItems
-              .filter((item) => !isStillOptimistic(item))
-              .map((item: ListItem, index: number) => ({
-                id: item.id,
-                listId: list.id,
-                order: index
-              }))
-        );
+        const savedItems = buildPersistedItemOrderPayload(nextLists);
 
         if (savedItems.length === 0) return;
 

@@ -1,8 +1,8 @@
-<!-- Current Version: 1.3.3 -->
+<!-- Current Version: 1.4.0-alpha -->
 # AI Handoff
-**Current Version**: 1.3.3 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.3.3 - Docs Surface and Product Roadmap Rebaseline
-**Next**: 1.4.0 - View Projection Reproduction Tests
+**Current Version**: 1.4.0-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.4.0 - View Projection Reproduction Tests
+**Next**: 1.4.1 - Backend View Membership Contract
 ---
 ## What Was Last Done
 **Phase 1.3.2** completed ChatGPT architect real workflow test:
@@ -257,6 +257,9 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - Reorders involving optimistic-only rows - IDs must be filtered before sending to server
 - Tag deletes or toggles that affect custom view membership mid-operation
 
+**View projection gaps (expected-failing 1.4.0 reproduction tests):**
+- ANY custom view matching currently behaves like ALL matching in dashboard projection helpers.
+- UNTAGGED view projection currently falls through to all lists instead of filtering to lists without tags.
 **Data model gaps:**
 - `ViewType.UNTAGGED` and `ViewMatchMode.ANY` exist in schema but are not implemented in UI or server logic
 - `tag.removeFromList` triggers duplicate custom view recompute (inside transaction + after)

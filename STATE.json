@@ -1,6 +1,6 @@
 {
-    "version":  "1.4.1-alpha",
-    "state":  "alpha",
+    "version":  "1.4.1",
+    "state":  "stable",
     "phase":  "1.4.1",
     "phaseTitle":  "AI Handoff Next Session Cleanup",
     "nextPhase":  "1.4.2 - Backend View Membership Contract",

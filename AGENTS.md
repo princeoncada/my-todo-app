@@ -26,6 +26,42 @@ Repo docs are the only source of truth. Never answer state queries,
 version questions, or "what's next" from session memory of docs.
 Always read STATE.json and docs/FUTURE_PLANS.md fresh.
 
+## ChatGPT Architect Mode
+
+ChatGPT chat can use pushed GitHub master plus pasted local evidence. ChatGPT
+chat cannot directly read local uncommitted files, local ChromaDB, local git
+status, local git diff, local-only branch files, or local-only generated graph
+changes. Anything not pushed or pasted does not exist to ChatGPT architect.
+
+For docs-only phases that only affect pushed files, GitHub remote reads may be
+enough. For source-heavy phases, local-only work, active branches, or any phase
+where ChromaDB or graph output matters, the user/controller must provide a Local
+Evidence Packet before ChatGPT scopes implementation.
+
+Required for source-heavy or local-sensitive scoping:
+
+    git status --short
+    git log --oneline -5
+    Get-Content STATE.json
+    python scripts/query_docs.py "<question about the current task>"
+    npm run graph:codebase
+    git diff --stat
+
+Optional when relevant:
+
+    git diff -- <path>
+    Select-String -Path "docs\FUTURE_PLANS.md" -Pattern "<phase>"
+    Select-String -Path "docs\AI_HANDOFF.md" -Pattern "<topic>"
+
+Rules:
+- If local evidence is required but missing, ChatGPT architect must either ask
+  for the packet or explicitly scope only from pushed remote state and state
+  that limitation.
+- Do not pretend GitHub connector reads include local uncommitted work.
+- Pasted validation output may be used as local evidence, but it does not
+  replace direct file reads when implementation details matter.
+- Do not expand the normal startup read set for local Claude/Codex sessions.
+
 ## Drift Guardrails
 
 These rules exist so lower-capability models cannot silently drift:

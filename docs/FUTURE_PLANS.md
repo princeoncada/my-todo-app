@@ -51,6 +51,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.2.1 - Graph Navigation Doc Consistency~~ (stable 2026-05-30)
 
+- ~~1.2.2 - Chroma Visibility Fix~~ (stable 2026-05-30)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -59,19 +61,11 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 
 ## In Progress
 
-- 1.2.2 - Chroma Visibility Fix (active) - see Planned
 - 1.3.0 - Phase 3: View Filter Hardening (active branch `phase/view-filter-hardening`, checkpoint `fix-cross-view-list-moves`) - see Planned
 
 ---
 
 ## Planned
-
-### 1.2.2 - Chroma Visibility Fix
-- **Status:** In progress | Priority: developer experience
-- **Files:** scripts/validate.ps1
-- **Problem:** validate.ps1 auto-starts ChromaDB with -WindowStyle Hidden, leaving an invisible process with no way for the developer to see it is running or stop it.
-- **Scope:** change -WindowStyle Hidden to -WindowStyle Normal; add a Write-Host notice after Start-Process.
-- **Acceptance:** when validate.ps1 auto-starts ChromaDB, a visible terminal window appears; no other validate.ps1 behavior changes.
 
 ### 1.3.0 - Phase 3 Completion: View Filter Hardening
 - **Status:** In progress | Priority: projection correctness

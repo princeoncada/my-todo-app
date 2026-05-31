@@ -43,6 +43,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useOptimisticSync } from "@/hooks/useOptimisticSync";
 import {
   applyViewSelection,
+  canApplySelectedViewPayload,
+  canRollbackViewSelection,
   DashboardSnapshot,
   listMatchesView,
   projectView,
@@ -669,9 +671,11 @@ export default function ViewsSidebarPreview() {
           viewId: id,
         });
 
-        const cachedNextView = queryClient.getQueryData(nextViewQueryKey);
+        const cachedNextView = queryClient.getQueryData<DashboardSnapshot>(
+          nextViewQueryKey
+        );
 
-        if (cachedNextView && latestSelectedViewIdRef.current === id) {
+        if (canApplySelectedViewPayload(latestSelectedViewIdRef.current, cachedNextView)) {
           queryClient.setQueryData(currentViewQueryKey, cachedNextView);
         }
 
@@ -683,15 +687,21 @@ export default function ViewsSidebarPreview() {
           trpc.view.getViewListsWithItems.queryOptions({ viewId: id })
         );
 
-        const freshNextView = queryClient.getQueryData(nextViewQueryKey);
+        const freshNextView = queryClient.getQueryData<DashboardSnapshot>(
+          nextViewQueryKey
+        );
 
-        if (freshNextView && latestSelectedViewIdRef.current === id) {
+        if (canApplySelectedViewPayload(latestSelectedViewIdRef.current, freshNextView)) {
           queryClient.setQueryData(currentViewQueryKey, freshNextView);
         }
       },
       {
         label: "view.saveSelectedView",
         rollback: () => {
+          if (!canRollbackViewSelection(latestSelectedViewIdRef.current, id)) {
+            return;
+          }
+
           queryClient.setQueryData(viewsQueryKey, previousViews);
           queryClient.setQueryData(currentViewQueryKey, previousCurrentView);
         },

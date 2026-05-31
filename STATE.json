@@ -1,9 +1,9 @@
 {
-    "version":  "1.4.1",
-    "state":  "stable",
-    "phase":  "1.4.1",
-    "phaseTitle":  "AI Handoff Next Session Cleanup",
-    "nextPhase":  "1.4.2 - Backend View Membership Contract",
+    "version":  "1.4.2-alpha",
+    "state":  "alpha",
+    "phase":  "1.4.2",
+    "phaseTitle":  "Backend View Membership Contract",
+    "nextPhase":  "1.4.3 - Dashboard Cache Projection Contract",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-31"
 }

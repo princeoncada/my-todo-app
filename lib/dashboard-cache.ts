@@ -9,6 +9,8 @@ export type DashboardList = DashboardSnapshot["lists"][number];
 export type DashboardTag = RouterOutputs["tag"]["getAll"][number];
 export type SavedListTags = DashboardList["listTags"];
 export type AffectedTagView =
+  RouterOutputs["tag"]["addToList"]["affectedViews"][number] |
+  RouterOutputs["tag"]["removeFromList"]["affectedViews"][number] |
   RouterOutputs["tag"]["applyListTagChanges"]["affectedViews"][number] |
   RouterOutputs["tag"]["delete"]["affectedViews"][number];
 

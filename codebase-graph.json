@@ -1,6 +1,6 @@
 {
   "schemaVersion": "tidy-codebase-graph/v1",
-  "version": "1.4.7",
+  "version": "1.4.8-alpha",
   "generatedAt": "2026-05-31",
   "generator": "scripts/generate_codebase_graph.py fallback scanner",
   "graphify": {
@@ -523,9 +523,10 @@
       "kind": "component",
       "extension": ".tsx",
       "symbols": [
-        "isStillOptimistic",
         "reorderListsForDrag",
         "reorderItemsForDrag",
+        "listOrderMatches",
+        "itemPlacementMatches",
         "sourceIndex",
         "targetIndex",
         "nextLists",
@@ -541,8 +542,7 @@
         "allListsView",
         "selectedView",
         "selectedViewId",
-        "allListsQueryKey",
-        "selectedViewQueryKey"
+        "allListsQueryKey"
       ],
       "imports": [
         "@/lib/dashboard-cache",
@@ -1041,7 +1041,6 @@
       "kind": "component",
       "extension": ".tsx",
       "symbols": [
-        "isOptimisticView",
         "buildOptimisticView",
         "moveCustomView",
         "SortableViewRowComponent",
@@ -1060,7 +1059,8 @@
         "targetIndex",
         "nextViews",
         "SortableViewRow",
-        "view"
+        "view",
+        "toggleTag"
       ],
       "imports": [
         "@dnd-kit/react",
@@ -1433,16 +1433,16 @@
         "canRollbackViewSelection",
         "reconcileCreatedListInSnapshot",
         "hasSavedListInDashboardSnapshots",
+        "buildPersistedListOrderPayload",
+        "buildPersistedItemOrderPayload",
+        "buildPersistedViewOrderPayload",
         "applyViewSelectionToViews",
         "applyViewSelection",
         "updateListInDashboardCaches",
         "removeListFromDashboardCaches",
         "invalidateViewPayloadQueries",
         "applyTagChangeToCaches",
-        "applyDeletedTagToDashboardCaches",
-        "reconcileSavedListTags",
-        "reconcileAffectedViewLists",
-        "rollbackScope"
+        "applyDeletedTagToDashboardCaches"
       ],
       "imports": [
         "@tanstack/react-query",
@@ -2131,6 +2131,8 @@
       "kind": "test",
       "extension": ".ts",
       "symbols": [
+        "createPersistedList",
+        "persisted",
         "first",
         "second",
         "firstCard",
@@ -2139,7 +2141,8 @@
         "targetList",
         "itemName",
         "item",
-        "targetCard"
+        "targetCard",
+        "Page"
       ],
       "imports": [
         "@playwright/test",
@@ -2218,6 +2221,7 @@
       "kind": "test",
       "extension": ".ts",
       "symbols": [
+        "waitForSuccessfulTrpcMutation",
         "createList",
         "createItemInVisibleList",
         "createListAndImmediatelyAddItem",
@@ -2231,11 +2235,12 @@
         "createTag",
         "removeTagFromList",
         "createView",
-        "waitForSuccessfulTrpcMutation",
+        "deleteView",
+        "escapeRegExp",
+        "createListButton",
         "card",
         "persisted",
-        "item",
-        "Page"
+        "allListsButton"
       ],
       "imports": [
         "@playwright/test",
@@ -2248,6 +2253,11 @@
       "kind": "test",
       "extension": ".ts",
       "symbols": [
+        "firstVisible",
+        "getListCards",
+        "getViewCards",
+        "getVisibleListCard",
+        "getVisibleViewCard",
         "expectListVisible",
         "expectListNotVisible",
         "expectItemVisible",
@@ -2259,13 +2269,14 @@
         "expectListOrder",
         "expectItemInList",
         "expectItemNotInList",
-        "names",
-        "indexes",
-        "card",
-        "Page"
+        "getVisibleViewNames",
+        "expectViewOrder",
+        "count",
+        "candidate"
       ],
       "imports": [
-        "@playwright/test"
+        "@playwright/test",
+        "./test-ids"
       ]
     },
     {
@@ -2274,15 +2285,18 @@
       "extension": ".ts",
       "symbols": [
         "dragByMouse",
+        "dragByMouseAndWaitForMutation",
         "center",
         "box",
         "from",
         "to",
+        "persisted",
         "Locator",
         "Page"
       ],
       "imports": [
-        "@playwright/test"
+        "@playwright/test",
+        "./app"
       ]
     },
     {
@@ -2298,11 +2312,14 @@
         "authStoragePath",
         "runId",
         "suffix",
+        "matchingCards",
         "card",
         "Page"
       ],
       "imports": [
-        "@playwright/test"
+        "@playwright/test",
+        "./assertions",
+        "./test-ids"
       ]
     },
     {
@@ -4074,6 +4091,30 @@
     },
     {
       "from": "tests/e2e/utils/app.ts",
+      "to": "tests/e2e/utils/test-ids.ts",
+      "type": "imports",
+      "import": "./test-ids"
+    },
+    {
+      "from": "tests/e2e/utils/assertions.ts",
+      "to": "tests/e2e/utils/test-ids.ts",
+      "type": "imports",
+      "import": "./test-ids"
+    },
+    {
+      "from": "tests/e2e/utils/drag.ts",
+      "to": "tests/e2e/utils/app.ts",
+      "type": "imports",
+      "import": "./app"
+    },
+    {
+      "from": "tests/e2e/utils/seed.ts",
+      "to": "tests/e2e/utils/assertions.ts",
+      "type": "imports",
+      "import": "./assertions"
+    },
+    {
+      "from": "tests/e2e/utils/seed.ts",
       "to": "tests/e2e/utils/test-ids.ts",
       "type": "imports",
       "import": "./test-ids"

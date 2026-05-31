@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  buildPersistedItemOrderPayload,
+  buildPersistedListOrderPayload,
   canApplySelectedViewPayload,
   DashboardSnapshot,
   selectedViewFromCache,
@@ -21,19 +23,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import ListComponent from './ListComponent';
 import ListItemComponent from './ListItemComponent';
 import ListSkeleton from './ListSkeleton';
-import { CurrentView, List, ListItem, Lists, OptimisticList, OptimisticListItem } from './types';
+import { CurrentView, List, Lists, OptimisticList, OptimisticListItem } from './types';
 import ListEmpty from './ListEmpty';
 
 type DragPreviewLists = Lists;
-
-function isStillOptimistic(value: unknown) {
-  return Boolean(
-    value &&
-    typeof value === "object" &&
-    "isOptimistic" in value &&
-    value.isOptimistic
-  );
-}
 
 function reorderListsForDrag(
   baseLists: Lists,
@@ -162,6 +155,23 @@ function reorderItemsForDrag(
   return nextLists;
 }
 
+function listOrderMatches(left: Lists, right: Lists) {
+  return left.length === right.length &&
+    left.every((list, index) => list.id === right[index]?.id);
+}
+
+function itemPlacementMatches(left: Lists, right: Lists) {
+  return left.length === right.length &&
+    left.every((list, listIndex) =>
+      list.id === right[listIndex]?.id &&
+      list.listItems.length === right[listIndex]?.listItems.length &&
+      list.listItems.every((item, itemIndex) =>
+        item.id === right[listIndex]?.listItems[itemIndex]?.id &&
+        item.listId === right[listIndex]?.listItems[itemIndex]?.listId
+      )
+    );
+}
+
 const ListsContainer = () => {
 
   const trpc = useTRPC();
@@ -253,7 +263,7 @@ const ListsContainer = () => {
   const reorderListsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reorderListItemsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const scheduleReorderListsSave = useCallback((nextLists: Lists) => {
+  const writeListOrderToCaches = useCallback((nextLists: Lists) => {
     if (currentView?.view.type === "ALL_LISTS") {
       measureCacheWrite("lists.drop.all-lists", nextLists);
       queryClient.setQueryData<CurrentView>(queryKey, (current) =>
@@ -287,6 +297,16 @@ const ListsContainer = () => {
         current ? { ...current, lists: nextLists } : current
       );
     }
+  }, [currentView?.view.id, currentView?.view.type, currentViewQueryKey, queryClient, queryKey, viewsQueryKey]);
+
+  const scheduleReorderListsSave = useCallback(async (nextLists: Lists) => {
+    await Promise.all([
+      queryClient.cancelQueries({ queryKey }),
+      queryClient.cancelQueries({ queryKey: currentViewQueryKey }),
+      queryClient.cancelQueries({ queryKey: viewsQueryKey }),
+    ]);
+
+    writeListOrderToCaches(nextLists);
 
     if (reorderListsTimeoutRef.current) {
       clearTimeout(reorderListsTimeoutRef.current);
@@ -295,17 +315,15 @@ const ListsContainer = () => {
     reorderListsTimeoutRef.current = setTimeout(() => {
       optimisticSync.replacePending("list-order", async () => {
         if (!currentView) return;
-        const savedLists = nextLists.filter((list) => !isStillOptimistic(list));
+        const savedLists = buildPersistedListOrderPayload(nextLists);
         if (savedLists.length === 0) return;
 
-        measureRequest("view.reorderViewLists", { count: nextLists.length });
+        measureRequest("view.reorderViewLists", { count: savedLists.length });
         await reorderViewListsMutation.mutateAsync({
           viewId: currentView.view.id,
-          lists: savedLists.map((list: List, index: number) => ({
-            id: list.id,
-            order: index
-          }))
+          lists: savedLists
         });
+        writeListOrderToCaches(nextLists);
       }, { label: "view.reorderViewLists" });
     }, 300);
   }, [
@@ -315,10 +333,11 @@ const ListsContainer = () => {
     optimisticSync,
     queryClient,
     reorderViewListsMutation,
+    writeListOrderToCaches,
     viewsQueryKey,
   ]);
 
-  const scheduleReorderListItemsSave = useCallback((nextLists: Lists) => {
+  const writeListItemOrderToCaches = useCallback((nextLists: Lists) => {
     measureCacheWrite("items.drop.all-lists", nextLists);
     const mergeChangedLists = (current: DashboardSnapshot | undefined) =>
       current
@@ -333,6 +352,16 @@ const ListsContainer = () => {
     queryClient.setQueryData<CurrentView>(allListsQueryKey, mergeChangedLists);
     queryClient.setQueryData<CurrentView>(queryKey, mergeChangedLists);
     queryClient.setQueryData<CurrentView>(currentViewQueryKey, mergeChangedLists);
+  }, [allListsQueryKey, currentViewQueryKey, queryClient, queryKey]);
+
+  const scheduleReorderListItemsSave = useCallback(async (nextLists: Lists) => {
+    await Promise.all([
+      queryClient.cancelQueries({ queryKey: allListsQueryKey }),
+      queryClient.cancelQueries({ queryKey }),
+      queryClient.cancelQueries({ queryKey: currentViewQueryKey }),
+    ]);
+
+    writeListItemOrderToCaches(nextLists);
 
     if (reorderListItemsTimeoutRef.current) {
       clearTimeout(reorderListItemsTimeoutRef.current);
@@ -340,17 +369,7 @@ const ListsContainer = () => {
 
     reorderListItemsTimeoutRef.current = setTimeout(() => {
       optimisticSync.replacePending("item-order", async () => {
-        const savedItems = nextLists.flatMap((list: List) =>
-          isStillOptimistic(list)
-            ? []
-            : list.listItems
-              .filter((item) => !isStillOptimistic(item))
-              .map((item: ListItem, index: number) => ({
-                id: item.id,
-                listId: list.id,
-                order: index
-              }))
-        );
+        const savedItems = buildPersistedItemOrderPayload(nextLists);
 
         if (savedItems.length === 0) return;
 
@@ -360,6 +379,7 @@ const ListsContainer = () => {
         await reorderListItemsMutation.mutateAsync({
           items: savedItems
         });
+        writeListItemOrderToCaches(nextLists);
       }, { label: "listItem.reorderListItems" });
     }, 300);
   }, [
@@ -369,6 +389,7 @@ const ListsContainer = () => {
     optimisticSync,
     queryClient,
     reorderListItemsMutation,
+    writeListItemOrderToCaches,
   ]);
 
   const setLocalDragPreview = useCallback((nextLists: DragPreviewLists | null) => {
@@ -425,8 +446,8 @@ const ListsContainer = () => {
       onDragEnd={(e) => {
         setActiveDropTarget(null);
 
-        const { source } = e.operation;
-        const finalPreview = dragPreviewListsRef.current;
+        const { source, target } = e.operation;
+        let finalPreview = dragPreviewListsRef.current;
 
         setLocalDragPreview(null);
 
@@ -443,14 +464,28 @@ const ListsContainer = () => {
           lists: finalPreview.length,
         });
 
+        if (
+          source.type === "list" &&
+          target?.type === "list" &&
+          listOrderMatches(finalPreview, lists)
+        ) {
+          const sourceListId = String(source.id).replace("list-", "");
+          const targetListId = String(target.id).replace("list-", "");
+          finalPreview = reorderListsForDrag(lists, sourceListId, targetListId) ?? finalPreview;
+        }
+
         // Only save the final dropped order. Older drag positions do not matter.
         switch (source.type) {
           case "list":
-            scheduleReorderListsSave(finalPreview);
+            if (!listOrderMatches(finalPreview, lists)) {
+              void scheduleReorderListsSave(finalPreview);
+            }
             break;
 
           case "list-item":
-            scheduleReorderListItemsSave(finalPreview);
+            if (!itemPlacementMatches(finalPreview, lists)) {
+              void scheduleReorderListItemsSave(finalPreview);
+            }
             break;
 
           default:

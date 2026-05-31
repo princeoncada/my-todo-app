@@ -1,9 +1,9 @@
 {
-    "version":  "1.4.7",
-    "state":  "stable",
-    "phase":  "1.4.7",
-    "phaseTitle":  "Create List + Create Item Race Regression",
-    "nextPhase":  "1.4.8 - Drag/Reorder Persistence Regression",
+    "version":  "1.4.8-alpha",
+    "state":  "alpha",
+    "phase":  "1.4.8",
+    "phaseTitle":  "Drag/Reorder Persistence Regression",
+    "nextPhase":  "1.5.0 - Ownership Failure Test Baseline",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-31"
 }

@@ -96,16 +96,24 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.4.8 - Drag/Reorder Persistence Regression (active) - see Planned
 ---
 
 ## Planned
 
 ### 1.4.8 - Drag/Reorder Persistence Regression
-- **Status:** Open | Priority: P1 reorder correctness
-- **Files:** components/list/ListsContainer.tsx, components/list/ListComponent.tsx, components/list/ListItemComponent.tsx, components/views/ViewsSidebarPreview.tsx, trpc/routers/listItemRouter.ts, trpc/routers/viewRouter.ts, tests/e2e/drag-drop.spec.ts
+- **Status:** In progress | Priority: P1 reorder correctness
+- **Files:** components/list/ListsContainer.tsx, components/list/ListComponent.tsx, components/list/ListItemComponent.tsx, tests/e2e/drag-drop.spec.ts
 - **Problem:** Reorder behavior must remain lightweight, optimistic, and persistent without rewriting caches during hover or sending optimistic-only IDs to the server.
-- **Scope:** prove drag/drop list, item, and view order persists after drop and refresh; preserve local-only hover behavior; add or update E2E regression coverage.
-- **Acceptance:** drag hover remains local; drop persists final order only; refresh shows the same order; regression tests cover list/item/view reorder.
+- **Scope:** prove drag/drop list and item order persists after drop and refresh; preserve local-only hover behavior; add or update E2E regression coverage.
+- **Acceptance:** drag hover remains local; drop persists final list/item order only; refresh shows the same order; regression tests cover list reorder and item moves.
+
+### 1.4.9 - Custom View Reorder E2E Stabilization
+- **Status:** Open | Priority: P1 reorder test stability
+- **Files:** components/views/ViewsSidebarPreview.tsx, tests/e2e/drag-drop.spec.ts, tests/e2e/utils/app.ts, tests/e2e/utils/assertions.ts, tests/e2e/utils/drag.ts, tests/e2e/utils/seed.ts
+- **Problem:** Custom view reorder product code exists, but the authenticated E2E path was unstable and expanded 1.4.8 into helper/harness stabilization.
+- **Scope:** stabilize custom view reorder setup, drag targeting, console-noise handling, and reload assertion without weakening the order expectation.
+- **Acceptance:** authenticated custom view reorder E2E reliably proves final order persists after drop and refresh.
 
 ### 1.5.0 - Ownership Failure Test Baseline
 - **Status:** Open | Priority: P0 security test baseline

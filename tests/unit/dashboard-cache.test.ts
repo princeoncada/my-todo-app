@@ -4,6 +4,9 @@ import { QueryClient } from "@tanstack/react-query";
 import {
   applyDeletedTagToDashboardCaches,
   applyTagChangeToCaches,
+  buildPersistedItemOrderPayload,
+  buildPersistedListOrderPayload,
+  buildPersistedViewOrderPayload,
   canApplySelectedViewPayload,
   canRollbackViewSelection,
   hasSavedListInDashboardSnapshots,
@@ -505,5 +508,58 @@ describe("dashboard cache projection", () => {
         "list-1"
       )
     ).toBe(false);
+  });
+
+  it("builds list reorder payloads from saved rows only with compact order", () => {
+    expect(
+      buildPersistedListOrderPayload([
+        list("optimistic-list", [], -1, { isOptimistic: true }),
+        list("saved-second", [], 1),
+        list("saved-first", [], 0),
+      ])
+    ).toEqual([
+      { id: "saved-second", order: 0 },
+      { id: "saved-first", order: 1 },
+    ]);
+  });
+
+  it("builds item reorder payloads without optimistic lists or items", () => {
+    expect(
+      buildPersistedItemOrderPayload([
+        list("source", [], 0, {
+          listItems: [
+            item("source-saved", "source", 0),
+            { ...item("source-optimistic", "source", 1), isOptimistic: true },
+          ],
+        }),
+        list("optimistic-target", [], -1, {
+          isOptimistic: true,
+          listItems: [item("hidden-saved", "optimistic-target", 0)],
+        }),
+        list("target", [], 1, {
+          listItems: [
+            item("moved-saved", "source", 0),
+            item("target-saved", "target", 1),
+          ],
+        }),
+      ])
+    ).toEqual([
+      { id: "source-saved", listId: "source", order: 0 },
+      { id: "moved-saved", listId: "target", order: 0 },
+      { id: "target-saved", listId: "target", order: 1 },
+    ]);
+  });
+
+  it("builds view reorder payloads from saved rows only with compact order", () => {
+    expect(
+      buildPersistedViewOrderPayload([
+        view({ id: "optimistic-view", userId: "optimistic", order: -1 }),
+        view({ id: "saved-second", order: 2 }),
+        view({ id: "saved-first", order: 1 }),
+      ])
+    ).toEqual([
+      { id: "saved-second", order: 0 },
+      { id: "saved-first", order: 1 },
+    ]);
   });
 });

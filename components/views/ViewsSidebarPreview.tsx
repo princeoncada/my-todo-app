@@ -43,6 +43,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useOptimisticSync } from "@/hooks/useOptimisticSync";
 import {
   applyViewSelection,
+  buildPersistedViewOrderPayload,
   canApplySelectedViewPayload,
   canRollbackViewSelection,
   DashboardSnapshot,
@@ -70,10 +71,6 @@ type ViewDialogState = {
   mode: ViewDialogMode;
   view?: ViewItem;
 };
-
-function isOptimisticView(view: ViewItem) {
-  return view.userId === "optimistic";
-}
 
 function buildOptimisticView({
   id,
@@ -616,17 +613,14 @@ export default function ViewsSidebarPreview() {
     }
 
     reorderTimeoutRef.current = setTimeout(() => {
-      const savedViews = nextViews.filter((view) => !isOptimisticView(view));
+      const savedViews = buildPersistedViewOrderPayload(nextViews);
 
       if (savedViews.length === 0) return;
 
       optimisticSync.replacePending("views", async () => {
         measureRequest("view.reorderViews", { count: savedViews.length });
         await reorderMutation.mutateAsync({
-          views: savedViews.map((view, index) => ({
-            id: view.id,
-            order: index,
-          })),
+          views: savedViews,
         });
       }, { label: "view.reorderViews" });
     }, 300);

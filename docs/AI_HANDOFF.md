@@ -1,8 +1,8 @@
-<!-- Current Version: 1.4.7 -->
+<!-- Current Version: 1.4.8-alpha -->
 # AI Handoff
-**Current Version**: 1.4.7 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.4.7 - Create List + Create Item Race Regression
-**Next**: 1.4.8 - Drag/Reorder Persistence Regression
+**Current Version**: 1.4.8-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.4.8 - Drag/Reorder Persistence Regression
+**Next**: 1.5.0 - Ownership Failure Test Baseline
 ---
 ## What Was Last Done
 **Phase 1.3.2** completed ChatGPT architect real workflow test:
@@ -132,13 +132,13 @@
 - **Phase 3: View Filter Hardening** - in progress, active on `checkpoint/fix-cross-view-list-moves` (checkpoint 3 of 6 complete; final manual-regression documentation is a merge-gate step, not an implementation checkpoint)
 ## Active Branch
 `master`
-## Current 1.4.7 Context
-1.4.7 hardens create-list plus immediate item-create by centralizing optimistic-list reconciliation in `lib/dashboard-cache.ts`. `reconcileCreatedListInSnapshot` replaces saved optimistic lists while preserving locally added optimistic items, relevant tags, and the optimistic order position, and removes duplicate optimistic rows for the saved list id.
+## Current 1.4.8 Context
+1.4.8 hardens drag/reorder persistence for lists and items. Reorder payload builders in `lib/dashboard-cache.ts` exclude optimistic-only rows and compact saved-row order before server writes, while drag hover remains local and cache writes still happen only on drop. Custom view reorder product code remains in place, but its authenticated E2E stabilization was intentionally deferred because the phase expanded into helper/harness stabilization.
 
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
-2. If 1.4.7 is stable, scope `1.4.8 - Drag/Reorder Persistence Regression`.
-3. Use the 1.4.0 reproduction tests, the 1.4.2 backend membership contract, the 1.4.3 dashboard projection contract, the 1.4.5 tag mutation affected-view contract, the 1.4.6 latest-selected-view guard, and the 1.4.7 create-list/create-item regression coverage as the source for expected optimistic behavior.
+2. If 1.4.8 is stable, read `docs/FUTURE_PLANS.md` before scoping because custom view reorder E2E stabilization is tracked separately as 1.4.9.
+3. Use the 1.4.0 reproduction tests, the 1.4.2 backend membership contract, the 1.4.3 dashboard projection contract, the 1.4.5 tag mutation affected-view contract, the 1.4.6 latest-selected-view guard, the 1.4.7 create-list/create-item regression coverage, and the 1.4.8 list/item drag reorder persistence coverage as the source for expected optimistic behavior.
 4. Do not use `docs/PHASE_LOG.md` as active phase guidance; it is historical only.
 5. Do not create a product audit doc by default; capture product behavior through tests, FUTURE_PLANS acceptance criteria, AI_HANDOFF risks, and DECISIONS only for durable architecture choices.
 6. Keep all generated implementation prompts prompt-fence safe.
@@ -197,6 +197,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - Dashboard writes cache first, queues server saves second
 - Drag hover stays local - cache writes happen only on drop, create, delete, rename, tag toggle, completion toggle
 - Optimistic-only IDs must not be sent to server reorder endpoints
+- Reorder payload builders must exclude optimistic-only list/item/view rows and compact order among saved rows before persistence
 - Use `replacePending` for reorders and selections (only newest matters)
 - Use `enqueue` for every action that must persist
 - Active scopes: `views`, `list-tags`, `list-order`, `item-order`, `view-selection`, `list-edits`, `item-edits`
@@ -215,6 +216,8 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - List reorder writes `ViewList.order`, not `List.order`
 - Item cross-list move writes both `ListItem.listId` and `ListItem.order`
 - `ALL_LISTS` view is pinned - not sortable; only custom views are reorderable
+- Authenticated drag/drop E2E waits for reorder mutation success before reload assertions
+- 1.4.8 covers list/item reorder persistence; custom view reorder E2E stabilization is deferred to 1.4.9.
 
 **Authentication:**
 - All dashboard data is user-scoped by Supabase user id
@@ -257,6 +260,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - Optimistic list creation followed by immediate item/tag changes before server save; immediate item creation is covered by cache helper unit tests and an E2E reload regression
 - Fast view switching is guarded by latest-selected-view checks; keep regression coverage for stale payloads and stale rollback
 - Reorders involving optimistic-only rows - IDs must be filtered before sending to server
+- Custom view reorder product behavior exists, but its authenticated E2E path needs separate stabilization in 1.4.9
 - Tag deletes or toggles that affect custom view membership mid-operation
 
 **Data model gaps:**
@@ -267,7 +271,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - Tests should protect every product implementation phase unless a phase is explicitly docs-only or test-only.
 - No API-level ownership tests yet
 - Authenticated E2E requires Supabase credentials (`tests/.auth/user.json` + real env vars)
-- No automated drag/drop tests; no keyboard drag accessibility validation
+- No keyboard drag accessibility validation
 
 **Sync/durability:**
 - Optimistic queues are in-memory - pending writes lost on refresh/crash

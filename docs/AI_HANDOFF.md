@@ -1,6 +1,6 @@
-<!-- Current Version: 1.2.2-alpha -->
+<!-- Current Version: 1.2.2 -->
 # AI Handoff
-**Current Version**: 1.2.2-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.2.2 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.2.2 - Chroma Visibility Fix
 **Next**: 1.3.0 - Phase 3 Completion: View Filter Hardening
 ---

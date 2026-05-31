@@ -1,10 +1,18 @@
-<!-- Current Version: 1.2.3 -->
+<!-- Current Version: 1.2.4-alpha -->
 # AI Handoff
-**Current Version**: 1.2.3 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.2.3 - Startup Oracle Cleanup
-**Next**: 1.2.4 - Handoff Drift Cleanup
+**Current Version**: 1.2.4-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.2.4 - Handoff Drift Cleanup
+**Next**: 1.2.5 - Phase Routing Guardrail Cleanup
 ---
 ## What Was Last Done
+**Phase 1.2.3** completed startup oracle cleanup:
+- Removed `preVersioningBaseline` from `STATE.json`
+- Kept pre-versioning history in `docs/VERSIONING.md` and `docs/PHASE_LOG.md`
+- Added Planned Phase Capture workflow rules
+- Inserted the 1.2.4 and 1.2.5 cleanup patches before 1.3.0 in `docs/FUTURE_PLANS.md`
+**Phase 1.2.2** completed Chroma visibility cleanup:
+- Kept ChromaDB status explicit during startup and validation
+- Preserved direct-read fallback behavior when ChromaDB is unavailable
 **Phase 1.2.1** opens graph navigation doc consistency:
 - Rewrote docs/COMPACT_STRATEGY.md graphify section to the static codebase-graph.json path (removed broken graphify-out/live-CLI steps)
 - Added a validate.ps1 "graph usage" guard that FAILs if any doc instructs the unavailable live graphify CLI
@@ -91,9 +99,10 @@
 ## Active Branch
 `master`
 ## What the Next Session Should Do
-1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`
-2. Query ChromaDB: `python scripts/query_docs.py "Graph Routing Usage Contract v1.1.4"`
-3. Finish or validate v1.1.4 - Graph Routing Usage Contract while this phase is alpha
+1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
+2. Query ChromaDB for the current planned task, starting with `python scripts/query_docs.py "1.2.5 Phase Routing Guardrail Cleanup"` when 1.2.4 is stable.
+3. Scope or implement `1.2.5 - Phase Routing Guardrail Cleanup` next.
+4. Do not return to completed 1.1.x graph-routing work unless the user reports a new bug in that area.
 ---
 
 ## Current Product Snapshot

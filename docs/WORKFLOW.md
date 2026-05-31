@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.2.1 -->
+<!-- Current Version: 1.2.2-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -62,7 +62,7 @@ Even when authorized, Claude Code never commits, pushes, creates branches, or ru
 ```
 QUERY (ChromaDB) -> READ (STATE.json + codebase graph + minimal docs) -> CONFIRM (user direction)
   -> PLAN -> CLARIFY -> PROMPT (write Codex prompt)
-  -> BUILD (Codex implements) -> TEST (user runs npm run test:ci)
+  -> OPEN (.\scripts\open-phase.ps1) -> BUILD (Codex implements) -> TEST (user runs npm run test:ci)
   -> ANALYZE (pass/fail) -> FIX (if needed)
   -> PROMOTE (.\scripts\promote.ps1) -> COMMIT (user runs git)
 ```
@@ -329,6 +329,7 @@ See `docs/VERSIONING.md` for the five versioning locations and the full bump rul
 4. `package.json` - `version` field
 5. `docs/WORKFLOW.md` - `<!-- Current Version: X.Y.Z -->` comment at top (this file)
 
+`.\scripts\open-phase.ps1` opens a new alpha phase across all five versioning locations automatically.
 `.\scripts\promote.ps1` handles all five versioning locations automatically and
 also closes the promoted roadmap item in `docs/FUTURE_PLANS.md` when present.
 It refreshes `codebase-graph.json` when graph tooling exists; the graph is a

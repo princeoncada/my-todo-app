@@ -1,6 +1,12 @@
 import { test } from "@playwright/test";
 
-import { createItem, createList, deleteItem, renameItem } from "./utils/app";
+import {
+  createItem,
+  createList,
+  createListAndImmediatelyAddItem,
+  deleteItem,
+  renameItem,
+} from "./utils/app";
 import { expectItemNotVisible, expectItemVisible, reloadAndExpectMissing, reloadAndExpectPersisted } from "./utils/assertions";
 import { cleanupNamedList, collectConsoleErrors, expectNoConsoleErrors, gotoDashboard, uniqueTestName } from "./utils/seed";
 
@@ -22,6 +28,17 @@ test("create item inside a list", async ({ page }) => {
   await createItem(page, listName, itemName);
   await expectItemVisible(page, itemName);
   await reloadAndExpectPersisted(page, itemName);
+  await cleanupNamedList(page, listName);
+});
+
+test("immediate item creation after list creation persists after reload", async ({ page }) => {
+  const listName = uniqueTestName("immediate-item-list");
+  const itemName = uniqueTestName("immediate-item");
+
+  await createListAndImmediatelyAddItem(page, listName, itemName);
+  await expectItemVisible(page, itemName);
+  await reloadAndExpectPersisted(page, listName);
+  await expectItemVisible(page, itemName);
   await cleanupNamedList(page, listName);
 });
 

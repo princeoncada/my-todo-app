@@ -87,6 +87,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.4.7 - Create List + Create Item Race Regression~~ (stable 2026-05-31)
 
+- ~~1.4.8 - Drag/Reorder Persistence Regression~~ (stable 2026-05-31)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -96,17 +98,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.4.8 - Drag/Reorder Persistence Regression (active) - see Planned
 ---
 
 ## Planned
-
-### 1.4.8 - Drag/Reorder Persistence Regression
-- **Status:** In progress | Priority: P1 reorder correctness
-- **Files:** components/list/ListsContainer.tsx, components/list/ListComponent.tsx, components/list/ListItemComponent.tsx, tests/e2e/drag-drop.spec.ts
-- **Problem:** Reorder behavior must remain lightweight, optimistic, and persistent without rewriting caches during hover or sending optimistic-only IDs to the server.
-- **Scope:** prove drag/drop list and item order persists after drop and refresh; preserve local-only hover behavior; add or update E2E regression coverage.
-- **Acceptance:** drag hover remains local; drop persists final list/item order only; refresh shows the same order; regression tests cover list reorder and item moves.
 
 ### 1.4.9 - Custom View Reorder E2E Stabilization
 - **Status:** Open | Priority: P1 reorder test stability

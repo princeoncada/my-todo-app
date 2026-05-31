@@ -98,11 +98,65 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.4.9 - Branch-Based Phase Workflow Draft (active) - see Planned
 ---
 
 ## Planned
 
-### 1.4.9 - Custom View Reorder E2E Stabilization
+### 1.4.9 - Branch-Based Phase Workflow Draft
+- **Status:** In progress | Priority: P1 workflow reliability
+- **Files:** docs/FUTURE_PLANS.md
+- **DRAFT:** This phase is a roadmap/workflow draft only. It records proposed branch-based guidance for review; it does not finalize the workflow or implement all hardening changes.
+- **Problem:** Master should remain stable while implementation phases preserve useful engineering history on phase branches.
+- **Scope:** Draft the branch-based phase lifecycle and record the follow-up phases needed to compress context, harden debugging discipline, finalize the workflow, and defer custom view reorder E2E stabilization.
+- **Draft branch-based implementation workflow:**
+  1. master must stay stable.
+  2. Every new phase starts from stable master.
+  3. Create a phase branch before opening or implementing the phase.
+  4. Run open-phase.ps1 on the phase branch, not master.
+  5. Implementation loops happen only on the phase branch.
+  6. Commit all meaningful changes one by one, including alpha/in-progress fixes, to preserve git action history.
+  7. Run validation on the phase branch.
+  8. When the phase branch is fully green, merge it into master.
+  9. Revalidate on master.
+  10. Promote on master.
+  11. Commit promotion files one by one.
+  12. Push master only after stable promotion.
+  13. If a phase expands too much, split the remaining work into the next planned phase instead of looping endlessly.
+- **Draft notes:** This is draft guidance only. Final workflow rules will be handled in a later phase.
+- **Commit-history note:** Meaningful failed attempts, diagnostic commits, rollback commits, and in-alpha fix commits may be preserved on phase branches when they represent reviewable engineering history. Fake activity commits are forbidden.
+- **Terminal no-next-phase note:** Terminal no-next-phase support is valid conceptually, but it is not part of 1.4.9. If needed later, it should be handled by a dedicated versioning/script phase.
+- **Acceptance:** FUTURE_PLANS captures the draft branch workflow and the follow-up phase sequence without changing active workflow docs or app behavior.
+
+### 1.4.10 - Context Index Routing Map
+- **Status:** Open | Priority: P1 token/context compression
+- **Files:** docs/CONTEXT_INDEX.md, AGENTS.md, docs/CODEX_RULES.md, docs/WORKFLOW.md if needed
+- **Problem:** Routing rules are duplicated across docs, increasing active-token burden and drift risk.
+- **Scope:** Add a routing-only context index that tells AI sessions which docs to read by task type; replace duplicate read-routing tables with pointers where safe.
+- **Acceptance:** CONTEXT_INDEX routes readers without duplicating rules; startup stays compact; source-of-truth ownership remains unchanged.
+
+### 1.4.11 - AI Handoff Compression
+- **Status:** Open | Priority: P1 token/context compression
+- **Files:** docs/AI_HANDOFF.md, docs/PHASE_LOG.md if needed, docs/CONTEXT_INDEX.md if needed
+- **Problem:** AI_HANDOFF carries too much historical phase material for an active handoff document.
+- **Scope:** Refactor AI_HANDOFF around current version/phase, latest completed change, product snapshot, architecture invariants, known risks, next-session guidance, and local evidence boundary; move historical detail to historical traceability only if needed.
+- **Acceptance:** AI_HANDOFF remains sufficient for current product context while reducing historical bloat; PHASE_LOG remains history only, not active guidance.
+
+### 1.4.12 - Codex Debugging Discipline Hardening
+- **Status:** Open | Priority: P1 debugging efficiency
+- **Files:** docs/CODEX_RULES.md, docs/WORKFLOW.md if needed
+- **Problem:** 1.4.8 showed that repeated in-alpha fixes can burn tokens and time when failure mode is not classified before changes.
+- **Scope:** Add Karpathy-style engineering discipline as an improvement to the existing workflow, including failure classification, hypothesis blocks, allowed file sets, expected proof, rollback conditions, and product-code/test-helper separation rules.
+- **Acceptance:** Codex must classify failures before fixes and avoid stacking speculative changes; existing validation boundaries and scope control remain intact.
+
+### 1.4.13 - Phase Branch Commit Workflow Finalization
+- **Status:** Open | Priority: P1 workflow reliability
+- **Files:** docs/WORKFLOW.md, docs/CODEX_RULES.md, AGENTS.md, scripts/* only if enforcement is explicitly needed
+- **Problem:** The workflow needs a finalized branch-based phase lifecycle that keeps master stable while preserving meaningful alpha/debugging commit history.
+- **Scope:** Finalize phase branch lifecycle, merge strategy, meaningful commit rules, and optional script guardrails after the draft has been reviewed.
+- **Acceptance:** master remains stable-only; phase branches preserve useful engineering history; fake activity commits are forbidden; workflow remains validation-gated and prompt-safe.
+
+### 1.4.14 - Custom View Reorder E2E Stabilization
 - **Status:** Open | Priority: P1 reorder test stability
 - **Files:** components/views/ViewsSidebarPreview.tsx, tests/e2e/drag-drop.spec.ts, tests/e2e/utils/app.ts, tests/e2e/utils/assertions.ts, tests/e2e/utils/drag.ts, tests/e2e/utils/seed.ts
 - **Problem:** Custom view reorder product code exists, but the authenticated E2E path was unstable and expanded 1.4.8 into helper/harness stabilization.

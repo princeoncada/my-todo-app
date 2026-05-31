@@ -96,12 +96,13 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.4.8 - Drag/Reorder Persistence Regression (active) - see Planned
 ---
 
 ## Planned
 
 ### 1.4.8 - Drag/Reorder Persistence Regression
-- **Status:** Open | Priority: P1 reorder correctness
+- **Status:** In progress | Priority: P1 reorder correctness
 - **Files:** components/list/ListsContainer.tsx, components/list/ListComponent.tsx, components/list/ListItemComponent.tsx, components/views/ViewsSidebarPreview.tsx, trpc/routers/listItemRouter.ts, trpc/routers/viewRouter.ts, tests/e2e/drag-drop.spec.ts
 - **Problem:** Reorder behavior must remain lightweight, optimistic, and persistent without rewriting caches during hover or sending optimistic-only IDs to the server.
 - **Scope:** prove drag/drop list, item, and view order persists after drop and refresh; preserve local-only hover behavior; add or update E2E regression coverage.

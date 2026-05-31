@@ -1,10 +1,15 @@
-<!-- Current Version: 1.2.4 -->
+<!-- Current Version: 1.2.5-alpha -->
 # AI Handoff
-**Current Version**: 1.2.4 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.2.4 - Handoff Drift Cleanup
-**Next**: 1.2.5 - Phase Routing Guardrail Cleanup
+**Current Version**: 1.2.5-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.2.5 - Phase Routing Guardrail Cleanup
+**Next**: 1.3.0 - ChatGPT Architect Local Context Workflow
 ---
 ## What Was Last Done
+**Phase 1.2.4** completed handoff drift cleanup:
+- Removed stale next-session instructions pointing to completed 1.1.4 graph-routing work
+- Corrected stale stable history notes for 1.2.2 and 1.2.3
+- Fixed old Phase 1.0.0 promotion wording in the phase log
+- Pointed the next handoff to 1.2.5 Phase Routing Guardrail Cleanup
 **Phase 1.2.3** completed startup oracle cleanup:
 - Removed `preVersioningBaseline` from `STATE.json`
 - Kept pre-versioning history in `docs/VERSIONING.md` and `docs/PHASE_LOG.md`
@@ -94,15 +99,14 @@
 **Pre-versioning phases** (documented fully in `docs/PHASE_LOG.md`):
 - **Phase 1: Dexie Foundation** - done, merged to master
 - **Phase 2: Outbox Sync Queue** - done, ready for merge review
-- **Phase 3: View Filter Hardening** - in progress, active on
-  `checkpoint/fix-cross-view-list-moves` (3 of 7 checkpoints done)
+- **Phase 3: View Filter Hardening** - in progress, active on `checkpoint/fix-cross-view-list-moves` (checkpoint 3 of 6 complete; final manual-regression documentation is a merge-gate step, not an implementation checkpoint)
 ## Active Branch
 `master`
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
-2. Query ChromaDB for the current planned task, starting with `python scripts/query_docs.py "1.2.5 Phase Routing Guardrail Cleanup"` when 1.2.4 is stable.
-3. Scope or implement `1.2.5 - Phase Routing Guardrail Cleanup` next.
-4. Do not return to completed 1.1.x graph-routing work unless the user reports a new bug in that area.
+2. Query ChromaDB for the current planned task.
+3. If 1.2.5 is stable, plan or scope `1.3.0 - ChatGPT Architect Local Context Workflow`.
+4. Do not start product View Filter Hardening until the new ChatGPT-local-context workflow phase is planned and the roadmap is updated.
 ---
 
 ## Current Product Snapshot

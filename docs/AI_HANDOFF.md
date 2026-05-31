@@ -1,8 +1,8 @@
-<!-- Current Version: 1.4.3 -->
+<!-- Current Version: 1.4.4-alpha -->
 # AI Handoff
-**Current Version**: 1.4.3 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.4.3 - Dashboard Cache Projection Contract
-**Next**: 1.4.4 - Tag Mutation Projection Regression
+**Current Version**: 1.4.4-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.4.4 - Open Phase Roadmap Status Automation
+**Next**: 1.4.5 - Tag Mutation Projection Regression
 ---
 ## What Was Last Done
 **Phase 1.3.2** completed ChatGPT architect real workflow test:
@@ -132,12 +132,12 @@
 - **Phase 3: View Filter Hardening** - in progress, active on `checkpoint/fix-cross-view-list-moves` (checkpoint 3 of 6 complete; final manual-regression documentation is a merge-gate step, not an implementation checkpoint)
 ## Active Branch
 `master`
-## Current 1.4.3 Context
-1.4.3 defines the frontend dashboard-cache projection contract to match the backend membership rules from 1.4.2. Dashboard projection helpers now support `ALL_LISTS`, `CUSTOM` `ALL`/`ANY`, zero-tag custom views as empty, `UNTAGGED`, and projected list order from `ViewList.order` with list-order fallback.
+## Current 1.4.4 Context
+1.4.4 is a workflow automation cleanup for alpha roadmap state. `open-phase.ps1` should now mark both the In Progress entry and the matching Planned heading's `Status: In progress` line when opening or repairing an alpha phase.
 
 ## What the Next Session Should Do
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md`.
-2. If 1.4.3 is stable, scope `1.4.4 - Tag Mutation Projection Regression`.
+2. If 1.4.4 is stable, scope `1.4.5 - Tag Mutation Projection Regression`.
 3. Use the 1.4.0 reproduction tests, the 1.4.2 backend membership contract, and the 1.4.3 dashboard projection contract as the source for expected tag mutation behavior.
 4. Do not use `docs/PHASE_LOG.md` as active phase guidance; it is historical only.
 5. Do not create a product audit doc by default; capture product behavior through tests, FUTURE_PLANS acceptance criteria, AI_HANDOFF risks, and DECISIONS only for durable architecture choices.

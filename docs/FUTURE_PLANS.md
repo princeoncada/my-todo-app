@@ -102,6 +102,7 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.4.11 - AI Handoff Compression (active) - see Planned
 ---
 
 ## Planned

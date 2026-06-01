@@ -1,9 +1,9 @@
 {
-    "version":  "1.4.16",
-    "state":  "stable",
-    "phase":  "1.4.16",
-    "phaseTitle":  "Session Checkpoint Output Contract Hardening",
-    "nextPhase":  "1.4.17 - Custom View Reorder E2E Stabilization",
+    "version":  "1.4.17-alpha",
+    "state":  "alpha",
+    "phase":  "1.4.17",
+    "phaseTitle":  "Session Log Folder Contract Correction",
+    "nextPhase":  "1.4.18 - Custom View Reorder E2E Stabilization",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-31"
 }

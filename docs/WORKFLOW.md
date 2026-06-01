@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.4.16 -->
+<!-- Current Version: 1.4.17-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -527,30 +527,54 @@ be copy-paste runnable as-is in PowerShell.
 
 ## Session Checkpoint Output Contract
 
-When the user says "session checkpoint", "let's do a session checkpoint", or
-equivalent, provide exactly two sections. The session checkpoint response is not itself implementation. It gives the user two copy-paste-safe prompts:
+When the user says "session checkpoint", "create a session checkpoint", "let's
+do a session checkpoint", or equivalent, the response is not itself
+implementation. It must provide, in order:
 
 Section 1 - Session Log Master Prompt for Codex
+Session checkpoint commit script
 Section 2 - Next ChatGPT Handoff Prompt
 
-Both Section 1 and Section 2 should be inside code blocks in the assistant response, with the section headings outside the code blocks.
+Section headings stay outside code blocks. Section 1 and Section 2 should be
+inside code blocks in the assistant response. The session checkpoint commit
+script must be a separate PowerShell code block between Section 1 and Section 2.
 Do not include nested fenced code blocks inside fenced master prompts or handoff prompts.
 
-Section 1 must be a copy-paste-safe prompt for Codex to create or update
-`docs/SESSION_LOG.md`. It must tell Codex to read `STATE.json`,
-`docs/FUTURE_PLANS.md`, `docs/AI_HANDOFF.md`, `docs/WORKFLOW.md`,
-`docs/VERSIONING.md`, `docs/CONTEXT_INDEX.md`, and `docs/SESSION_LOG.md` if it
-exists; create `docs/SESSION_LOG.md` if missing; append or update a session
-checkpoint entry; preserve source-of-truth boundaries; not use
-`docs/PHASE_LOG.md` as active guidance; not modify product source files; not run
-validation or git commands; and stop and summarize files changed.
+Section 1 must be a copy-paste-safe prompt for Codex to create a new checkpoint
+file under `docs/SESSION_LOG/YYYY-MM-DD-session-NN.md`. It must tell Codex to
+read `STATE.json`, `docs/FUTURE_PLANS.md`, `docs/AI_HANDOFF.md`,
+`docs/WORKFLOW.md`, `docs/VERSIONING.md`, `docs/CONTEXT_INDEX.md`,
+`docs/SESSION_LOG.md`, and the latest file under `docs/SESSION_LOG/` if one
+exists; create the `docs/SESSION_LOG/` folder if missing; create the next dated
+session file; preserve source-of-truth boundaries; not use `docs/PHASE_LOG.md`
+as active guidance; not modify product source files; not run validation or git
+commands; and stop and summarize files changed. Do not append directly to docs/SESSION_LOG.md, because `docs/SESSION_LOG.md` is an
+index/pointer only. Plainly: docs/SESSION_LOG.md is an index/pointer only. It must instruct Codex to update `docs/AI_HANDOFF.md` only
+if current state or next step changed, and update `docs/NEW_CHATHEAD_OPENER.md`
+only if the next-chat opener changed.
+
+The session checkpoint commit script must include the checkpoint commit, optional
+handoff/opener commits only when those files changed, then status and push:
+
+```powershell
+.\scripts\commit.ps1 -Files "docs/SESSION_LOG/YYYY-MM-DD-session-NN.md" -Message "docs(session): add YYYY-MM-DD session NN checkpoint"
+.\scripts\commit.ps1 -Files "docs/AI_HANDOFF.md" -Message "docs(handoff): update handoff after session checkpoint"
+.\scripts\commit.ps1 -Files "docs/NEW_CHATHEAD_OPENER.md" -Message "docs(session): update new chathead opener"
+git status --short
+git push origin master
+```
+
+Include the `docs/AI_HANDOFF.md` commit only if `docs/AI_HANDOFF.md` changed.
+Include the `docs/NEW_CHATHEAD_OPENER.md` commit only if
+`docs/NEW_CHATHEAD_OPENER.md` changed.
 
 Section 2 must be a copy-paste-safe prompt for the next ChatGPT chathead. It
 must include the repository name and URL, current confirmed stable version and
 phase, next planned phase, what was completed this session, key workflow rules
 now locked in, current local/remote caveats when any are known, startup
 requirements for the next chathead, instruction not to implement until the user
-confirms, and instruction to verify remote master first.
+confirms, instruction to verify remote master first, and a pointer to
+`docs/NEW_CHATHEAD_OPENER.md` instead of embedding the full opener inline.
 
 ---
 

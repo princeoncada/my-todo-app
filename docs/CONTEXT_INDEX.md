@@ -27,7 +27,9 @@ unless the startup protocol is changed later by a dedicated workflow phase.
 - `docs/WORKFLOW.md` = process and phase workflow
 - `docs/VERSIONING.md` = versioning rules and history table
 - `docs/PHASE_LOG.md` = historical traceability only, not active guidance
-- `docs/SESSION_LOG.md` = historical session continuity only, not active guidance
+- `docs/SESSION_LOG/` = historical session continuity logs only, not active guidance
+- `docs/SESSION_LOG.md` = session log index/pointer only, not active guidance
+- `docs/NEW_CHATHEAD_OPENER.md` = standard next-chat opener reference only, not active guidance
 - `docs/DECISIONS.md` = durable architecture decisions
 - `codebase-graph.json` = routing/orientation only, not source of truth
 
@@ -69,6 +71,7 @@ unless the startup protocol is changed later by a dedicated workflow phase.
 ### Historical Investigation
 
 - `docs/PHASE_LOG.md`
+- `docs/SESSION_LOG/`
 - `docs/SESSION_LOG.md`
 - relevant completed phase notes only
 
@@ -83,7 +86,9 @@ unless the startup protocol is changed later by a dedicated workflow phase.
 ## Do Not Read By Default
 
 - `docs/PHASE_LOG.md` for active implementation
+- `docs/SESSION_LOG/` for active implementation
 - `docs/SESSION_LOG.md` for active implementation
+- `docs/NEW_CHATHEAD_OPENER.md` as a substitute for reading source-of-truth docs
 - full repository tree
 - product source files unrelated to the graph-selected task
 - old deprecated docs unless explicitly scoped

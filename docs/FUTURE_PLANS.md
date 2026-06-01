@@ -101,6 +101,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.4.14 - Phase Branch Commit Workflow Finalization~~ (stable 2026-05-31)
 
+- ~~1.4.15 - Closeout Evidence and Validation Efficiency Hardening~~ (stable 2026-05-31)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -110,17 +112,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.4.15 - Closeout Evidence and Validation Efficiency Hardening (active) - see Planned
 ---
 
 ## Planned
-
-### 1.4.15 - Closeout Evidence and Validation Efficiency Hardening
-- **Status:** In progress | Priority: P1 workflow efficiency
-- **Files:** docs/FUTURE_PLANS.md, docs/WORKFLOW.md, docs/CODEX_RULES.md if needed, AGENTS.md if needed, docs/AI_HANDOFF.md if needed
-- **Problem:** Closeout workflow guidance should avoid unnecessary command repetition. `git log` should not be requested when `git status --short` is enough, and full `validate.ps1` should not be blindly repeated after every clean docs-only merge when branch validation already passed.
-- **Scope:** distinguish required closeout evidence from optional audit evidence, and define when post-merge full validation is required versus when targeted post-merge checks are acceptable.
-- **Acceptance:** workflow docs distinguish required evidence from optional audit evidence, and define when post-merge full validation is required versus when targeted checks are acceptable.
 
 ### 1.4.16 - Custom View Reorder E2E Stabilization
 - **Status:** Open | Priority: P1 reorder test stability

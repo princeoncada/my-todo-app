@@ -93,6 +93,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.4.10 - Context Index Routing Map~~ (stable 2026-05-31)
 
+- ~~1.4.11 - AI Handoff Compression~~ (stable 2026-05-31)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -102,17 +104,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.4.11 - AI Handoff Compression (active) - see Planned
 ---
 
 ## Planned
-
-### 1.4.11 - AI Handoff Compression
-- **Status:** In progress | Priority: P1 token/context compression
-- **Files:** docs/AI_HANDOFF.md, docs/PHASE_LOG.md if needed, docs/CONTEXT_INDEX.md if needed
-- **Problem:** AI_HANDOFF carries too much historical phase material for an active handoff document.
-- **Scope:** Refactor AI_HANDOFF around current version/phase, latest completed change, product snapshot, architecture invariants, known risks, next-session guidance, and local evidence boundary; move historical detail to historical traceability only if needed.
-- **Acceptance:** AI_HANDOFF remains sufficient for current product context while reducing historical bloat; PHASE_LOG remains history only, not active guidance.
 
 ### 1.4.12 - Codex Debugging Discipline Hardening
 - **Status:** Open | Priority: P1 debugging efficiency

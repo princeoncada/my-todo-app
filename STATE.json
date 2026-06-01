@@ -1,9 +1,9 @@
 {
-    "version":  "1.4.10",
-    "state":  "stable",
-    "phase":  "1.4.10",
-    "phaseTitle":  "Context Index Routing Map",
-    "nextPhase":  "1.4.11 - AI Handoff Compression",
+    "version":  "1.4.11-alpha",
+    "state":  "alpha",
+    "phase":  "1.4.11",
+    "phaseTitle":  "AI Handoff Compression",
+    "nextPhase":  "1.4.12 - Codex Debugging Discipline Hardening",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-31"
 }

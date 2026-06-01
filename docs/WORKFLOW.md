@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.4.10 -->
+<!-- Current Version: 1.4.11-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -170,6 +170,9 @@ headers sitting above their code block - not inside it.
 - Do not wrap both sections in one code block.
 - Do not combine Codex prompt text and PowerShell commands in the same code block.
 - The push command must be separate from commit command blocks.
+- When providing a merge command, include the merge message inline with `-m` so
+  Git does not open the default editor:
+  `git merge --no-ff phase/<version-slug> -m "merge: bring <version> <short phase name> into master"`
 - Code blocks must be copy-paste runnable for their target tool.
 - Do not place explanatory prose, bullets, markdown headings, wrappers, or
   comments inside copyable command blocks unless they are commands the user

@@ -1,6 +1,6 @@
 {
-    "version":  "1.4.15-alpha",
-    "state":  "alpha",
+    "version":  "1.4.15",
+    "state":  "stable",
     "phase":  "1.4.15",
     "phaseTitle":  "Closeout Evidence and Validation Efficiency Hardening",
     "nextPhase":  "1.4.16 - Custom View Reorder E2E Stabilization",

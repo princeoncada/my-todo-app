@@ -97,6 +97,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.4.12 - Validation-Gated Assistant Response Hardening~~ (stable 2026-05-31)
 
+- ~~1.4.13 - Codex Debugging Discipline Hardening~~ (stable 2026-05-31)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -106,17 +108,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.4.13 - Codex Debugging Discipline Hardening (active) - see Planned
 ---
 
 ## Planned
-
-### 1.4.13 - Codex Debugging Discipline Hardening
-- **Status:** In progress | Priority: P1 debugging efficiency
-- **Files:** docs/CODEX_RULES.md, docs/WORKFLOW.md if needed
-- **Problem:** 1.4.8 showed that repeated in-alpha fixes can burn tokens and time when failure mode is not classified before changes.
-- **Scope:** Add Karpathy-style engineering discipline as an improvement to the existing workflow, including failure classification, hypothesis blocks, allowed file sets, expected proof, rollback conditions, and product-code/test-helper separation rules.
-- **Acceptance:** Codex must classify failures before fixes and avoid stacking speculative changes; existing validation boundaries and scope control remain intact.
 
 ### 1.4.14 - Phase Branch Commit Workflow Finalization
 - **Status:** Open | Priority: P1 workflow reliability

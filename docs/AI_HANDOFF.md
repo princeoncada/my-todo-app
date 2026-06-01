@@ -146,13 +146,15 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 
 ## Next Session Should Do
 
-- Do not include nested fenced code blocks inside fenced master prompts.
-
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md` first.
 2. Use `docs/CONTEXT_INDEX.md` to choose any additional task-specific read set.
 3. If 1.4.11 is stable, scope `1.4.12 - Codex Debugging Discipline Hardening`.
 4. Keep `docs/PHASE_LOG.md` historical only. Do not use it as active phase guidance.
-5. Preserve prompt-fence safety and the Codex validation boundary.
+5. Preserve the Codex validation boundary.
+
+### Prompt Fence Safety
+
+Do not include nested fenced code blocks inside fenced master prompts. Generated Codex prompts must remain copy-paste safe.
 
 ---
 

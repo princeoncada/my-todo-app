@@ -1,4 +1,4 @@
-# Future Plans
+﻿# Future Plans
 
 Single version-sequenced plan for Tidy. This file is the ONE owner of the roadmap;
 `docs/VERSIONING.md` holds history + rules only. Every committed item carries its
@@ -100,19 +100,20 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.4.10 - Context Index Routing Map (active) - see Planned
 ---
 
 ## Planned
 
 ### 1.4.10 - Context Index Routing Map
-- **Status:** Open | Priority: P1 token/context compression
+- **Status:** In progress | Priority: P1 token/context compression
 - **Files:** docs/CONTEXT_INDEX.md, AGENTS.md, docs/CODEX_RULES.md, docs/WORKFLOW.md if needed
 - **Problem:** Routing rules are duplicated across docs, increasing active-token burden and drift risk.
 - **Scope:** Add a routing-only context index that tells AI sessions which docs to read by task type; replace duplicate read-routing tables with pointers where safe.
 - **Acceptance:** CONTEXT_INDEX routes readers without duplicating rules; startup stays compact; source-of-truth ownership remains unchanged.
 
 ### 1.4.11 - AI Handoff Compression
-- **Status:** Open | Priority: P1 token/context compression
+- **Status:** In progress | Priority: P1 token/context compression
 - **Files:** docs/AI_HANDOFF.md, docs/PHASE_LOG.md if needed, docs/CONTEXT_INDEX.md if needed
 - **Problem:** AI_HANDOFF carries too much historical phase material for an active handoff document.
 - **Scope:** Refactor AI_HANDOFF around current version/phase, latest completed change, product snapshot, architecture invariants, known risks, next-session guidance, and local evidence boundary; move historical detail to historical traceability only if needed.
@@ -331,3 +332,4 @@ Assigned a version only when scoped.
 - Large components increase risk for focused changes.
 - API ownership gaps should land in 1.5.x before expanding API surface area.
 - Frontend projection and backend refresh must agree before UI/UX polish.
+

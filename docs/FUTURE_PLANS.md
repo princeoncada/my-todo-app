@@ -112,7 +112,7 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## Planned
 
 ### 1.4.13 - Codex Debugging Discipline Hardening
-- **Status:** Open | Priority: P1 debugging efficiency
+- **Status:** In progress | Priority: P1 debugging efficiency
 - **Files:** docs/CODEX_RULES.md, docs/WORKFLOW.md if needed
 - **Problem:** 1.4.8 showed that repeated in-alpha fixes can burn tokens and time when failure mode is not classified before changes.
 - **Scope:** Add Karpathy-style engineering discipline as an improvement to the existing workflow, including failure classification, hypothesis blocks, allowed file sets, expected proof, rollback conditions, and product-code/test-helper separation rules.

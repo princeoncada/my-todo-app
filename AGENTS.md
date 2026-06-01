@@ -127,8 +127,9 @@ model handoff, Claude Code must protect continuity proactively:
   - before a large, risky, or many-file operation
   - the user signals stopping, switching tasks, or stepping away
 - The user decides whether to checkpoint; Claude Code only proposes it.
-- A checkpoint = write docs/SESSION_LOG/YYYY-MM-DD-session-NN.md per the Session
-  Checkpoint format in docs/WORKFLOW.md.
+- `docs/WORKFLOW.md` owns the session checkpoint output format. A checkpoint
+  response provides the Codex prompt for updating `docs/SESSION_LOG.md` plus the
+  next-ChatGPT handoff prompt.
 - Continuity invariant: STATE.json + docs/FUTURE_PLANS.md + the latest SESSION_LOG
   must together let a brand-new model resume with no prior conversation. If they
   would not, say so and fix the docs before continuing.
@@ -182,7 +183,7 @@ Do not read `docs/WORKFLOW.md` at startup. Read it only when writing or reviewin
 | "scope it out" | Write the full Codex prompt + Section 2 validation block |
 | "what's next" | Read docs/FUTURE_PLANS.md fresh, report the next item in the Planned section and summarize it. This is the next planned item, not the roadmap "Next phase" (which comes from STATE.json nextPhase) - distinguish them if both are relevant |
 | "session start" / "continue" | Run Session Start Protocol and output Startup Report |
-| "session checkpoint" / "handoff" | Write SESSION_LOG entry (Claude Code may also propose this proactively - see Session Continuity). Do not write version/phase state into docs/NEW_CHATHEAD_OPENER.md - the opener points to STATE.json + FUTURE_PLANS by design (see Doc Continuity Model in docs/VERSIONING.md) |
+| "session checkpoint" / "handoff" | Provide the two-section output contract from docs/WORKFLOW.md: a Codex session log prompt and a next-ChatGPT handoff prompt. Do not write version/phase state into docs/NEW_CHATHEAD_OPENER.md - the opener points to STATE.json + FUTURE_PLANS by design (see Doc Continuity Model in docs/VERSIONING.md) |
 | "I AUTHORIZE CLAUDE CODE TO IMPLEMENT - [reason]" | Fallback only  -  use when Codex hits its token limit mid-implementation. Claude Code never suggests this phrase; the user initiates it. |
 
 When validation checks fail after a Codex implementation, Claude Code must provide a fix master prompt immediately. Never ask the user to authorize direct implementation.

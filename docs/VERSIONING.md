@@ -93,9 +93,9 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.4.10
-- **Current phase:** 1.4.10 - Context Index Routing Map
-- **Next phase:** 1.4.11 - AI Handoff Compression
+- **Current version:** 1.4.11-alpha
+- **Current phase:** 1.4.11 - AI Handoff Compression
+- **Next phase:** 1.4.12 - Codex Debugging Discipline Hardening
 
 ---
 
@@ -155,6 +155,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.4.11 | alpha | 2026-05-31 | AI Handoff Compression | (in progress) |
 | 1.4.10 | stable | 2026-05-31 | Context Index Routing Map | (in progress) |
 | 1.4.9 | stable | 2026-05-31 | Branch-Based Phase Workflow Draft | (in progress) |
 | 1.4.8 | stable | 2026-05-31 | Drag/Reorder Persistence Regression | (in progress) |

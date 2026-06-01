@@ -340,8 +340,7 @@ instructions.
 ## Validation Intensity
 
 Full `.\scripts\validate.ps1` is the final confidence gate, not a command to
-request after every tiny edit. During active in-alpha work, prefer targeted
-checks that match the risk of the change.
+request after every tiny edit. Plainly: full validate.ps1 is not required after every tiny edit. During active in-alpha work, prefer targeted checks that match the risk of the change.
 
 Targeted checks are acceptable while actively editing or confirming a narrow
 docs fix, including:
@@ -361,8 +360,8 @@ Do not request full `.\scripts\validate.ps1` after every one-line docs edit,
 after every `Select-String` check, after every individual commit, after every
 graph refresh while still actively editing, or immediately after `promote.ps1`
 when promote self-verify succeeds and only version/docs/graph metadata changed.
-`promote.ps1` already self-verifies version locations, roadmap closeout, and
-graph artifact consistency.
+Plainly: promote.ps1 already self-verifies version locations, roadmap closeout,
+and graph artifact consistency.
 
 If product source, tests, scripts, dependencies, or validation logic changed,
 treat full `.\scripts\validate.ps1` as required before closeout.

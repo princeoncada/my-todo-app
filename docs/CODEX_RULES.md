@@ -203,6 +203,10 @@ Default pattern:
 3. Commit source changes by feature area
 4. Commit validation/test updates separately
 
+Meaningful failed validation states may be committed on phase branches when
+they document a real debugging checkpoint. Fake activity commits remain
+forbidden.
+
 Commit message format:
 ```
 type(scope): short imperative summary

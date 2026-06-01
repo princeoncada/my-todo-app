@@ -105,6 +105,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.4.16 - Session Checkpoint Output Contract Hardening~~ (stable 2026-05-31)
 
+- ~~1.4.17 - Session Log Folder Contract Correction~~ (stable 2026-05-31)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -114,17 +116,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.4.17 - Session Log Folder Contract Correction (active) - see Planned
 ---
 
 ## Planned
-
-### 1.4.17 - Session Log Folder Contract Correction
-- **Status:** In progress | Priority: P1 workflow continuity
-- **Files:** docs/FUTURE_PLANS.md, docs/WORKFLOW.md, docs/SESSION_LOG.md, docs/SESSION_LOG/YYYY-MM-DD-session-NN.md, docs/NEW_CHATHEAD_OPENER.md, docs/CONTEXT_INDEX.md, AGENTS.md if needed, docs/AI_HANDOFF.md if needed
-- **Problem:** 1.4.16 implemented the session checkpoint contract against a single docs/SESSION_LOG.md file, but the intended workflow is a docs/SESSION_LOG/ folder with one markdown file per checkpoint.
-- **Scope:** correct the session checkpoint storage contract, preserve the old root session log path as a discoverability index only, and update workflow guidance so checkpoints create one dated session file plus a commit script and next-ChatGPT handoff prompt.
-- **Acceptance:** Session checkpoints create files under docs/SESSION_LOG/YYYY-MM-DD-session-NN.md, the old docs/SESSION_LOG.md file no longer acts as the active log, and the checkpoint output includes a Codex prompt, commit script, and next-ChatGPT handoff prompt.
 
 ### 1.4.18 - Custom View Reorder E2E Stabilization
 - **Status:** Open | Priority: P1 reorder test stability

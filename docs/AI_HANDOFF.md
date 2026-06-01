@@ -1,6 +1,6 @@
-<!-- Current Version: 1.4.10-alpha -->
+<!-- Current Version: 1.4.10 -->
 # AI Handoff
-**Current Version**: 1.4.10-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.4.10 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.4.10 - Context Index Routing Map
 **Next**: 1.4.11 - AI Handoff Compression
 ---

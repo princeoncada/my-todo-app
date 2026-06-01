@@ -95,6 +95,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.4.11 - AI Handoff Compression~~ (stable 2026-05-31)
 
+- ~~1.4.12 - Validation-Gated Assistant Response Hardening~~ (stable 2026-05-31)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -104,17 +106,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.4.12 - Validation-Gated Assistant Response Hardening (active) - see Planned
 ---
 
 ## Planned
-
-### 1.4.12 - Validation-Gated Assistant Response Hardening
-- **Status:** In progress | Priority: P1 workflow safety
-- **Files:** docs/FUTURE_PLANS.md, docs/WORKFLOW.md, docs/AI_HANDOFF.md if needed
-- **Problem:** Assistant responses must not jump ahead to commit, merge, promote, or push commands before the user/controller has provided the required validation and status evidence.
-- **Scope:** Define validation-gated assistant response stages so responses provide only the next valid command stage based on the evidence the user has provided.
-- **Acceptance:** The workflow clearly requires assistant responses to provide only the next valid command stage based on the evidence the user has provided.
 
 ### 1.4.13 - Codex Debugging Discipline Hardening
 - **Status:** Open | Priority: P1 debugging efficiency

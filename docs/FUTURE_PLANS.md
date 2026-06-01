@@ -1,4 +1,4 @@
-﻿# Future Plans
+# Future Plans
 
 Single version-sequenced plan for Tidy. This file is the ONE owner of the roadmap;
 `docs/VERSIONING.md` holds history + rules only. Every committed item carries its
@@ -91,6 +91,8 @@ Inserting a new minor/major pushes later Planned numbers back to stay monotonic
 
 - ~~1.4.9 - Branch-Based Phase Workflow Draft~~ (stable 2026-05-31)
 
+- ~~1.4.10 - Context Index Routing Map~~ (stable 2026-05-31)
+
 Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 - ~~Phase 1 - Dexie Foundation~~ (merged to master)
 - ~~Phase 2 - Outbox Sync Queue~~ (ready for merge review)
@@ -100,17 +102,9 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
-- 1.4.10 - Context Index Routing Map (active) - see Planned
 ---
 
 ## Planned
-
-### 1.4.10 - Context Index Routing Map
-- **Status:** In progress | Priority: P1 token/context compression
-- **Files:** docs/CONTEXT_INDEX.md, AGENTS.md, docs/CODEX_RULES.md, docs/WORKFLOW.md if needed
-- **Problem:** Routing rules are duplicated across docs, increasing active-token burden and drift risk.
-- **Scope:** Add a routing-only context index that tells AI sessions which docs to read by task type; replace duplicate read-routing tables with pointers where safe.
-- **Acceptance:** CONTEXT_INDEX routes readers without duplicating rules; startup stays compact; source-of-truth ownership remains unchanged.
 
 ### 1.4.11 - AI Handoff Compression
 - **Status:** In progress | Priority: P1 token/context compression

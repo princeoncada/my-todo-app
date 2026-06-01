@@ -1,9 +1,9 @@
-<!-- Current Version: 1.4.12-alpha -->
+<!-- Current Version: 1.4.12 -->
 # AI Handoff
 
 ## Current Version / Phase
 
-**Current Version**: 1.4.12-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.4.12 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.4.12 - Validation-Gated Assistant Response Hardening
 **Next**: 1.4.13 - Codex Debugging Discipline Hardening
 

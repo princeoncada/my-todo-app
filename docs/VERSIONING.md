@@ -93,7 +93,7 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.4.13-alpha
+- **Current version:** 1.4.13
 - **Current phase:** 1.4.13 - Codex Debugging Discipline Hardening
 - **Next phase:** 1.4.14 - Phase Branch Commit Workflow Finalization
 
@@ -155,7 +155,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
-| 1.4.13 | alpha | 2026-05-31 | Codex Debugging Discipline Hardening | (in progress) |
+| 1.4.13 | stable | 2026-05-31 | Codex Debugging Discipline Hardening | (in progress) |
 | 1.4.12 | stable | 2026-05-31 | Validation-Gated Assistant Response Hardening | (in progress) |
 | 1.4.11 | stable | 2026-05-31 | AI Handoff Compression | (in progress) |
 | 1.4.10 | stable | 2026-05-31 | Context Index Routing Map | (in progress) |

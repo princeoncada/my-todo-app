@@ -1,9 +1,9 @@
-<!-- Current Version: 1.4.14-alpha -->
+<!-- Current Version: 1.4.14 -->
 # AI Handoff
 
 ## Current Version / Phase
 
-**Current Version**: 1.4.14-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.4.14 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.4.14 - Phase Branch Commit Workflow Finalization
 **Next**: 1.4.15 - Custom View Reorder E2E Stabilization
 

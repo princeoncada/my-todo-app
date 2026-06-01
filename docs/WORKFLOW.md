@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.4.12 -->
+<!-- Current Version: 1.4.13-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -308,7 +308,7 @@ already supplied; do not provide commands that lead all the way to
 complete and valid.
 
 - Stage A - Implementation/in-alpha changes exist but validation not provided: give validation commands only.
-- Stage B - Validation failed: give failure classification and an in-alpha fix prompt. Do not give commit, merge, promote, or push commands.
+- Stage B - Validation failed: give failure classification and an in-alpha fix prompt that follows `docs/CODEX_RULES.md` debugging attempt discipline. Do not give commit, merge, promote, or push commands.
 - Stage C - Validation passed and alpha branch has uncommitted changes: give alpha commit commands only.
 - Stage D - Alpha branch is clean and validation passed: the assistant may give the merge-to-master command.
 - Stage E - Master merge completed but master validation not provided: give master validation commands only.

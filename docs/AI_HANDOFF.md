@@ -1,9 +1,9 @@
-<!-- Current Version: 1.4.11-alpha -->
+<!-- Current Version: 1.4.11 -->
 # AI Handoff
 
 ## Current Version / Phase
 
-**Current Version**: 1.4.11-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Version**: 1.4.11 - read `STATE.json` for the machine-readable oracle.
 **Current Phase**: 1.4.11 - AI Handoff Compression
 **Next**: 1.4.12 - Codex Debugging Discipline Hardening
 

@@ -1,11 +1,11 @@
-<!-- Current Version: 1.4.12 -->
+<!-- Current Version: 1.4.13-alpha -->
 # AI Handoff
 
 ## Current Version / Phase
 
-**Current Version**: 1.4.12 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.4.12 - Validation-Gated Assistant Response Hardening
-**Next**: 1.4.13 - Codex Debugging Discipline Hardening
+**Current Version**: 1.4.13-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.4.13 - Codex Debugging Discipline Hardening
+**Next**: 1.4.14 - Phase Branch Commit Workflow Finalization
 
 Use these source-of-truth pointers instead of treating this file as a full history dump:
 - `STATE.json` - version, state, phase, phase title, next phase.
@@ -18,7 +18,7 @@ Use these source-of-truth pointers instead of treating this file as a full histo
 
 ## Latest Completed Change
 
-**1.4.11 - AI Handoff Compression** compressed this handoff around current state, product snapshot, architecture invariants, known risks, next-session guidance, and the local evidence boundary. It preserves prompt-fence safety while keeping historical traceability in the historical docs.
+**1.4.12 - Validation-Gated Assistant Response Hardening** added staged assistant response rules so command instructions advance only as far as user-provided validation and status evidence allows. It prevents jumping ahead to commit, merge, promote, or push commands.
 
 ---
 
@@ -144,6 +144,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 
 **Workflow:**
 - Assistant responses can drift if they provide commit, merge, promote, or push commands before the user/controller has supplied validation and status evidence. `docs/WORKFLOW.md` owns the stage-gated response rule.
+- Codex debugging attempts can drift if failure classes and hypotheses are not stated before fixes. `docs/CODEX_RULES.md` owns the debugging attempt discipline.
 
 ---
 
@@ -151,7 +152,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md` first.
 2. Use `docs/CONTEXT_INDEX.md` to choose any additional task-specific read set.
-3. If 1.4.12 is stable, scope `1.4.13 - Codex Debugging Discipline Hardening`.
+3. If 1.4.13 is stable, scope `1.4.14 - Phase Branch Commit Workflow Finalization`.
 4. Keep `docs/PHASE_LOG.md` historical only. Do not use it as active phase guidance.
 5. Preserve the Codex validation boundary.
 

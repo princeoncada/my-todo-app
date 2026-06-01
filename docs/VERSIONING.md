@@ -93,9 +93,9 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.4.15
-- **Current phase:** 1.4.15 - Closeout Evidence and Validation Efficiency Hardening
-- **Next phase:** 1.4.16 - Custom View Reorder E2E Stabilization
+- **Current version:** 1.4.16-alpha
+- **Current phase:** 1.4.16 - Session Checkpoint Output Contract Hardening
+- **Next phase:** 1.4.17 - Custom View Reorder E2E Stabilization
 
 ---
 
@@ -155,6 +155,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
+| 1.4.16 | alpha | 2026-05-31 | Session Checkpoint Output Contract Hardening | (in progress) |
 | 1.4.15 | stable | 2026-05-31 | Closeout Evidence and Validation Efficiency Hardening | (in progress) |
 | 1.4.14 | stable | 2026-05-31 | Phase Branch Commit Workflow Finalization | (in progress) |
 | 1.4.13 | stable | 2026-05-31 | Codex Debugging Discipline Hardening | (in progress) |

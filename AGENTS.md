@@ -245,6 +245,7 @@ Use `docs/CODEX_RULES.md` (Required Tests section) as the source of truth for te
 
 ## Commit Discipline
 
+- `docs/WORKFLOW.md` owns the finalized phase branch lifecycle. `docs/CODEX_RULES.md` owns Codex implementation and commit discipline.
 - Claude Code writes commit.ps1 call sequences; the user runs each call.
 - Do not batch multiple files into one commit.
 - Do not add Co-Authored-By or any AI co-author trailer to commit messages.

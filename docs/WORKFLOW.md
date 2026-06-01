@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.4.13 -->
+<!-- Current Version: 1.4.14-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -100,6 +100,30 @@ QUERY (ChromaDB) -> READ (STATE.json + codebase graph + minimal docs) -> CONFIRM
   -> ANALYZE (pass/fail) -> FIX (if needed)
   -> PROMOTE (.\scripts\promote.ps1) -> COMMIT (user runs git)
 ```
+
+### Phase Branch Lifecycle
+
+Master must stay stable. Every new phase starts from stable master, then the
+user/controller creates a phase branch before opening or implementing the phase.
+Run open-phase.ps1 on the phase branch, not master.
+
+Implementation loops happen only on the phase branch. Commit meaningful alpha
+work one reviewable unit at a time. Meaningful failed validation states may be
+committed when they preserve real debugging history; fake activity commits are
+forbidden. If a phase expands too much, split the remaining work into the next
+planned phase instead of looping endlessly.
+
+During active editing, use targeted checks. Run full `.\scripts\validate.ps1` at
+meaningful gates. When the alpha branch is clean and full validation is green,
+provide the full closeout command packet: switch to master, pull master, merge
+the phase branch with `--no-ff` and an inline `-m` message, validate on master,
+promote on master, commit promotion files one by one, run a final targeted status
+check, then push master. If any command in the closeout packet fails, stop and
+paste the output before continuing.
+
+If `git push` reports that the repository moved, update origin with
+`git remote set-url origin https://github.com/princeoncada/tidy.git`. This is a
+local repo maintenance action, not a product or phase implementation change.
 
 ### Planned Phase Capture
 
@@ -322,13 +346,17 @@ revalidation commands.
 
 Once alpha validation is green and the phase branch is clean, the assistant may
 provide the full closeout command packet. The packet must include, in order:
+- switch to master
+- pull master
 - merge into master using the inline `-m` merge message:
   `git merge --no-ff phase/<version-slug> -m "merge: bring <version> <short phase name> into master"`
 - validate on master
 - promote
 - commit stable promotion files one by one
-- final validation
+- final targeted status check
 - `git push origin master`
+
+If any closeout command fails, stop and paste the output before continuing.
 
 If the user says "we won't be promoting because we have a problem" or equivalent
 during alpha, treat it as an in-alpha fix situation. Provide an in-alpha fix
@@ -376,7 +404,7 @@ Code first classifies the next valid action from
 During active alpha work, provide only that immediate next action. Once alpha
 validation is green and the phase branch is clean, provide the full closeout
 packet instead of drip-feeding merge, master validation, promotion, stable
-commits, final validation, and push one message at a time.
+commits, final targeted status check, and push one message at a time.
 
 1. Validation summary - pass counts, failures, and warnings from user-provided output only. If validation failed, provide an in-alpha fix prompt and revalidation commands only.
 2. Alpha commit sequence - When alpha validation is green but uncommitted alpha changes remain, provide one PowerShell code block containing all alpha commit commands, one command per line.
@@ -391,6 +419,7 @@ commits, final validation, and push one message at a time.
 
 ```powershell
 git switch master
+git pull origin master
 git merge --no-ff phase/<version-slug> -m "merge: bring <version> <short phase name> into master"
 .\scripts\validate.ps1
 ```
@@ -428,11 +457,19 @@ git merge --no-ff phase/<version-slug> -m "merge: bring <version> <short phase n
 
 Include the `codebase-graph.json` commit only when `promote.ps1` changes it.
 
-6. Final validation and push - provide final validation before the push, and
-   keep the push command separate from commit command blocks:
+6. Final targeted status check and push - provide a targeted status check before
+   the push, and keep the push command separate from commit command blocks:
 
 ```powershell
-.\scripts\validate.ps1
+git status --short
+git push origin master
+```
+
+If `git push` reports that the repository moved, run this local repo maintenance
+command and retry the push:
+
+```powershell
+git remote set-url origin https://github.com/princeoncada/tidy.git
 git push origin master
 ```
 

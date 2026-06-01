@@ -108,12 +108,13 @@ Pre-versioning (full detail in `docs/PHASE_LOG.md`):
 ## In Progress
 
 
+- 1.4.14 - Phase Branch Commit Workflow Finalization (active) - see Planned
 ---
 
 ## Planned
 
 ### 1.4.14 - Phase Branch Commit Workflow Finalization
-- **Status:** Open | Priority: P1 workflow reliability
+- **Status:** In progress | Priority: P1 workflow reliability
 - **Files:** docs/WORKFLOW.md, docs/CODEX_RULES.md, AGENTS.md, scripts/* only if enforcement is explicitly needed
 - **Problem:** The workflow needs a finalized branch-based phase lifecycle that keeps master stable while preserving meaningful alpha/debugging commit history.
 - **Scope:** Finalize phase branch lifecycle, merge strategy, meaningful commit rules, and optional script guardrails after the draft has been reviewed.

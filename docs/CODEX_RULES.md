@@ -197,15 +197,23 @@ Validation is user/controller-run, not Codex-run.
 
 ## Commit Discipline
 
+Codex does not commit, push, create branches, or run git commands. The
+user/controller owns git actions. Codex should propose meaningful commit units
+for the user/controller to run through `.\scripts\commit.ps1`.
+
 Default pattern:
 1. Commit the new or updated doc first
 2. Commit entrypoint/backlog references separately
 3. Commit source changes by feature area
 4. Commit validation/test updates separately
 
+One commit should represent one reviewable engineering unit. Do not batch
+unrelated changes.
+
 Meaningful failed validation states may be committed on phase branches when
-they document a real debugging checkpoint. Fake activity commits remain
-forbidden.
+they document a real debugging checkpoint. Fake activity commits are forbidden.
+Do not hide meaningful failed attempts by silently rewriting history during
+alpha.
 
 Commit message format:
 ```
@@ -232,6 +240,7 @@ Avoid: `update stuff`, `local-first work`, `big sync changes`, `wip`
 Never do:
 - Use raw git add + git commit  -  always use .\scripts\commit.ps1
 - Batch multiple files into one commit
+- Batch unrelated changes into one commit
 - Add Co-Authored-By or any AI co-author trailer to commit messages
 
 When updating workflow docs involving assistant output, preserve copy-paste safety:

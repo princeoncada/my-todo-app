@@ -65,7 +65,7 @@ Unless the task specifically changes these areas, never touch:
 1. Read `STATE.json`  -  current version, active phase, active branch
 2. Read `codebase-graph.json` when present to pick the smallest relevant source file set
 3. Read `docs/AI_HANDOFF.md`  -  product snapshot, invariants, known risks
-4. Use the task routing table below to pick the smallest relevant source file set
+4. Use `docs/CONTEXT_INDEX.md` to pick the smallest relevant task-specific read set
 5. Identify required test coverage before coding (see Required Tests below)
 6. Read 2 - 3 source files directly relevant to the change
 7. Make the code change and matching test change in the same branch
@@ -225,17 +225,9 @@ FUTURE_PLANS remains roadmap state, not a sixth versioning location.
 
 ## What to Read For Specific Tasks
 
-| Task type | Read these source files |
-|---|---|
-| Any task | `STATE.json`, `docs/AI_HANDOFF.md`, this file |
-| Dashboard cache / optimistic mutation | `lib/dashboard-cache.ts`, `hooks/useOptimisticSync.ts`, target component |
-| Drag and drop | `components/list/ListsContainer.tsx`, `ListComponent.tsx`, `ListItemComponent.tsx` |
-| Tags / custom views | `trpc/routers/tagRouter.ts`, `viewHelpers.ts`, `ListTagPicker.tsx`, `ViewsSidebarPreview.tsx`, `lib/dashboard-cache.ts` |
-| Auth / tRPC / API procedures | `trpc/init.ts`, `trpc/routers/_app.ts`, target router file |
-| Prisma schema / data model | `prisma/schema.prisma`, `lib/db.ts` |
-| Roadmap/docs phase work | `docs/FUTURE_PLANS.md`, `docs/AI_HANDOFF.md`, affected workflow docs |
-| Security fix | target router file + `trpc/init.ts` |
-| Mobile / PWA / metadata | `app/layout.tsx`, `next.config.ts`, `public/` |
+Use `docs/CONTEXT_INDEX.md` for task-based route selection. This file remains
+the source of truth for implementation rules, validation boundaries, testing
+rules, scope control, and commit discipline.
 
 ---
 

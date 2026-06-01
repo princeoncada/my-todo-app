@@ -1352,6 +1352,13 @@
       "imports": []
     },
     {
+      "path": "docs/SESSION_LOG.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
       "path": "docs/VERSIONING.md",
       "kind": "documentation",
       "extension": ".md",

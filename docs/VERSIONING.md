@@ -93,7 +93,7 @@ Rules:
 
 ## Current State
 
-- **Current version:** 1.4.17-alpha
+- **Current version:** 1.4.17
 - **Current phase:** 1.4.17 - Session Log Folder Contract Correction
 - **Next phase:** 1.4.18 - Custom View Reorder E2E Stabilization
 
@@ -155,7 +155,7 @@ Phase log: `docs/PHASE_LOG.md` (Phase 3 section)
 
 | Version | State | Date | Phase | Notes |
 |---------|-------|------|-------|-------|
-| 1.4.17 | alpha | 2026-05-31 | Session Log Folder Contract Correction | (in progress) |
+| 1.4.17 | stable | 2026-05-31 | Session Log Folder Contract Correction | (in progress) |
 | 1.4.16 | stable | 2026-05-31 | Session Checkpoint Output Contract Hardening | (in progress) |
 | 1.4.15 | stable | 2026-05-31 | Closeout Evidence and Validation Efficiency Hardening | (in progress) |
 | 1.4.14 | stable | 2026-05-31 | Phase Branch Commit Workflow Finalization | (in progress) |

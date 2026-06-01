@@ -215,6 +215,10 @@ they document a real debugging checkpoint. Fake activity commits are forbidden.
 Do not hide meaningful failed attempts by silently rewriting history during
 alpha.
 
+Closeout evidence sequencing belongs in `docs/WORKFLOW.md`. `git status --short`
+is cleanliness evidence; `git log --oneline -12` is audit evidence for commit
+history and should not be requested by default.
+
 Commit message format:
 ```
 type(scope): short imperative summary

@@ -548,8 +548,7 @@ read `STATE.json`, `docs/FUTURE_PLANS.md`, `docs/AI_HANDOFF.md`,
 exists; create the `docs/SESSION_LOG/` folder if missing; create the next dated
 session file; preserve source-of-truth boundaries; not use `docs/PHASE_LOG.md`
 as active guidance; not modify product source files; not run validation or git
-commands; and stop and summarize files changed. It must instruct Codex not to
-append directly to `docs/SESSION_LOG.md`, because `docs/SESSION_LOG.md` is an
+commands; and stop and summarize files changed. Do not append directly to docs/SESSION_LOG.md, because `docs/SESSION_LOG.md` is an
 index/pointer only. Plainly: docs/SESSION_LOG.md is an index/pointer only. It must instruct Codex to update `docs/AI_HANDOFF.md` only
 if current state or next step changed, and update `docs/NEW_CHATHEAD_OPENER.md`
 only if the next-chat opener changed.

@@ -1,9 +1,9 @@
 {
-    "version":  "1.4.9",
-    "state":  "stable",
-    "phase":  "1.4.9",
-    "phaseTitle":  "Branch-Based Phase Workflow Draft",
-    "nextPhase":  "1.4.10 - Context Index Routing Map",
+    "version":  "1.4.10-alpha",
+    "state":  "alpha",
+    "phase":  "1.4.10",
+    "phaseTitle":  "Context Index Routing Map",
+    "nextPhase":  "1.4.11 - AI Handoff Compression",
     "seriesComplete":  false,
     "lastUpdated":  "2026-05-31"
 }

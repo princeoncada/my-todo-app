@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.4.9 -->
+<!-- Current Version: 1.4.10-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -185,6 +185,10 @@ When scoping implementation prompts, include `codebase-graph.json` as an early
 read after `STATE.json` when it exists. The graph narrows file selection; it
 does not replace `docs/AI_HANDOFF.md`, `docs/CODEX_RULES.md`, or direct reads of
 affected source files.
+
+Use `docs/CONTEXT_INDEX.md` as the routing-only scoping map for choosing the
+smallest correct document/source read set. It does not define process rules,
+phase workflow, prompt format, or validation boundaries.
 
 ### Graph Routing Usage Contract
 

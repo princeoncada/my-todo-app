@@ -1,6 +1,6 @@
 {
   "schemaVersion": "tidy-codebase-graph/v1",
-  "version": "1.4.9",
+  "version": "1.4.10-alpha",
   "generatedAt": "2026-05-31",
   "generator": "scripts/generate_codebase_graph.py fallback scanner",
   "graphify": {
@@ -1111,6 +1111,13 @@
     },
     {
       "path": "docs/COMPACT_STRATEGY.md",
+      "kind": "documentation",
+      "extension": ".md",
+      "symbols": [],
+      "imports": []
+    },
+    {
+      "path": "docs/CONTEXT_INDEX.md",
       "kind": "documentation",
       "extension": ".md",
       "symbols": [],

@@ -97,6 +97,10 @@ Normal startup still reads only `STATE.json`, `codebase-graph.json` when present
 `docs/FUTURE_PLANS.md`, and ChromaDB only if available. Do not add graph audit,
 graph drills, or broader graph proof work to normal startup.
 
+Use `docs/CONTEXT_INDEX.md` during task scoping to choose the smallest correct
+document/source read set. It is routing-only and must not expand startup reads
+unless a later workflow phase changes the startup protocol.
+
 For implementation scoping responses, include a concise Graph Routing Summary
 before the Codex prompt. Keep it short so it does not become another token
 burden. It must include:
@@ -164,12 +168,10 @@ Always output this exact structure at session start:
 
 ## File Read Priority
 
-| Task type | Read these |
-|-----------|-----------|
-| Startup | `STATE.json` + `codebase-graph.json` if present + `docs/FUTURE_PLANS.md` |
-| Implementation | `docs/AI_HANDOFF.md` + `docs/CODEX_RULES.md` + 2 - 3 source files |
-| Patch / docs work | `docs/CODEX_RULES.md` + affected files only |
-| Session close | Write `SESSION_LOG` -> update `STATE.json` |
+Use `docs/CONTEXT_INDEX.md` for task-based read routing. Startup remains
+strictly owned by the Session Start Protocol above and stays limited to
+`STATE.json`, `codebase-graph.json` when present, `docs/FUTURE_PLANS.md`, and
+ChromaDB when available.
 
 Do not read `docs/WORKFLOW.md` at startup. Read it only when writing or reviewing a Codex prompt format or the post-validation workflow.
 
@@ -216,10 +218,10 @@ Before editing any file, route yourself through the repo-specific AI docs instea
 
 0. Read `STATE.json` first  -  compact project oracle (version, active phase, notes).
 1. Read `codebase-graph.json` when present  -  orientation only, to pick the smallest relevant source file set.
-2. Read `docs/AI_HANDOFF.md`  -  current product snapshot, invariants, data flow, known risks, and next action.
-3. Read `docs/CODEX_RULES.md` before implementation  -  scope control, invariants, commit discipline, required tests, task routing table.
+2. Use `docs/CONTEXT_INDEX.md` to select the smallest correct task-specific doc/source set.
+3. For implementation, still read `docs/AI_HANDOFF.md` for current product context and `docs/CODEX_RULES.md` for implementation rules before editing.
 
-See `docs/PHASE_LOG.md` for active phase checkpoint context. See `docs/FUTURE_PLANS.md` for the prioritized work backlog.
+See `docs/FUTURE_PLANS.md` for the prioritized work backlog. Use `docs/PHASE_LOG.md` only for historical investigation, not active implementation guidance.
 
 Do not broadly inspect the repo unless the task cannot be understood from the AI docs plus the smallest relevant source files.
 

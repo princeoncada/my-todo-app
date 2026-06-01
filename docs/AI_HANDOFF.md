@@ -1,11 +1,11 @@
-<!-- Current Version: 1.4.14 -->
+<!-- Current Version: 1.4.15-alpha -->
 # AI Handoff
 
 ## Current Version / Phase
 
-**Current Version**: 1.4.14 - read `STATE.json` for the machine-readable oracle.
-**Current Phase**: 1.4.14 - Phase Branch Commit Workflow Finalization
-**Next**: 1.4.15 - Custom View Reorder E2E Stabilization
+**Current Version**: 1.4.15-alpha - read `STATE.json` for the machine-readable oracle.
+**Current Phase**: 1.4.15 - Closeout Evidence and Validation Efficiency Hardening
+**Next**: 1.4.16 - Custom View Reorder E2E Stabilization
 
 Use these source-of-truth pointers instead of treating this file as a full history dump:
 - `STATE.json` - version, state, phase, phase title, next phase.
@@ -18,7 +18,7 @@ Use these source-of-truth pointers instead of treating this file as a full histo
 
 ## Latest Completed Change
 
-**1.4.13 - Codex Debugging Discipline Hardening** added concise implementation discipline and debugging attempt rules. Codex must classify failures, state hypotheses, constrain files allowed to change, define expected proof, and avoid stacking speculative fixes.
+**1.4.14 - Phase Branch Commit Workflow Finalization** finalized the phase branch lifecycle: open phases on phase branches, keep master stable, commit meaningful alpha units, merge with `--no-ff`, promote on master, and push after targeted final status evidence.
 
 ---
 
@@ -95,7 +95,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 - Item cross-list move writes both `ListItem.listId` and `ListItem.order`.
 - `ALL_LISTS` view is pinned and not sortable; only custom views are reorderable.
 - Authenticated drag/drop E2E waits for reorder mutation success before reload assertions.
-- Custom view reorder product behavior exists, but its authenticated E2E stabilization is deferred to `1.4.15 - Custom View Reorder E2E Stabilization`.
+- Custom view reorder product behavior exists, but its authenticated E2E stabilization is deferred to `1.4.16 - Custom View Reorder E2E Stabilization`.
 
 **Authentication and API:**
 - All dashboard data is user-scoped by Supabase user id.
@@ -145,7 +145,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 **Workflow:**
 - Assistant responses can drift if they provide commit, merge, promote, or push commands before the user/controller has supplied validation and status evidence. `docs/WORKFLOW.md` owns the stage-gated response rule.
 - Codex debugging attempts can drift if failure classes and hypotheses are not stated before fixes. `docs/CODEX_RULES.md` owns the debugging attempt discipline.
-- 1.4.14 finalizes the phase branch workflow in `docs/WORKFLOW.md`; product work resumes with `1.4.15 - Custom View Reorder E2E Stabilization`.
+- 1.4.15 clarifies closeout evidence and post-merge validation efficiency in `docs/WORKFLOW.md`; product work resumes with `1.4.16 - Custom View Reorder E2E Stabilization`.
 
 ---
 
@@ -153,7 +153,7 @@ Tidy is an authenticated personal todo workspace with optimistic-first updates.
 
 1. Read `STATE.json`, `codebase-graph.json`, and `docs/FUTURE_PLANS.md` first.
 2. Use `docs/CONTEXT_INDEX.md` to choose any additional task-specific read set.
-3. If 1.4.14 is stable, scope `1.4.15 - Custom View Reorder E2E Stabilization`.
+3. If 1.4.15 is stable, scope `1.4.16 - Custom View Reorder E2E Stabilization`.
 4. Keep `docs/PHASE_LOG.md` historical only. Do not use it as active phase guidance.
 5. Preserve the Codex validation boundary.
 

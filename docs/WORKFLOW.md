@@ -1,6 +1,6 @@
 # Agent Workflow
 
-<!-- Current Version: 1.4.14 -->
+<!-- Current Version: 1.4.15-alpha -->
 
 This file governs how Claude Code and Codex operate together in Tidy. Read it at session start after `STATE.json` and `codebase-graph.json` orientation. It is the authoritative protocol for all implementation phases.
 
@@ -116,10 +116,11 @@ planned phase instead of looping endlessly.
 During active editing, use targeted checks. Run full `.\scripts\validate.ps1` at
 meaningful gates. When the alpha branch is clean and full validation is green,
 provide the full closeout command packet: switch to master, pull master, merge
-the phase branch with `--no-ff` and an inline `-m` message, validate on master,
-promote on master, commit promotion files one by one, run a final targeted status
-check, then push master. If any command in the closeout packet fails, stop and
-paste the output before continuing.
+the phase branch with `--no-ff` and an inline `-m` message, run post-merge
+validation on master using the documented post-merge validation rule, promote on
+master, commit promotion files one by one, run a final targeted status check,
+then push master. If any command in the closeout packet fails, stop and paste
+the output before continuing.
 
 If `git push` reports that the repository moved, update origin with
 `git remote set-url origin https://github.com/princeoncada/tidy.git`. This is a
@@ -350,7 +351,7 @@ provide the full closeout command packet. The packet must include, in order:
 - pull master
 - merge into master using the inline `-m` merge message:
   `git merge --no-ff phase/<version-slug> -m "merge: bring <version> <short phase name> into master"`
-- validate on master
+- run the documented post-merge validation path on master
 - promote
 - commit stable promotion files one by one
 - final targeted status check
@@ -381,7 +382,8 @@ docs fix, including:
 Recommend full `.\scripts\validate.ps1` at meaningful gates:
 - after an implementation or in-alpha fix batch is ready to prove
 - before alpha work is considered ready for merge
-- after merging the phase branch into master, before promotion
+- after merging the phase branch into master, before promotion, when
+  [Post-Merge Validation](#post-merge-validation) requires full validation
 - before final push only when the user wants final confidence or when source, scripts, product, tests, dependencies, or validation logic changed after the last full validation
 
 Do not request full `.\scripts\validate.ps1` after every one-line docs edit,
@@ -396,6 +398,34 @@ treat full `.\scripts\validate.ps1` as required before closeout.
 
 ---
 
+## Closeout Evidence
+
+`git status --short` is the primary check for uncommitted work and closeout
+cleanliness. `git log --oneline -12` is optional audit evidence, not the default
+cleanliness check.
+
+Use `git log` when auditing meaningful alpha history, commit order, branch tip,
+merge history, troubleshooting, or when the user asks to review the commit
+story. Do not request `git log` after every commit or checkpoint by default.
+
+---
+
+## Post-Merge Validation
+
+Branch validation proves the phase branch state; post-merge validation proves the
+final master state. Full post-merge `.\scripts\validate.ps1` is required when
+product source, tests, scripts, dependencies, validation logic, conflict
+resolution, or a significantly moved master could change final behavior.
+
+For docs-only clean merges from freshly pulled master, after full alpha branch
+validation has passed, targeted post-merge checks are acceptable. Targeted
+post-merge checks can include `git status --short`, selected version/roadmap
+`Select-String` checks, graph freshness checks when graph metadata changed, and
+task-specific file inspection. The user/controller may still choose full
+validation for final confidence.
+
+---
+
 ## Post-Validation Workflow
 
 After the user/controller provides validation output or status evidence, Claude
@@ -403,7 +433,7 @@ Code first classifies the next valid action from
 [Validation-Gated Assistant Responses](#validation-gated-assistant-responses).
 During active alpha work, provide only that immediate next action. Once alpha
 validation is green and the phase branch is clean, provide the full closeout
-packet instead of drip-feeding merge, master validation, promotion, stable
+packet instead of drip-feeding merge, post-merge validation, promotion, stable
 commits, final targeted status check, and push one message at a time.
 
 1. Validation summary - pass counts, failures, and warnings from user-provided output only. If validation failed, provide an in-alpha fix prompt and revalidation commands only.
@@ -415,16 +445,31 @@ commits, final targeted status check, and push one message at a time.
 
 3. Closeout packet - When alpha validation is green and the phase branch is
    clean, provide command blocks that take the user from merge through final
-   push. The merge command must include the inline `-m` message:
+   push. The merge command must include the inline `-m` message. After the
+   merge, choose the post-merge validation path from
+   [Post-Merge Validation](#post-merge-validation):
 
 ```powershell
 git switch master
 git pull origin master
 git merge --no-ff phase/<version-slug> -m "merge: bring <version> <short phase name> into master"
+```
+
+   If full post-merge validation is required, provide:
+
+```powershell
 .\scripts\validate.ps1
 ```
 
-4. Promote block - after master validation passes, provide the promote command:
+   If targeted post-merge checks are acceptable for a clean docs-only merge,
+   provide targeted checks that match the phase evidence, including:
+
+```powershell
+git status --short
+```
+
+4. Promote block - after the selected post-merge validation path passes, provide
+   the promote command:
 
 ```powershell
 .\scripts\promote.ps1
